@@ -1,4 +1,4 @@
-package Models;
+package src.main.com.lemmings.Models;
 
 /**
  * Character.java
