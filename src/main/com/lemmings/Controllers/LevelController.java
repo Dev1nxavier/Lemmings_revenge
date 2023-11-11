@@ -27,16 +27,18 @@ import src.main.com.lemmings.Views.CharacterView;
  * 
  */
 public class LevelController {
+    private static final int MAX_CHARS = 10;
     private LevelModel lvl;
     private LevelView gameView;
     private ArrayList<BufferedImage> chFrames = new ArrayList<>();
-    private Character lemming;
-    private CharacterView chView;
+    private ArrayList <Character> characters;
+    private ArrayList<CharacterView> chViews;
+    private ArrayList<CharacterController> chControllers;
 
     public LevelController(LevelView gameView) {
         this.lvl = new LevelModel();
         this.gameView = gameView;
-
+        this.chControllers = new ArrayList<>();
         // pass map to gameview
         gameView.setMap(lvl.getMap());
         // load character images
@@ -45,17 +47,22 @@ public class LevelController {
         chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-0.png"));
 
         // FIXME: move to own CharacterController
-        // initiate a new Character
-        lemming = new Lemming();
-        chView = new CharacterView(chFrames);
-        // pass reference of new CharacterView to LevelView
-        gameView.addCharacterView(chView);
+
+        for (int i = 0; i < MAX_CHARS; i++) {
+            // initiate a new Character
+            Character ch = new Lemming(); // default are Lemming type
+            // initialize a new characterview
+            CharacterView chView = new CharacterView(chFrames);
+            // add characterview to this JPanel
+            gameView.add(chView);
+            // create a new controller
+            chControllers.add(new CharacterController(ch, chView));
+        }
 
         addListeners();
     }
 
     private void addListeners() {
-        // FIXME: Adjust frame rate
 
         // refresh at frame rate
         Timer timer = new Timer(100, new ActionListener() {
@@ -63,11 +70,10 @@ public class LevelController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //update character
-                lemming.updatePosition();
-                // get updated position and pass to CharacterView
-                chView.setPosX(lemming.getXPosition());
+                for (CharacterController ctrl : chControllers) {
+                    ctrl.updateCharacter();
+                }
 
-                // TODO: Update view
                 gameView.setMap(lvl.getMap()); // pass level map each time
                 gameView.updateView();
             }

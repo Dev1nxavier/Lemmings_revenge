@@ -35,9 +35,8 @@ public class LevelView extends JPanel {
     }
 
     public void updateView() {
-        // on update call, move character 5 units
-        // lemming.setPosX(lemming.getPosX() + 5);
-        lemming.setCurrentFrame();
+        // on update call, update Character
+        // lemming.setCurrentFrame();
         repaint();
     }
 

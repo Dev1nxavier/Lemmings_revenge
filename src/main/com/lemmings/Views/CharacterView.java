@@ -1,7 +1,6 @@
 package src.main.com.lemmings.Views;
 
 import javax.swing.*;
-import src.main.com.lemmings.utilities.Utilities;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -26,6 +25,12 @@ public class CharacterView extends JPanel {
         layoutComponents();
     }
 
+    public void update(int xPos){
+        setCurrentFrame();
+        setPosX(xPos);
+        this.repaint();
+    }
+
     public void setCurrentFrame(){
         currentFrame = (currentFrame + 1) % animationFrames.size();
     }
@@ -41,7 +46,6 @@ public class CharacterView extends JPanel {
 
     public void setPosX(int posX) {
         this.posX = posX;
-        this.repaint();
     }
 
     public int getPosY() {
