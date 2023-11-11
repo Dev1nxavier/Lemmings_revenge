@@ -1,19 +1,14 @@
 package src.main.com.lemmings.Views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.TextField;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.Buffer;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import java.awt.Image;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -24,6 +19,7 @@ public class LevelView extends JPanel {
     private final int WIDTH = 600;
     private ArrayList<BufferedImage> obstacles = new ArrayList<>();
     private BufferedImage background;
+    private CharacterView cView;
 
     int[][] map;
 
@@ -35,13 +31,28 @@ public class LevelView extends JPanel {
     }
 
     public void updateView() {
+        // cView.setBounds(cView.getX_pos(), cView.getY_pos(),
+        // 10, 20);
+        // this.add(cView);
+        // cView.updateFrame(x_pos, y_pos);
         repaint();
+
     }
 
     private void layoutComponents() {
+        background = loadImage("src/main/resources/cave_background.png");
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setLayout(new BorderLayout());
+        // this.setLayout(null);
 
+    }
+
+    // adds a new instance of CharacterView to the game window
+    public void addCharacterView(CharacterView cView, int x, int y) {
+        this.cView = cView;
+        // if using null layout, must explicitly define bounds
+        cView.setBounds(cView.getX_pos(), x, y, cView.getCharacterHeight());
+        this.add(cView, BorderLayout.CENTER);
     }
 
     @Override
@@ -60,8 +71,7 @@ public class LevelView extends JPanel {
 
         // typecast to Graphics2D for finer control
         Graphics2D g2d = (Graphics2D) g;
-        background = loadImage("src/main/resources/cave_background.png");
-        g2d.drawImage(background, 0,0, this.getWidth(), this.getHeight(), null);
+        g2d.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
 
         // TODO: Update to use imageIcons
         // for every 1 in model, ground, 2 = rock
@@ -70,7 +80,7 @@ public class LevelView extends JPanel {
                 for (int obstacle : row) {
                     if (obstacle == 2) {
                         g2d.drawImage(obstacles.get(0), px, py, 75, OBSTACLE_HEIGHT, null);
-                    }else if (obstacle == 1) {
+                    } else if (obstacle == 1) {
                         g2d.drawImage(obstacles.get(1), px, py, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, null);
                     }
                     // either way, advance along the x axis
