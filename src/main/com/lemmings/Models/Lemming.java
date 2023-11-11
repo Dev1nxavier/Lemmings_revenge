@@ -11,7 +11,7 @@ public class Lemming extends Character {
 
     // TODO: Handle updates in y
     @Override
-    public void update() {
+    public void updatePosition() {
         System.out.println("Inside Lemming's update method!");
         if (isMovingRight) {
             // if we are moving right

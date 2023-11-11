@@ -11,48 +11,46 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import src.main.com.lemmings.utilities.Utilities;
+
 /**
  * LevelView
  */
 public class LevelView extends JPanel {
+
     private final int HEIGHT = 600;
     private final int WIDTH = 600;
     private ArrayList<BufferedImage> obstacles = new ArrayList<>();
+
     private BufferedImage background;
-    private CharacterView cView;
+    CharacterView lemming;
 
     int[][] map;
 
     public LevelView() {
 
         layoutComponents();
-        obstacles.add(loadImage("src/main/com/lemmings/Views/stalagmite_01.png"));
-        obstacles.add(loadImage("src/main/resources/ground_tile_02.png"));
+        obstacles.add(Utilities.getGameImages("src/main/com/lemmings/Views/stalagmite_01.png"));
+        obstacles.add(Utilities.getGameImages("src/main/resources/ground_tile_02.png"));
     }
 
     public void updateView() {
-        // cView.setBounds(cView.getX_pos(), cView.getY_pos(),
-        // 10, 20);
-        // this.add(cView);
-        // cView.updateFrame(x_pos, y_pos);
+        // on update call, move character 5 units
+        // lemming.setPosX(lemming.getPosX() + 5);
+        lemming.setCurrentFrame();
         repaint();
-
     }
 
     private void layoutComponents() {
-        background = loadImage("src/main/resources/cave_background.png");
+        background = Utilities.getGameImages("src/main/resources/cave_background.png");
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setLayout(new BorderLayout());
-        // this.setLayout(null);
-
     }
 
-    // adds a new instance of CharacterView to the game window
-    public void addCharacterView(CharacterView cView, int x, int y) {
-        this.cView = cView;
-        // if using null layout, must explicitly define bounds
-        cView.setBounds(cView.getX_pos(), x, y, cView.getCharacterHeight());
-        this.add(cView, BorderLayout.CENTER);
+    public void addCharacterView(CharacterView chView){
+        lemming = chView;
+              // add a character
+        this.add(lemming, BorderLayout.CENTER);
     }
 
     @Override
@@ -100,17 +98,6 @@ public class LevelView extends JPanel {
 
     public void setMap(int[][] map) {
         this.map = map;
-    }
-
-    private BufferedImage loadImage(String path) {
-        try {
-            BufferedImage image = ImageIO.read(new File(path));
-            return image;
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.err.println("Unable to laod image");
-            return null;
-        }
     }
 
 }

@@ -1,19 +1,17 @@
 package src.main.com.lemmings.Controllers;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
+import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.Lemming;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Views.LevelView;
+import src.main.com.lemmings.utilities.Utilities;
+import src.main.com.lemmings.Views.CharacterView;
 
 /**
  * LevelController.java
@@ -31,7 +29,9 @@ import src.main.com.lemmings.Views.LevelView;
 public class LevelController {
     private LevelModel lvl;
     private LevelView gameView;
-    private CharacterController cController;
+    private ArrayList<BufferedImage> chFrames = new ArrayList<>();
+    private Character lemming;
+    private CharacterView chView;
 
     public LevelController(LevelView gameView) {
         this.lvl = new LevelModel();
@@ -39,6 +39,18 @@ public class LevelController {
 
         // pass map to gameview
         gameView.setMap(lvl.getMap());
+        // load character images
+        chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-two.png"));
+        chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-three.png"));
+        chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-0.png"));
+
+        // FIXME: move to own CharacterController
+        // initiate a new Character
+        lemming = new Lemming();
+        chView = new CharacterView(chFrames);
+        // pass reference of new CharacterView to LevelView
+        gameView.addCharacterView(chView);
+
         addListeners();
     }
 
@@ -46,16 +58,18 @@ public class LevelController {
         // FIXME: Adjust frame rate
 
         // refresh at frame rate
-        Timer timer = new Timer(2000, new ActionListener() {
+        Timer timer = new Timer(100, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                //update character
+                lemming.updatePosition();
+                // get updated position and pass to CharacterView
+                chView.setPosX(lemming.getXPosition());
 
                 // TODO: Update view
                 gameView.setMap(lvl.getMap()); // pass level map each time
                 gameView.updateView();
-                // update characters
-                cController.update();
             }
 
         });
@@ -69,10 +83,6 @@ public class LevelController {
                 JOptionPane.showMessageDialog(null, "You Clicked the Mouse!");
             }
         });
-    }
-
-    public void setCharacterController(CharacterController cController) {
-        this.cController = cController;
     }
 
 }

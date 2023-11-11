@@ -1,112 +1,72 @@
 package src.main.com.lemmings.Views;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import javax.swing.*;
+import src.main.com.lemmings.utilities.Utilities;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import java.util.ArrayList;
+
 
 /**
- * CharacterView.java
- * 
- * @author Sean Greene
- * @date November 10, 2023
- * 
- *       This class defines the Characters visual representation
+ * Innerclass for Character view TODO: Will move to own class
  */
 public class CharacterView extends JPanel {
-    private BufferedImage[] animationFrames;
+    //load one image for now
+    private ArrayList <BufferedImage> animationFrames;
     private int currentFrame;
-    private int x_pos = 0;
-    private int y_pos = 0;
-    private final int C_HEIGHT = 20;
-    private final int C_WIDTH = 10;
+    private int posX, posY;
+    private final int WIDTH = 10;
+    private final int HEIGHT = 20;
 
-    public CharacterView(BufferedImage[] animationFrames) {
-        this.animationFrames = animationFrames;
-        this.setPreferredSize(new Dimension(C_WIDTH, C_HEIGHT));
-        this.setOpaque(false);
+    public CharacterView(ArrayList<BufferedImage> frames){
+        this.posX = 100;
+        this.posY = 100;
+        this.animationFrames = frames;
         currentFrame = 0;
-        // this.x_pos = 200;
-        // this.y_pos = 250;
+        layoutComponents();
     }
 
-    public void updateCharacterPosition(int x, int y) {
-        // Swing is not thread safe. Ensure update runs on
-        // event dispatch thread
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                System.out.printf("Inside updateCharPos: x: %d, y: %d\n", x, y);
-                updateFrame(x, y);
-            }
-
-        });
+    public void setCurrentFrame(){
+        currentFrame = (currentFrame + 1) % animationFrames.size();
     }
 
-    // updates character's position on screen
-    public void updateFrame(int x, int y) {
-        this.setX_pos(x);
-        this.setY_pos(y);
-        currentFrame = (currentFrame + 1) % animationFrames.length;
-        setBounds(this.x_pos, this.y_pos, C_WIDTH, C_HEIGHT);
-        System.out.printf("Updated Ch. View: x: %d, y: %d \ndx: %d\n", this.getX_pos(), this.getY_pos(), x);
-        this.revalidate();
+    private void layoutComponents() {
+        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setOpaque(false);
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
         this.repaint();
     }
 
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    public int getWIDTH() {
+        return WIDTH;
+    }
+
+    public int getHEIGHT() {
+        return HEIGHT;
+    }
+
     @Override
-    protected void paintComponent(Graphics g)  {
+    protected void paintComponent(Graphics g){
         super.paintComponent(g);
+
         Graphics2D g2d = (Graphics2D) g;
-        System.out.println("Repainting character!");
-
-        // draw current image at character position
-        g2d.drawImage(animationFrames[0], x_pos, y_pos, C_WIDTH, C_HEIGHT, null);
-        System.out.printf("Inside CView paintComponent(x: %d, y: %d)\n", x_pos, y_pos);
-    }
-
-    public BufferedImage[] getAnimationFrames() {
-        return animationFrames;
-    }
-
-    public void setAnimationFrames(BufferedImage[] animationFrames) {
-        this.animationFrames = animationFrames;
-    }
-
-    public int getCurrentFrame() {
-        return currentFrame;
-    }
-
-    public void setCurrentFrame(int currentFrame) {
-        this.currentFrame = currentFrame;
-    }
-
-    public int getX_pos() {
-        return x_pos;
-    }
-
-    public void setX_pos(int x) {
-        this.x_pos = x;
-    }
-
-    public int getY_pos() {
-        return y_pos;
-    }
-
-    public void setY_pos(int y) {
-        this.y_pos = y;
-    }
-
-    public int getCharacterHeight() {
-        return C_HEIGHT;
-    }
-
-    public int getCharacterWidth() {
-        return C_WIDTH;
+        // draw the thingy
+        g2d.drawImage(animationFrames.get(currentFrame), posX, posY, WIDTH, HEIGHT, null);
     }
 
 }

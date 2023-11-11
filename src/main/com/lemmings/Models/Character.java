@@ -28,11 +28,11 @@ public abstract class Character {
         this.x_pos = 100;
         this.y_pos = 200;
         isCollided = false;
-        speed = 2;
+        speed = 5;
     }
 
     // updates character's position
-    public abstract void update();
+    public abstract void updatePosition();
 
     public void toggleDirection(){
         isMovingRight = !isMovingRight;
