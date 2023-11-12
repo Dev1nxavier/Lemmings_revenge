@@ -23,7 +23,10 @@ public class CharacterController {
 
     public void updateCharacter(){
         ch.updatePosition();
-        chView.update(ch.getXPosition());
+        chView.update(ch.getXPosition(), ch.getYPosition());
+
+        //check for collisions
+        ch.detectCollision();
     }
     
 }

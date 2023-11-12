@@ -2,13 +2,13 @@ package src.main.com.lemmings.Views;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.TextArea;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import src.main.com.lemmings.utilities.Utilities;
@@ -21,6 +21,8 @@ public class LevelView extends JPanel {
     private final int HEIGHT = 600;
     private final int WIDTH = 600;
     private ArrayList<BufferedImage> obstacles = new ArrayList<>();
+    //TODO: Delete after testing
+    public Point pointer;
 
     private BufferedImage background;
     CharacterView lemming;
@@ -35,21 +37,20 @@ public class LevelView extends JPanel {
     }
 
     public void updateView() {
-        // on update call, update Character
-        // lemming.setCurrentFrame();
         repaint();
     }
 
     private void layoutComponents() {
         background = Utilities.getGameImages("src/main/resources/cave_background.png");
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        this.setLayout(new BorderLayout());
     }
 
     public void addCharacterView(CharacterView chView){
         lemming = chView;
               // add a character
-        this.add(lemming, BorderLayout.CENTER);
+        this.add(lemming);
+        this.setComponentZOrder(chView, 0);
+        updateView();
     }
 
     @Override
@@ -97,6 +98,13 @@ public class LevelView extends JPanel {
 
     public void setMap(int[][] map) {
         this.map = map;
+    }
+
+    public void showMouseLocation(Point mouseLoc){
+        TextArea mouseLocation = new TextArea(1, 1);
+        mouseLocation.setText(mouseLocation.toString());
+        this.add(mouseLocation);
+        System.out.println(mouseLoc.toString());
     }
 
 }

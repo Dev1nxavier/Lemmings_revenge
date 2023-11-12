@@ -93,13 +93,6 @@ environment. Calls repaint();
 updateGame(): updates character positions and changes to obstacles,
 scoreboard.
 
-isGround(int char_y_pos, int char_x_pos): Boolean method for determining
-if a character is on the ground. Returns true if the character's
-Rectangle x, y coordinates cross ground.
-
-onCollision(int char_y_pos, int char_x_pos): Boolean. Returns true if a
-character's Rectangle x, y coordinates cross an obstacle.
-
 LevelView class: The main JPanel that renders the level, environment,
 and characters. Includes an ActionListener for detecting Timer events,
 and a mouseListener for determining which character was selected.
@@ -127,7 +120,12 @@ of character movement.
 getBounds(): draws a rectangle around the character, to be used with
 mouse events.
 
-onCollision(): A method for determining collision events with obstacles.
+isGround(int char_y_pos, int char_x_pos): Boolean method for determining
+if a character is on the ground. Returns true if the character's
+Rectangle x, y coordinates cross ground.
+
+onCollision(int char_y_pos, int char_x_pos): Boolean. Returns true if a
+character's Rectangle x, y coordinates cross an obstacle.
 
 abstract assignSkill(Skill skill): Method assigns the selected skill to
 the clicked character.

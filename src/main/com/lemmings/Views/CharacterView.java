@@ -17,17 +17,18 @@ public class CharacterView extends JPanel {
     private final int WIDTH = 10;
     private final int HEIGHT = 20;
 
-    public CharacterView(ArrayList<BufferedImage> frames){
-        this.posX = 100;
-        this.posY = 100;
+    public CharacterView(ArrayList<BufferedImage> frames, int x, int y){
+        this.posX = x;
+        this.posY = y;
         this.animationFrames = frames;
         currentFrame = 0;
         layoutComponents();
     }
 
-    public void update(int xPos){
+    public void update(int xPos, int yPos){
         setCurrentFrame();
         setPosX(xPos);
+        setPosY(yPos);
         this.repaint();
     }
 

@@ -12,21 +12,29 @@ import java.util.Random;
  */
 public class LevelModel {
     // TODO: Make randomly generated levels
-
-    int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
-    ArrayList<Character> characters = new ArrayList<>();
-    int score = 0;
-    long timer;
+    final int WIDTH = 600;
+    final int HEIGHT = 600;
+    final int MAX_CHARS = 10;
+    private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
+    private ArrayList<Character> characters = new ArrayList<>();
+    private int score = 0;
+    private long timer;
 
     public LevelModel() {
 
-        generateMap();
-        layoutComponents();
+        createLevel();
 
     }
 
     // primes the map with obstacles
-    private void layoutComponents() {
+    private void createLevel() {
+        generateMap(); // random level generator
+        for (int i = 0; i < MAX_CHARS; i++) {
+            Character ch = new Lemming();
+            // slightly offset each character
+            ch.setPosition(i*5, i*10);
+            characters.add(ch);
+        }
 
     }
 
@@ -50,8 +58,6 @@ public class LevelModel {
                 }
             }
         }
-        //TODO: Remove after testing
-        System.out.printf(this.toString());
     }
 
     @Override
@@ -71,4 +77,7 @@ public class LevelModel {
         return Arrays.copyOf(map, map.length);
     }
 
+    public ArrayList<Character> getCharactersArray(){
+        return this.characters;
+    }
 }

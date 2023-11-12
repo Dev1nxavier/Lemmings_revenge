@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Character;
-import src.main.com.lemmings.Models.Lemming;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.utilities.Utilities;
@@ -27,11 +26,10 @@ import src.main.com.lemmings.Views.CharacterView;
  * 
  */
 public class LevelController {
-    private static final int MAX_CHARS = 10;
     private LevelModel lvl;
     private LevelView gameView;
     private ArrayList<BufferedImage> chFrames = new ArrayList<>();
-    private ArrayList <Character> characters;
+    private ArrayList<Character> characters;
     private ArrayList<CharacterView> chViews;
     private ArrayList<CharacterController> chControllers;
 
@@ -39,6 +37,8 @@ public class LevelController {
         this.lvl = new LevelModel();
         this.gameView = gameView;
         this.chControllers = new ArrayList<>();
+        characters = lvl.getCharactersArray();
+        gameView.setLayout(new FlowLayout());
         // pass map to gameview
         gameView.setMap(lvl.getMap());
         // load character images
@@ -46,17 +46,22 @@ public class LevelController {
         chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-three.png"));
         chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-0.png"));
 
-        // FIXME: move to own CharacterController
+        int counter = 0;
+        if (characters.size() != 0) {
+            for (Character ch : characters) {
+                // initialize a new view
+                System.out.printf("Character %d: x = %d, y= %d\n",counter, ch.getXPosition(), ch.getYPosition() );
+                CharacterView chView = new CharacterView(chFrames, ch.getXPosition(), ch.getYPosition());
+                chView.setPreferredSize(new Dimension(100, 200));
+                //add view to panel
+                gameView.addCharacterView(chView);
+                //create a new controller
+                CharacterController ctrlr = new CharacterController(ch, chView);
+                ctrlr.updateCharacter();
+                chControllers.add(ctrlr);
+                counter++; 
+            }
 
-        for (int i = 0; i < MAX_CHARS; i++) {
-            // initiate a new Character
-            Character ch = new Lemming(); // default are Lemming type
-            // initialize a new characterview
-            CharacterView chView = new CharacterView(chFrames);
-            // add characterview to this JPanel
-            gameView.add(chView);
-            // create a new controller
-            chControllers.add(new CharacterController(ch, chView));
         }
 
         addListeners();
@@ -69,11 +74,12 @@ public class LevelController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                //update character
+                // update character
                 for (CharacterController ctrl : chControllers) {
                     ctrl.updateCharacter();
                 }
 
+                //check for collisions
                 gameView.setMap(lvl.getMap()); // pass level map each time
                 gameView.updateView();
             }
@@ -87,6 +93,13 @@ public class LevelController {
             @Override
             public void mouseClicked(MouseEvent event) {
                 JOptionPane.showMessageDialog(null, "You Clicked the Mouse!");
+            }
+        });
+
+        this.gameView.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent event){
+                 gameView.showMouseLocation(MouseInfo.getPointerInfo().getLocation());
             }
         });
     }

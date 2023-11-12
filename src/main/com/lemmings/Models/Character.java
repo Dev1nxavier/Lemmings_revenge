@@ -16,11 +16,11 @@ import java.util.ArrayList;
 public abstract class Character {
     protected boolean isMovingRight;
     public int x_pos;
-    private int y_pos;
+    public int y_pos;
     private final int C_HEIGHT = 20;
     private final int C_WIDTH = 10;
     protected boolean isCollided;
-    private boolean isGround;
+    public boolean isGround = false;
     public int speed;
 
     Character() {
@@ -34,20 +34,43 @@ public abstract class Character {
     // updates character's position
     public abstract void updatePosition();
 
-    public void toggleDirection(){
+    public void toggleDirection() {
         isMovingRight = !isMovingRight;
     }
 
+    public abstract void detectCollision();
+
     // returns the characters hitbox
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return new Rectangle(x_pos, y_pos - C_HEIGHT, C_WIDTH, C_HEIGHT);
     }
 
-    public int getXPosition(){
+    public void setPosition(int x, int y){
+        this.x_pos = x;
+        this.y_pos = y;
+    }
+
+    public int getXPosition() {
         return this.x_pos;
     }
-    public int getYPosition(){
+
+    public int getYPosition() {
         return this.y_pos;
     }
 
+    // this method determines if object has collided with an obstacle of type
+    // 'ground'
+    // and returns true, otherwise it returns false;
+    public boolean isOnGround(Rectangle ground) {
+        Rectangle r = this.getBounds();
+
+        // check for overlap
+        if (r.y + r.height > ground.y + .05 && r.x < ground.x + ground.width && r.x + r.width > ground.x) { // extend
+                                                                                                            // hit box
+                                                                                                            // beyond                                                                                     // ground
+            // we are on an obstacle
+            return true;
+        }
+        return false;
+    }
 }
