@@ -1,43 +1,51 @@
 package src.main.com.lemmings.Views;
 
 import javax.swing.*;
+
+import src.main.com.lemmings.utilities.ImageLoader;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-
-/**
- * Innerclass for Character view TODO: Will move to own class
- */
-public class CharacterView extends JPanel {
-    //load one image for now
-    private ArrayList <BufferedImage> animationFrames;
+public class CharacterView extends JLabel {
+    // load one image for now
+    private ArrayList<BufferedImage> animationFrames;
     private int currentFrame;
     private int posX, posY;
     private final int WIDTH = 10;
     private final int HEIGHT = 20;
 
-    public CharacterView(ArrayList<BufferedImage> frames, int x, int y){
+    public CharacterView(int x, int y) {
         this.posX = x;
         this.posY = y;
-        this.animationFrames = frames;
         currentFrame = 0;
         layoutComponents();
     }
 
-    public void update(int xPos, int yPos){
+    public void update(int xPos, int yPos) {
         setCurrentFrame();
         setPosX(xPos);
         setPosY(yPos);
+        this.setBounds(getPosX(), getPosY(), getWIDTH(), getHEIGHT());
         this.repaint();
     }
 
-    public void setCurrentFrame(){
+    public void setCurrentFrame() {
         currentFrame = (currentFrame + 1) % animationFrames.size();
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(WIDTH, HEIGHT);
+    }
+
     private void layoutComponents() {
-        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        animationFrames = new ArrayList<>();
+        this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-two.png"));
+        this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-three.png"));
+        this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-0.png"));
+
         this.setOpaque(false);
     }
 
@@ -66,12 +74,21 @@ public class CharacterView extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g){
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
-        // draw the thingy
-        g2d.drawImage(animationFrames.get(currentFrame), posX, posY, WIDTH, HEIGHT, null);
+
+        try {
+            if (animationFrames.get(currentFrame) != null) {
+                g2d.drawImage(animationFrames.get(currentFrame), 0, 0, WIDTH, HEIGHT, null); // draw it relative to this                                                                               // frame
+            }else{
+                System.err.println("Unable to load character images");
+            }
+        } catch (Exception e) {
+            System.out.println("Unable to load characters!");
+        }
+
     }
 
 }

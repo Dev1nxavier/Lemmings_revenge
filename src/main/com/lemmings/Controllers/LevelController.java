@@ -7,9 +7,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Character;
+import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Views.LevelView;
-import src.main.com.lemmings.utilities.Utilities;
+import src.main.com.lemmings.utilities.ImageLoader;
 import src.main.com.lemmings.Views.CharacterView;
 
 /**
@@ -30,41 +31,60 @@ public class LevelController {
     private LevelView gameView;
     private ArrayList<BufferedImage> chFrames = new ArrayList<>();
     private ArrayList<Character> characters;
-    private ArrayList<CharacterView> chViews;
     private ArrayList<CharacterController> chControllers;
 
     public LevelController(LevelView gameView) {
+        initializeLevel(gameView);
+
+        addListeners();
+    }
+
+    private void initializeLevel(LevelView gameView) {
         this.lvl = new LevelModel();
         this.gameView = gameView;
         this.chControllers = new ArrayList<>();
         characters = lvl.getCharactersArray();
-        gameView.setLayout(new FlowLayout());
         // pass map to gameview
         gameView.setMap(lvl.getMap());
-        // load character images
-        chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-two.png"));
-        chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-three.png"));
-        chFrames.add(Utilities.getGameImages("src/main/resources/Lemming_pose-0.png"));
+        initializeGameObjects();
 
-        int counter = 0;
+        initializeCharacters(gameView);
+
+    }
+
+    private void initializeGameObjects() {
+        ArrayList<GameObject> gameObjects = lvl.getGameObjects();
+
+        if (gameObjects.size() != 0) {
+            for (GameObject go : gameObjects) {
+                gameView.addGameObjectsToView(go, JLayeredPane.DEFAULT_LAYER);
+                gameView.repaint();
+            }
+        }else{
+            System.err.println("Unable to load Game Objects");
+        }
+
+    }
+
+    private void initializeCharacters(LevelView gameView) {
+        // load character images
+        chFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-two.png"));
+        chFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-three.png"));
+        chFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-0.png"));
+
         if (characters.size() != 0) {
             for (Character ch : characters) {
                 // initialize a new view
-                System.out.printf("Character %d: x = %d, y= %d\n",counter, ch.getXPosition(), ch.getYPosition() );
-                CharacterView chView = new CharacterView(chFrames, ch.getXPosition(), ch.getYPosition());
-                chView.setPreferredSize(new Dimension(100, 200));
-                //add view to panel
-                gameView.addCharacterView(chView);
-                //create a new controller
+                CharacterView chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
+                // add view to panel
+                gameView.addCharacterView(chView, JLayeredPane.DEFAULT_LAYER);
+                // create a new controller
                 CharacterController ctrlr = new CharacterController(ch, chView);
                 ctrlr.updateCharacter();
                 chControllers.add(ctrlr);
-                counter++; 
             }
 
         }
-
-        addListeners();
     }
 
     private void addListeners() {
@@ -79,7 +99,7 @@ public class LevelController {
                     ctrl.updateCharacter();
                 }
 
-                //check for collisions
+                // check for collisions
                 gameView.setMap(lvl.getMap()); // pass level map each time
                 gameView.updateView();
             }
@@ -98,8 +118,8 @@ public class LevelController {
 
         this.gameView.addMouseMotionListener(new MouseAdapter() {
             @Override
-            public void mouseMoved(MouseEvent event){
-                 gameView.showMouseLocation(MouseInfo.getPointerInfo().getLocation());
+            public void mouseMoved(MouseEvent event) {
+                gameView.showMouseLocation(MouseInfo.getPointerInfo().getLocation());
             }
         });
     }

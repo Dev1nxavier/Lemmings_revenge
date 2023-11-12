@@ -20,7 +20,7 @@ public abstract class Character {
     private final int C_HEIGHT = 20;
     private final int C_WIDTH = 10;
     protected boolean isCollided;
-    public boolean isGround = false;
+    public boolean isGround = true;
     public int speed;
 
     Character() {
@@ -66,8 +66,7 @@ public abstract class Character {
 
         // check for overlap
         if (r.y + r.height > ground.y + .05 && r.x < ground.x + ground.width && r.x + r.width > ground.x) { // extend
-                                                                                                            // hit box
-                                                                                                            // beyond                                                                                     // ground
+                                                                                                            // hit box    // beyond                                                                                     // ground
             // we are on an obstacle
             return true;
         }
