@@ -66,11 +66,12 @@ public class LevelView extends JPanel {
     }
 
     public void addGameObjectsToView(GameObject go, int layer) {
-
+        final int OBSTACLE_WIDTH = this.WIDTH / 8; // the width of obstacle
+        final int OBSTACLE_HEIGHT = this.HEIGHT / 8; // the height of an obstacle
         layeredPane.add(go, Integer.valueOf(layer));
-        System.out.printf("BOUNDS: %d %d %d %d\n",go.getxPos(), go.getyPos(), go.getWIDTH(), go.getHEIGHT());
-        // FIXME: Y is outside view bound. Try also setting y within component
-        go.setBounds(go.getxPos(), 100, go.getWIDTH(), go.getHEIGHT());
+        System.out.printf("BOUNDS: %d %d %d %d\n", go.getxPos(), go.getyPos(), go.getWIDTH(), go.getHEIGHT());
+
+        // go.setBounds(go.getxPos(), go.getyPos(), go.getWIDTH(), go.getHEIGHT());
         layeredPane.revalidate();
         layeredPane.repaint();
     }
@@ -83,8 +84,6 @@ public class LevelView extends JPanel {
             return;
         }
 
-        final int OBSTACLE_WIDTH = this.WIDTH / 8; // the width of obstacle
-        final int OBSTACLE_HEIGHT = this.HEIGHT / 8; // the height of an obstacle
         // lay out components starting with top left of panel
         int px = 0;
         int py = 0;
@@ -92,29 +91,6 @@ public class LevelView extends JPanel {
         // typecast to Graphics2D for finer control
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
-
-        // TODO: Update to use imageIcons
-        // for every 1 in model, ground, 2 = rock
-        // if (obstacles != null) {
-        //     for (int[] row : map) {
-        //         for (int obstacle : row) {
-        //             if (obstacle == 2) {
-        //                 g2d.drawImage(obstacles.get(0), px, py, 75, OBSTACLE_HEIGHT, null);
-        //             } else if (obstacle == 1) {
-        //                 g2d.drawImage(obstacles.get(1), px, py, OBSTACLE_WIDTH, OBSTACLE_HEIGHT,
-        //                         null);
-        //             }
-        //             // either way, advance along the x axis
-        //             px += OBSTACLE_WIDTH;
-        //         }
-        //         px = 0;
-        //         // jump down to the next row
-        //         py += OBSTACLE_HEIGHT;
-        //     }
-
-        // } else {
-        //     System.err.println("Image was null?");
-        // }
 
     }
 

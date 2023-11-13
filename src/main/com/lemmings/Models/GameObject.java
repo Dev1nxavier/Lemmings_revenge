@@ -30,7 +30,7 @@ public class GameObject extends JLabel {
 
         image = loadBufferedImage();
         this.setPreferredSize(new Dimension(this.WIDTH, this.HEIGHT));
-        // this.setBounds(getxPos(), getyPos(), WIDTH, HEIGHT);
+        this.setBounds(getxPos(), getyPos(), WIDTH, HEIGHT);
         this.setIcon(new ImageIcon(image));
     }
 

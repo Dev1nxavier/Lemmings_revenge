@@ -27,7 +27,7 @@ public class LevelModel {
         createLevel();
 
     }
-
+    //FIXME: the sizes of the obstacles is incorrect
     // primes the map with obstacles
     private void createLevel() {
         generateMap(); // random level generator
@@ -45,9 +45,8 @@ public class LevelModel {
                 px+=125;
             }
             px = 0;
-            py+=125;
+            py+=75;
         }
-
 
         for (int i = 0; i < MAX_CHARS; i++) {
             Character ch = new Lemming();
