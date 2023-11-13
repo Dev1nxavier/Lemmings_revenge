@@ -20,7 +20,7 @@ public abstract class Character {
     private final int C_HEIGHT = 20;
     private final int C_WIDTH = 10;
     protected boolean isCollided;
-    public boolean isGround = true;
+    public boolean isGround = false;
     public int speed;
 
     Character() {
@@ -38,14 +38,23 @@ public abstract class Character {
         isMovingRight = !isMovingRight;
     }
 
-    public abstract void detectCollision();
+    public abstract void detectCollision(Rectangle object);
+
+    // this method detects the right and left bounds of the game panel.
+    public void detectBounds() {
+        if (this.getXPosition() >= 600 || this.getXPosition() <= 0) {
+            // update direction
+            this.toggleDirection();
+            return;
+        }
+    }
 
     // returns the characters hitbox
     public Rectangle getBounds() {
-        return new Rectangle(x_pos, y_pos - C_HEIGHT, C_WIDTH, C_HEIGHT);
+        return new Rectangle(x_pos, y_pos, C_WIDTH, C_HEIGHT);
     }
 
-    public void setPosition(int x, int y){
+    public void setPosition(int x, int y) {
         this.x_pos = x;
         this.y_pos = y;
     }
@@ -64,12 +73,12 @@ public abstract class Character {
     public boolean isOnGround(Rectangle ground) {
         Rectangle r = this.getBounds();
 
-        // check for overlap
-        if (r.y + r.height > ground.y + .05 && r.x < ground.x + ground.width && r.x + r.width > ground.x) { // extend
-                                                                                                            // hit box    // beyond                                                                                     // ground
-            // we are on an obstacle
+        if (r.y > ground.y && r.x < ground.x + ground.width && r.x + C_WIDTH > ground.x) {
+            System.out.println("I hit the ground!");
+            isGround = true;
             return true;
         }
+
         return false;
     }
 }

@@ -3,7 +3,6 @@ package src.main.com.lemmings.Models;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import src.main.com.lemmings.Models.GameObject;
 
 /**
  * LevelModel.java
@@ -12,7 +11,7 @@ import src.main.com.lemmings.Models.GameObject;
  * @date November 10, 2023
  */
 public class LevelModel {
-    // TODO: Make randomly generated levels
+
     final int WIDTH = 600;
     final int HEIGHT = 600;
     final int MAX_CHARS = 10;
@@ -30,7 +29,22 @@ public class LevelModel {
     //FIXME: the sizes of the obstacles is incorrect
     // primes the map with obstacles
     private void createLevel() {
+
         generateMap(); // random level generator
+        generateEnvironmentObjects();
+        generateCharacters();
+
+    }
+
+    private void generateCharacters() {
+        for (int i = 0; i < MAX_CHARS; i++) {
+            Character ch = new Lemming();
+            // slightly offset each character
+            ch.setPosition(i * 20, 100);
+            characters.add(ch);
+        }
+    }
+    private void generateEnvironmentObjects() {
         // add obstacles
         int px = 0; // start at top of screen
         int py = 0;
@@ -47,18 +61,9 @@ public class LevelModel {
             px = 0;
             py+=75;
         }
-
-        for (int i = 0; i < MAX_CHARS; i++) {
-            Character ch = new Lemming();
-            // slightly offset each character
-            ch.setPosition(i * 20, 100);
-            characters.add(ch);
-        }
-
     }
 
     private void generateMap() {
-        // TODO: update
 
         // last three rows are ground
         int isGround = map.length - 3;

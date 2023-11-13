@@ -1,5 +1,7 @@
 package src.main.com.lemmings.Controllers;
 
+import java.util.ArrayList;
+
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Views.CharacterView;
 
@@ -23,10 +25,9 @@ public class CharacterController {
 
     public void updateCharacter(){
         ch.updatePosition();
+        ch.detectBounds();
         chView.update(ch.getXPosition(), ch.getYPosition());
 
-        //check for collisions
-        ch.detectCollision();
     }
     
 }

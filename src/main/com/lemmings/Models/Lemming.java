@@ -30,12 +30,13 @@ public class Lemming extends Character {
     // this method detects if the character's rectangular hitbox has crossed the x,y
     // coordinates of an obstacle
     @Override
-    public void detectCollision() {
+    public void detectCollision(Rectangle ob) {
+        Rectangle r = this.getBounds();
         // chck if characters x position crosses an obstacle
         // TODO: Update to respond to all obstacles. DONT HARDCODE BOUNDS!
 
-        if (this.getXPosition() >= 600 || this.getXPosition() <= 0) {
-            // update direction
+        if (r.x + r.width > ob.x && r.y >= ob.y + ob.width && r.y + r.height < ob.y + ob.height) {
+            System.out.println("Collision Detected!");
             this.toggleDirection();
         }
     }

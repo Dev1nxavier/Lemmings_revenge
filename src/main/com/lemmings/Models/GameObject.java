@@ -1,6 +1,7 @@
 package src.main.com.lemmings.Models;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -9,10 +10,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import src.main.com.lemmings.utilities.ImageLoader;
+
 /**
  * GameObject
  */
+
+
 public class GameObject extends JLabel {
+
+public static enum ENV_TYPE{ GROUND,ROCK,CLIFF, HOLE, WATER};
 
     private int xPos;
     private int yPos;
@@ -21,6 +28,7 @@ public class GameObject extends JLabel {
     private final int HEIGHT = 175;
     private String name;
     private static int id;
+    private ENV_TYPE type;
 
     public GameObject(int x, int y) {
         id++;
@@ -28,21 +36,11 @@ public class GameObject extends JLabel {
         this.xPos = x;
         this.yPos = y;
 
-        image = loadBufferedImage();
+        image = ImageLoader.GAME_IMAGES.get("ground_tile_02.png");
         this.setPreferredSize(new Dimension(this.WIDTH, this.HEIGHT));
         this.setBounds(getxPos(), getyPos(), WIDTH, HEIGHT);
         this.setIcon(new ImageIcon(image));
-    }
-
-    private BufferedImage loadBufferedImage() {
-
-        try {
-            return ImageIO.read(new File("src/main/resources/ground_tile.png"));
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("Unable to read file");
-            return null;
-        }
+        this.type = ENV_TYPE.GROUND;
     }
 
     public String getName(){
@@ -81,5 +79,14 @@ public class GameObject extends JLabel {
         return HEIGHT;
     }
 
+    // returns the obect's hitbox
+    public Rectangle getBounds(){
+        return new Rectangle(xPos, yPos, WIDTH, HEIGHT);
+        
+    }
+
+    public ENV_TYPE getType(){
+        return this.type;
+    }
     
 }

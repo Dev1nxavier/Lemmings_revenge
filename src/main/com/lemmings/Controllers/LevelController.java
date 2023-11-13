@@ -60,7 +60,7 @@ public class LevelController {
                 gameView.addGameObjectsToView(go, JLayeredPane.DEFAULT_LAYER);
                 gameView.repaint();
             }
-        }else{
+        } else {
             System.err.println("Unable to load Game Objects");
         }
 
@@ -100,10 +100,22 @@ public class LevelController {
                 }
 
                 // check for collisions
+                ArrayList<GameObject> env = lvl.getGameObjects();
+                for (Character ch : characters) {
+                    // check every game object
+                    for (GameObject obj : env) {
+                        if (obj.getType() == GameObject.ENV_TYPE.GROUND) {
+                            ch.isOnGround(obj.getBounds());
+                        } else {
+                            // check if this is an obstacle
+                            ch.detectCollision(obj.getBounds());
+                        }
+                    }
+                }
+
                 gameView.setMap(lvl.getMap()); // pass level map each time
                 gameView.updateView();
             }
-
         });
 
         timer.start();
