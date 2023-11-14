@@ -47,7 +47,7 @@ public class LevelView extends JPanel {
         this.add(layeredPane, BorderLayout.CENTER);
     }
 
-    public void addCharacterView(CharacterView chView, int layer) {
+    public void addCharacterToView(CharacterView chView, int layer) {
 
         layeredPane.add(chView, Integer.valueOf(layer));
         chView.setBounds(chView.getPosX(), chView.getPosY(), chView.getWIDTH(), chView.getHEIGHT());
