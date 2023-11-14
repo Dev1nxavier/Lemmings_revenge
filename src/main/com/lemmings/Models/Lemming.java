@@ -31,7 +31,6 @@ public class Lemming extends Character {
     // coordinates of an obstacle
     @Override
     public void detectCollision(Rectangle ob) {
-        System.out.println("inside detectCollision");
         Rectangle r = this.getBounds();
 
         // Check if there is overlap along the X axis and Y axis
@@ -39,7 +38,6 @@ public class Lemming extends Character {
         boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
 
         if (xOverlap && yOverlap) {
-            System.out.println("Collision Detected!");
             this.toggleDirection();
         }
     }

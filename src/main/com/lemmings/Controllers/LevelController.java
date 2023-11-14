@@ -77,7 +77,7 @@ public class LevelController {
                 // initialize a new view
                 CharacterView chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
                 // add view to panel
-                gameView.addCharacterView(chView, JLayeredPane.DEFAULT_LAYER);
+                gameView.addCharacterToView(chView, JLayeredPane.DEFAULT_LAYER);
                 // create a new controller
                 CharacterController ctrlr = new CharacterController(ch, chView);
                 ctrlr.updateCharacter();

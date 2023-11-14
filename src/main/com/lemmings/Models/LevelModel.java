@@ -23,7 +23,7 @@ public class LevelModel {
         {0, 0, 0, 0, 0, 0, 0, 0},  // Row 3
         {0, 2, 0, 0, 0, 0, 2, 0},  // Row 4
         {1, 1, 1, 1, 1, 0, 1, 1},  // Row 5
-        {1, 1, 1, 1, 1, 0, 1, 1},  // Row 6
+        {1, 1, 1, 1, 2, 0, 2, 1},  // Row 6
         {1, 1, 1, 1, 1, 1, 1, 1}   // Row 7
     };
     // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
@@ -55,7 +55,7 @@ public class LevelModel {
             characters.add(ch);
         }
     }
-    //FIXME: 
+    //FIXME: dont hardcode! Calculate!
     private void generateEnvironmentObjects() {
         // add obstacles
         int px = 0; // start at top of screen
