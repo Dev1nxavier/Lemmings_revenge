@@ -11,7 +11,6 @@ public class Lemming extends Character {
         super();
     }
 
-    // TODO: Handle updates in y
     @Override
     public void updatePosition() {
         if (isGround) {
@@ -21,8 +20,9 @@ public class Lemming extends Character {
             } else {
                 x_pos -= speed;
             }
-        }else if (!isGround) {
-            y_pos+=5;
+
+        } else if (!isGround) {
+            y_pos+=7.5;
         }
 
     }
@@ -31,11 +31,14 @@ public class Lemming extends Character {
     // coordinates of an obstacle
     @Override
     public void detectCollision(Rectangle ob) {
+        System.out.println("inside detectCollision");
         Rectangle r = this.getBounds();
-        // chck if characters x position crosses an obstacle
-        // TODO: Update to respond to all obstacles. DONT HARDCODE BOUNDS!
 
-        if (r.x + r.width > ob.x && r.y >= ob.y + ob.width && r.y + r.height < ob.y + ob.height) {
+        // Check if there is overlap along the X axis and Y axis
+        boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
+        boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
+
+        if (xOverlap && yOverlap) {
             System.out.println("Collision Detected!");
             this.toggleDirection();
         }

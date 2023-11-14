@@ -1,9 +1,6 @@
 package src.main.com.lemmings.Models;
 
-import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 /**
  * Character.java
@@ -70,15 +67,12 @@ public abstract class Character {
     // this method determines if object has collided with an obstacle of type
     // 'ground'
     // and returns true, otherwise it returns false;
-    public boolean isOnGround(Rectangle ground) {
+    public void isOnGround(Rectangle ground) {
+
         Rectangle r = this.getBounds();
-
-        if (r.y > ground.y && r.x < ground.x + ground.width && r.x + C_WIDTH > ground.x) {
-            System.out.println("I hit the ground!");
+        if (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + C_WIDTH > ground.x) {
             isGround = true;
-            return true;
+            return;
         }
-
-        return false;
     }
 }

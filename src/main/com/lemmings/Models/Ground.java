@@ -3,12 +3,14 @@ package src.main.com.lemmings.Models;
 /**
  * Ground
  */
-public class Ground extends GameObject{
+public class Ground extends GameObject {
 
-    Ground(int x, int y) {
-        super(x, y);
-        //TODO Auto-generated constructor stub
+
+    public Ground(int x, int y, int width, int height) {
+        super(x, y, width, height);
+        setImage("ground_tile_02.png");
+        setType(ENV_TYPE.GROUND);
+        
     }
 
-    
 }

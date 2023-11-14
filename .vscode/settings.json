@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "/Users/seangreene/JavaLibraries/iText-Core-8.0.1-only-jars/*.jar",
+        "test-lib/**/*.jar"
+    ]
+}

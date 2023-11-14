@@ -103,6 +103,8 @@ public class LevelController {
                 ArrayList<GameObject> env = lvl.getGameObjects();
                 for (Character ch : characters) {
                     // check every game object
+                    //reset for each loop
+                    ch.isGround = false;
                     for (GameObject obj : env) {
                         if (obj.getType() == GameObject.ENV_TYPE.GROUND) {
                             ch.isOnGround(obj.getBounds());

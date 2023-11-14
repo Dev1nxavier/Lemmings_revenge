@@ -15,7 +15,18 @@ public class LevelModel {
     final int WIDTH = 600;
     final int HEIGHT = 600;
     final int MAX_CHARS = 10;
-    private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
+    //FIXME: Use generateMap function after testing!
+    int[][] map = {
+        {0, 0, 0, 0, 0, 0, 0, 0},  // Row 0
+        {0, 0, 0, 0, 0, 0, 0, 0},  // Row 1
+        {1, 1, 0, 0, 0, 0, 0, 0},  // Row 2
+        {0, 0, 0, 0, 0, 0, 0, 0},  // Row 3
+        {0, 2, 0, 0, 0, 0, 2, 0},  // Row 4
+        {1, 1, 1, 1, 1, 0, 1, 1},  // Row 5
+        {1, 1, 1, 1, 1, 0, 1, 1},  // Row 6
+        {1, 1, 1, 1, 1, 1, 1, 1}   // Row 7
+    };
+    // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
     private ArrayList<Character> characters = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private int score = 0;
@@ -30,7 +41,7 @@ public class LevelModel {
     // primes the map with obstacles
     private void createLevel() {
 
-        generateMap(); // random level generator
+        // generateMap(); // random level generator
         generateEnvironmentObjects();
         generateCharacters();
 
@@ -40,23 +51,30 @@ public class LevelModel {
         for (int i = 0; i < MAX_CHARS; i++) {
             Character ch = new Lemming();
             // slightly offset each character
-            ch.setPosition(i * 20, 100);
+            ch.setPosition((i+2) * 20, 100);
             characters.add(ch);
         }
     }
+    //FIXME: 
     private void generateEnvironmentObjects() {
         // add obstacles
         int px = 0; // start at top of screen
         int py = 0;
+        
+
         for (int[] row : map) {
             for (int obs : row) {
                 if (obs == 1) {
                     // add ground
-                    gameObjects.add(new GameObject(px, py));
-                    //TODO: dont hardcode!
-                    
+                    gameObjects.add(new Ground(px, py, 75, 75));
+                    px += 75; // advance by width of object
+                }else if (obs == 2) {
+                    gameObjects.add(new Rock(px, py, 50, 75));
+                    px += 150;
+                }else{
+                    // blanks count!
+                    px+=75;
                 }
-                px+=125;
             }
             px = 0;
             py+=75;

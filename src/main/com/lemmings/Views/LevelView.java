@@ -3,23 +3,16 @@ package src.main.com.lemmings.Views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
-import javax.swing.BoxLayout;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import com.itextpdf.layout.borders.Border;
-
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.utilities.ImageLoader;
-import src.main.com.lemmings.utilities.Utilities;
 
 /**
  * LevelView
@@ -28,7 +21,6 @@ public class LevelView extends JPanel {
     private JLayeredPane layeredPane; // for rendering characters
     private final int HEIGHT = 600;
     private final int WIDTH = 600;
-    private ArrayList<BufferedImage> obstacles = new ArrayList<>();
     // TODO: Delete after testing
     public Point pointer;
 
@@ -40,8 +32,6 @@ public class LevelView extends JPanel {
     public LevelView() {
 
         layoutComponents();
-        obstacles.add(ImageLoader.GAME_IMAGES.get("stalagmite_01.png"));
-        obstacles.add(ImageLoader.GAME_IMAGES.get("ground_tile_02.png"));
     }
 
     public void updateView() {
@@ -67,9 +57,6 @@ public class LevelView extends JPanel {
 
     public void addGameObjectsToView(GameObject go, int layer) {
         layeredPane.add(go, Integer.valueOf(layer));
-        System.out.printf("BOUNDS: %d %d %d %d\n", go.getxPos(), go.getyPos(), go.getWIDTH(), go.getHEIGHT());
-
-        // go.setBounds(go.getxPos(), go.getyPos(), go.getWIDTH(), go.getHEIGHT());
         layeredPane.revalidate();
         layeredPane.repaint();
     }
