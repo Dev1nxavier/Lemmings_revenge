@@ -22,7 +22,7 @@ public class Lemming extends Character {
             }
 
         } else if (!isGround) {
-            y_pos+=7.5;
+            y_pos += 7.5;
         }
 
     }
@@ -42,15 +42,13 @@ public class Lemming extends Character {
         }
     }
 
-        // this method detects the right and left bounds of the game panel.
-        @Override
-        public void detectBounds() {
-            if (this.getXPosition() >= 600) {
-                // update direction
-                this.isMovingRight = false;
-            }
-            if (this.getXPosition() <= 0) {
-                this.isMovingRight = true;
-            }
+    // this method detects the right and left bounds of the game panel.
+    @Override
+    public void detectBounds() {
+        if (this.getXPosition() >= 550 || this.getXPosition() <= 0) {
+            // update direction
+            this.toggleDirection();
+            return;
         }
+    }
 }
