@@ -35,12 +35,7 @@ public class LevelView extends JPanel {
 
         layoutComponents();
     }
-
-    public void updateView(int[][] map) {
-        setMap(map);
-        repaint();
-    }
-
+    
     private void layoutComponents() {
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -66,11 +61,7 @@ public class LevelView extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (map == null) {
-            System.out.println("NO MAP!");
-            return;
-        }
-
+  
         // typecast to Graphics2D for finer control
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);

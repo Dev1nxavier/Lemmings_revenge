@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import src.main.com.lemmings.Views.CharacterView;
+
 /**
  * LevelModel.java
  * 
@@ -29,6 +31,7 @@ public class LevelModel {
     };
     // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
     private ArrayList<Character> characters = new ArrayList<>();
+    private ArrayList<CharacterView> characterViews = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private int score = 0;
     private long timer;
@@ -43,20 +46,25 @@ public class LevelModel {
     // primes the map with obstacles
     private void loadLevel() {
 
-        // generateMap(); // random level generator
-        generateEnvironmentObjects();
+        // // generateMap(); // random level generator
+        // generateEnvironmentObjects();
         generateCharacters();
     }
 
     public void updateGameState(){
         gameObjects.clear();
 
-        generateEnvironmentObjects();
-
     }
 
+    public void setCharacterViews(CharacterView cView){
+        characterViews.add(cView);
+    }
 
-    private void generateCharacters() {
+    public ArrayList<CharacterView>getCharacterViews(){
+        return this.characterViews;
+    }
+
+    public void generateCharacters() {
         for (int i = 0; i < MAX_CHARS; i++) {
             Character ch = new Lemming();
             // slightly offset each character
@@ -66,7 +74,7 @@ public class LevelModel {
     }
 
     // FIXME: dont hardcode! Calculate!
-    private void generateEnvironmentObjects() {
+    public void createGameObjectsFromMap() {
         // add obstacles
         int px = 0; // start at top of screen
         int py = 0;
