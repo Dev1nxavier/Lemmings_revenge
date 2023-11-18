@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
+import src.main.com.lemmings.Models.GameObjectClickListener;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.utilities.ImageLoader;
@@ -26,7 +27,7 @@ import src.main.com.lemmings.Views.CharacterView;
  *       environment and characters
  * 
  */
-public class LevelController {
+public class LevelController implements GameObjectClickListener{
     private LevelModel lvl;
     private LevelView gameView;
     private ArrayList<BufferedImage> chFrames = new ArrayList<>();
@@ -44,8 +45,7 @@ public class LevelController {
         this.gameView = gameView;
         this.chControllers = new ArrayList<>();
         characters = lvl.getCharactersArray();
-        // pass map to gameview
-        gameView.setMap(lvl.getMap());
+        gameView.updateView(lvl.getMap());
         initializeGameObjects();
 
         initializeCharacters(gameView);
@@ -54,7 +54,7 @@ public class LevelController {
 
     private void initializeGameObjects() {
         ArrayList<GameObject> gameObjects = lvl.getGameObjects();
-
+        System.out.printf("Initializing game objects: %d", gameObjects.size());
         if (gameObjects.size() != 0) {
             for (GameObject go : gameObjects) {
                 gameView.addGameObjectsToView(go, JLayeredPane.DEFAULT_LAYER);
@@ -103,7 +103,7 @@ public class LevelController {
                 ArrayList<GameObject> env = lvl.getGameObjects();
                 for (Character ch : characters) {
                     // check every game object
-                    //reset for each loop
+                    // reset for each loop
                     ch.isGround = false;
                     for (GameObject obj : env) {
                         if (obj.getType() == GameObject.ENV_TYPE.GROUND) {
@@ -114,21 +114,11 @@ public class LevelController {
                         }
                     }
                 }
-
-                gameView.setMap(lvl.getMap()); // pass level map each time
-                gameView.updateView();
+                gameView.updateView(lvl.getMap()); // pass map back each time
             }
         });
 
         timer.start();
-
-        this.gameView.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseClicked(MouseEvent event) {
-                JOptionPane.showMessageDialog(null, "You Clicked the Mouse!");
-            }
-        });
 
         this.gameView.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -136,6 +126,28 @@ public class LevelController {
                 gameView.showMouseLocation(MouseInfo.getPointerInfo().getLocation());
             }
         });
+
+        // add click listeners to each Ground object
+        for (GameObject obj : lvl.getGameObjects()) {
+            obj.setGameObjectClickListener(this);
+        }
+    }
+
+
+    @Override
+    public void gameObjectClicked(GameObject clickedObject) {
+       // retrieve the map coordinates of the clicked object
+       Point xy = clickedObject.getRowAndCol();
+
+       //remove from map
+       int[][] updatedMap = lvl.removePointFromMap(xy);
+
+       
+       //update view
+       gameView.updateView(updatedMap);  //udpate the gameState
+       //update Lvl model
+       lvl.updateGameState();
+        initializeGameObjects();
     }
 
 }

@@ -3,7 +3,10 @@ package src.main.com.lemmings.Models;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JLabel;
 
@@ -23,19 +26,21 @@ public abstract class GameObject extends JLabel {
     private BufferedImage image;
     private int width;
     private int height;
-    private String name;
+    private Point rowAndCol;
     private static int id;
     private ENV_TYPE type;
+    private GameObjectClickListener mouseClickListener;
 
-    public GameObject(int x, int y, int width, int height) {
+    public GameObject(int x, int y, int width, int height, Point rowAndCol) {
         id++;
-        this.name = "GO ID: " + id;
+        this.rowAndCol = rowAndCol;
         this.xPos = x;
         this.yPos = y;
         this.width = width;
         this.height = height;
         setPreferredsize();
         setObjectBounds();
+        setMouseClickedListener();
 
     }
 
@@ -47,9 +52,6 @@ public abstract class GameObject extends JLabel {
         this.setPreferredSize(new Dimension(this.width, this.height));
     }
 
-    public String getName() {
-        return this.name;
-    }
 
     public int getxPos() {
         return xPos;
@@ -119,6 +121,48 @@ public abstract class GameObject extends JLabel {
         } catch (Exception e) {
             System.out.println("Unable to load image");
         }
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
+    public Point getRowAndCol() {
+        return rowAndCol;
+    }
+
+    public void setRowAndCol(Point rowAndCol) {
+        this.rowAndCol = rowAndCol;
+    }
+
+    public static int getId() {
+        return id;
+    }
+
+    public static void setId(int id) {
+        GameObject.id = id;
+    }
+
+    /**
+     * This method sets the instance variable mouseClickListern to an 
+     * instance of a GameObjectClickListener passed as an argument. 
+     * @param clickListener an instance of the GameObjectClickListener interface.
+     */
+    public void setGameObjectClickListener (GameObjectClickListener clickListener){
+        this.mouseClickListener = clickListener;
+    }
+
+    /**
+     * This method sets a mouseClicked listener to this GameObject instance. On mouseclick,
+     * it calls the gameObjectClicked method of the mouseClickListener and passes this as an argument. 
+     */
+    public void setMouseClickedListener(){
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event){
+                mouseClickListener.gameObjectClicked(GameObject.this);
+            }
+        });
     }
 
 }

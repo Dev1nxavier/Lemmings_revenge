@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -34,7 +36,8 @@ public class LevelView extends JPanel {
         layoutComponents();
     }
 
-    public void updateView() {
+    public void updateView(int[][] map) {
+        setMap(map);
         repaint();
     }
 
@@ -42,7 +45,6 @@ public class LevelView extends JPanel {
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         background = ImageLoader.GAME_IMAGES.get("cave_background.png");
-        // this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setLayout(new BorderLayout());
         this.add(layeredPane, BorderLayout.CENTER);
     }
@@ -52,7 +54,7 @@ public class LevelView extends JPanel {
         layeredPane.add(chView, Integer.valueOf(layer));
         chView.setBounds(chView.getPosX(), chView.getPosY(), chView.getWIDTH(), chView.getHEIGHT());
 
-        updateView();
+        repaint();
     }
 
     public void addGameObjectsToView(GameObject go, int layer) {
@@ -80,10 +82,13 @@ public class LevelView extends JPanel {
     }
 
     public void showMouseLocation(Point mouseLoc) {
-        TextArea mouseLocation = new TextArea(1, 1);
-        mouseLocation.setBackground(Color.WHITE);
-        mouseLocation.setText(mouseLocation.toString());
-        this.add(mouseLocation, BorderLayout.SOUTH);
+        TextArea mouseLocation = new TextArea(1, 20);
+        mouseLocation.setForeground(Color.WHITE);
+        mouseLocation.setBackground(Color.BLACK);
+        mouseLocation.setText(""+mouseLoc.x+","+mouseLoc.y);
+       layeredPane.add(mouseLocation, 1);
+       mouseLocation.setBounds(500, 100, 100, 200);
+        
     }
 
 }

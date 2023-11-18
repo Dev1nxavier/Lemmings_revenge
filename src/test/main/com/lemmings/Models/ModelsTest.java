@@ -24,7 +24,7 @@ public class ModelsTest {
         CharacterView lemming = new CharacterView(20, 20);
         assertEquals(20, lemming.getHEIGHT());
 
-        Ground ground = new Ground(20, 20, 125, 75);
+        Ground ground = new Ground(20, 20, 125, 75, 2, 2);
         assertEquals(125, ground.getWidth());
         
       
