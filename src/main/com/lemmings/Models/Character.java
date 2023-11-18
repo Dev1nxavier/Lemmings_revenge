@@ -17,7 +17,10 @@ public abstract class Character {
     private final int C_HEIGHT = 20;
     private final int C_WIDTH = 10;
     protected boolean isCollided;
-    public boolean isGround = false;
+    private boolean isGround = false;
+    private Ground currentGround = null;
+    private Skill skill;
+
     public int speed;
 
     Character() {
@@ -59,15 +62,100 @@ public abstract class Character {
         return this.y_pos;
     }
 
+    public void setGround(Ground g) {
+        this.currentGround = g;
+    }
+
+    public boolean useSkill() {
+        if (skill.useSkill(this) == true) {
+            return true;
+        }
+        return false;
+    }
+
     // this method determines if object has collided with an obstacle of type
-    // 'ground'
-    // and returns true, otherwise it returns false;
-    public void isOnGround(Rectangle ground) {
+    // 'ground'. If yes, it sets isGround to true and returns the current ground
+    // object.
+    public void isOnGround(Ground g) {
 
         Rectangle r = this.getBounds();
+        Rectangle ground = g.getBounds();
         if (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + C_WIDTH > ground.x) {
             isGround = true;
-            return;
+            setGround(g);
         }
+
+    }
+
+    public boolean isMovingRight() {
+        return isMovingRight;
+    }
+
+    public void setMovingRight(boolean isMovingRight) {
+        this.isMovingRight = isMovingRight;
+    }
+
+    public int getX_pos() {
+        return x_pos;
+    }
+
+    public void setX_pos(int x_pos) {
+        this.x_pos = x_pos;
+    }
+
+    public int getY_pos() {
+        return y_pos;
+    }
+
+    public void setY_pos(int y_pos) {
+        this.y_pos = y_pos;
+    }
+
+    public int getC_HEIGHT() {
+        return C_HEIGHT;
+    }
+
+    public int getC_WIDTH() {
+        return C_WIDTH;
+    }
+
+    public boolean isCollided() {
+        return isCollided;
+    }
+
+    public void setCollided(boolean isCollided) {
+        this.isCollided = isCollided;
+    }
+
+    public boolean isGround() {
+        return isGround;
+    }
+
+    public void setIsGround(boolean isGround) {
+        this.isGround = isGround;
+    }
+
+    public Ground getCurrentGround() {
+        return currentGround;
+    }
+
+    public void setCurrentGround(Ground currentGround) {
+        this.currentGround = currentGround;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public void setSkill(Skill skill) {
+        this.skill = skill;
+    }
+
+    public Skill getSkill(){
+        return this.skill;
     }
 }

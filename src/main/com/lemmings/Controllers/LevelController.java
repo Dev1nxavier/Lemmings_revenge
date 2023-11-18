@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectClickListener;
+import src.main.com.lemmings.Models.Ground;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.Views.CharacterView;
@@ -44,7 +45,7 @@ public class LevelController implements GameObjectClickListener {
         addObjectsToGameView(lvl.getGameObjects()); // display game objects in game view
 
         // initialize characters
-        udpateCharacterViewsInGameModel(createCharacterViews()); // add character views to game model
+        updateCharacterViewsInGameModel(createCharacterViews()); // add character views to game model
         addCharacterViewsToGameView(gameView, lvl.getCharacterViews());// add views to gameView
         this.chControllers = createCharacterControllers();
     }
@@ -75,7 +76,7 @@ public class LevelController implements GameObjectClickListener {
         return characterViews;
     }
 
-    public void udpateCharacterViewsInGameModel(ArrayList<CharacterView> characterViews) {
+    public void updateCharacterViewsInGameModel(ArrayList<CharacterView> characterViews) {
         for (CharacterView characterView : characterViews) {
             lvl.setCharacterViews(characterView);
         }
@@ -110,6 +111,11 @@ public class LevelController implements GameObjectClickListener {
                 // update character
                 for (CharacterController ctrl : chControllers) {
                     ctrl.updateCharacter();
+
+                    //FIXME: Dont invoke twice
+                    if (ctrl.invokeSkill()!=null){
+                        gameObjectClicked(ctrl.invokeSkill());
+                    }
                 }
 
                 // check for collisions
@@ -118,10 +124,11 @@ public class LevelController implements GameObjectClickListener {
                 for (Character ch : characters) {
                     // check every game object
                     // reset for each loop
-                    ch.isGround = false;
+                    ch.setIsGround(false);
+                    ch.setCurrentGround(null);
                     for (GameObject obj : env) {
                         if (obj.getType() == GameObject.ENV_TYPE.GROUND) {
-                            ch.isOnGround(obj.getBounds());
+                            ch.isOnGround((Ground)obj);
                         } else {
                             // check if this is an obstacle
                             ch.detectCollision(obj.getBounds());

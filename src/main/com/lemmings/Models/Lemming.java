@@ -13,7 +13,7 @@ public class Lemming extends Character {
 
     @Override
     public void updatePosition() {
-        if (isGround) {
+        if (isGround()) {
             if (isMovingRight) {
                 // if we are moving right
                 x_pos += speed;
@@ -21,7 +21,7 @@ public class Lemming extends Character {
                 x_pos -= speed;
             }
 
-        } else if (!isGround) {
+        } else if (!isGround()) {
             y_pos += 7.5;
         }
 

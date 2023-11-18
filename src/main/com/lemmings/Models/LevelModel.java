@@ -2,7 +2,6 @@ package src.main.com.lemmings.Models;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import src.main.com.lemmings.Views.CharacterView;
@@ -20,14 +19,14 @@ public class LevelModel {
     final int MAX_CHARS = 10;
     // FIXME: Use generateMap function after testing!
     int[][] map = {
-            { 0, 0, 0, 0, 0, 0, 0, 0 }, // Row 0
-            { 0, 0, 0, 0, 0, 0, 0, 0 }, // Row 1
-            { 1, 1, 0, 0, 0, 0, 0, 0 }, // Row 2
-            { 0, 0, 0, 0, 0, 0, 0, 0 }, // Row 3
-            { 0, 2, 0, 0, 0, 0, 0, 0 }, // Row 4
-            { 1, 1, 1, 1, 1, 1, 1, 1 }, // Row 5
-            { 1, 1, 1, 1, 2, 0, 2, 1 }, // Row 6
-            { 1, 1, 1, 1, 1, 1, 1, 1 } // Row 7
+            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 1, 1, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 2, 0, 0, 0, 0, 0, 0 },
+            { 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 1, 1, 1, 1, 2, 0, 2, 1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1 }
     };
     // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
     private ArrayList<Character> characters = new ArrayList<>();
@@ -37,9 +36,7 @@ public class LevelModel {
     private long timer;
 
     public LevelModel() {
-
         loadLevel();
-
     }
 
     // FIXME: the sizes of the obstacles is incorrect
@@ -51,7 +48,6 @@ public class LevelModel {
 
     public void updateGameState(){
         gameObjects.clear();
-
     }
 
     public void setCharacterViews(CharacterView cView){
@@ -67,6 +63,11 @@ public class LevelModel {
             Character ch = new Lemming();
             // slightly offset each character
             ch.setPosition((i + 2) * 20, 100);
+
+            //TODO: For testing purposes only. Remove after testing!
+            if (i == 5) {
+                ch.setSkill(new Excavator());
+            }
             characters.add(ch);
         }
     }
