@@ -29,7 +29,7 @@ import src.main.com.lemmings.Views.CharacterView;
 public class LevelController implements GameObjectClickListener {
     private LevelModel lvl;
     private LevelView gameView;
-    private ArrayList<Character> characters;
+    // private ArrayList<Character> characters;
     private ArrayList<CharacterController> chControllers;
 
     public LevelController(LevelView gameView) {
@@ -40,34 +40,31 @@ public class LevelController implements GameObjectClickListener {
     private void initializeLevel(LevelView gameView) {
         this.lvl = new LevelModel();
         this.gameView = gameView;
-        this.chControllers = new ArrayList<>();
-        characters = lvl.getCharactersArray();
         lvl.createGameObjectsFromMap(); // populate game objects in Model
-        addObjectsToGameView(); // display game objects in game view
+        addObjectsToGameView(lvl.getGameObjects()); // display game objects in game view
 
         // initialize characters
-        ArrayList<CharacterView> cViews = createCharacterViews(); // create all character views
-        udpateCharacterViewsInGameModel(cViews); // add character views to game model
-        addCharacterViewsToGameView(gameView, cViews);// add views to gameView
-        createCharacterControllers();
-
+        udpateCharacterViewsInGameModel(createCharacterViews()); // add character views to game model
+        addCharacterViewsToGameView(gameView, lvl.getCharacterViews());// add views to gameView
+        this.chControllers = createCharacterControllers();
     }
 
-    private void addObjectsToGameView() {
-        ArrayList<GameObject> gameObjects = lvl.getGameObjects();
-        System.out.printf("Initializing game objects: %d", gameObjects.size());
+    private void addObjectsToGameView(ArrayList<GameObject>gameObjects) {
+
+        gameView.clearGameObjectsFromView();
         if (gameObjects.size() != 0) {
             for (GameObject go : gameObjects) {
                 gameView.addGameObjectsToView(go, JLayeredPane.DEFAULT_LAYER);
-                gameView.repaint();
             }
         } else {
             System.err.println("Unable to load Game Objects");
         }
+        gameView.repaint();
     }
 
     private ArrayList<CharacterView> createCharacterViews() {
         ArrayList<CharacterView> characterViews = new ArrayList<>();
+        ArrayList<Character> characters = lvl.getCharacters();
         for (Character ch : characters) {
             // initialize a new view
             CharacterView chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
@@ -86,18 +83,21 @@ public class LevelController implements GameObjectClickListener {
 
     private void addCharacterViewsToGameView(LevelView gameView, ArrayList<CharacterView> characterViews) {
         for (CharacterView cView : characterViews) {
-            gameView.addCharacterToView(cView, JLayeredPane.DEFAULT_LAYER);
+            gameView.addCharacterToView(cView, JLayeredPane.MODAL_LAYER);
         }
     }
 
-    private void createCharacterControllers() {
+    private ArrayList<CharacterController> createCharacterControllers() {
         ArrayList<CharacterView> cViews = lvl.getCharacterViews();
+        ArrayList<Character> characters = lvl.getCharacters();
+        ArrayList<CharacterController> characterControllers = new ArrayList<>();
         for (int i = 0; i < characters.size(); i++) {
             // create a new controller
             CharacterController ctrlr = new CharacterController(characters.get(i), cViews.get(i));
             ctrlr.updateCharacter();
-            chControllers.add(ctrlr);
+            characterControllers.add(ctrlr);
         }
+        return characterControllers;
     }
 
     private void addListeners() {
@@ -114,6 +114,7 @@ public class LevelController implements GameObjectClickListener {
 
                 // check for collisions
                 ArrayList<GameObject> env = lvl.getGameObjects();
+                ArrayList<Character> characters = lvl.getCharacters();
                 for (Character ch : characters) {
                     // check every game object
                     // reset for each loop
@@ -149,13 +150,16 @@ public class LevelController implements GameObjectClickListener {
     public void gameObjectClicked(GameObject clickedObject) {
         // retrieve the map coordinates of the clicked object
         Point xy = clickedObject.getRowAndCol();
+        // update gameObjects array
+        lvl.getGameObjects().remove(clickedObject);
+        // update map
+        lvl.setMap(lvl.removePointFromMap(xy));
+        // // recreate game objects
+        gameView.clearGameObjectsFromView();
+        // add the objects to gameview
+        addObjectsToGameView(lvl.getGameObjects());
+        // add characters back to gameView
+        addCharacterViewsToGameView(gameView, lvl.getCharacterViews());
 
-        // remove from map
-        int[][] updatedMap = lvl.removePointFromMap(xy);
-
-        // update Lvl model
-        lvl.updateGameState();
-        addObjectsToGameView();
     }
-
 }

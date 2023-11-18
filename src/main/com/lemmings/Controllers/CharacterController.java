@@ -29,5 +29,4 @@ public class CharacterController {
         chView.update(ch.getXPosition(), ch.getYPosition());
 
     }
-    
 }

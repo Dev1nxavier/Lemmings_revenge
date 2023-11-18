@@ -24,8 +24,8 @@ public class LevelModel {
             { 0, 0, 0, 0, 0, 0, 0, 0 }, // Row 1
             { 1, 1, 0, 0, 0, 0, 0, 0 }, // Row 2
             { 0, 0, 0, 0, 0, 0, 0, 0 }, // Row 3
-            { 0, 2, 0, 0, 0, 0, 2, 0 }, // Row 4
-            { 1, 1, 1, 1, 1, 0, 1, 1 }, // Row 5
+            { 0, 2, 0, 0, 0, 0, 0, 0 }, // Row 4
+            { 1, 1, 1, 1, 1, 1, 1, 1 }, // Row 5
             { 1, 1, 1, 1, 2, 0, 2, 1 }, // Row 6
             { 1, 1, 1, 1, 1, 1, 1, 1 } // Row 7
     };
@@ -46,8 +46,6 @@ public class LevelModel {
     // primes the map with obstacles
     private void loadLevel() {
 
-        // // generateMap(); // random level generator
-        // generateEnvironmentObjects();
         generateCharacters();
     }
 
@@ -75,6 +73,7 @@ public class LevelModel {
 
     // FIXME: dont hardcode! Calculate!
     public void createGameObjectsFromMap() {
+        gameObjects.clear();
         // add obstacles
         int px = 0; // start at top of screen
         int py = 0;
@@ -151,6 +150,7 @@ public class LevelModel {
     }
 
     public void setMap(int[][] map) {
+        //make sure map is empty
         this.map = map;
     }
 

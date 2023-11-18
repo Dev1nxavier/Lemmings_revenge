@@ -33,18 +33,13 @@ public abstract class Character {
 
     public void toggleDirection() {
         isMovingRight = !isMovingRight;
+        System.out.println("moving right? " + isMovingRight);
     }
 
     public abstract void detectCollision(Rectangle object);
 
     // this method detects the right and left bounds of the game panel.
-    public void detectBounds() {
-        if (this.getXPosition() >= 600 || this.getXPosition() <= 0) {
-            // update direction
-            this.toggleDirection();
-            return;
-        }
-    }
+    public abstract void detectBounds();
 
     // returns the characters hitbox
     public Rectangle getBounds() {

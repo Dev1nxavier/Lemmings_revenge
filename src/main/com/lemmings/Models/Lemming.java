@@ -41,4 +41,16 @@ public class Lemming extends Character {
             this.toggleDirection();
         }
     }
+
+        // this method detects the right and left bounds of the game panel.
+        @Override
+        public void detectBounds() {
+            if (this.getXPosition() >= 600) {
+                // update direction
+                this.isMovingRight = false;
+            }
+            if (this.getXPosition() <= 0) {
+                this.isMovingRight = true;
+            }
+        }
 }

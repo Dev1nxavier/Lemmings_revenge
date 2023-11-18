@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -80,6 +79,10 @@ public class LevelView extends JPanel {
        layeredPane.add(mouseLocation, 1);
        mouseLocation.setBounds(500, 100, 100, 200);
         
+    }
+
+    public void clearGameObjectsFromView() {
+        this.layeredPane.removeAll();
     }
 
 }
