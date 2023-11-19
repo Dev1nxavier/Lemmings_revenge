@@ -20,6 +20,7 @@ public class Miner extends Excavator {
 
         // System.out.printf("Miner.useSkill:\nObject: %d\nLast ground: %d", c.getCurrentGround().getUniqueId(), c.getLastGround().getUniqueId() );
         if (c.getLastGround().getxPos() != c.getCurrentGround().getxPos()) {
+            // c.updatePosition();
             return true;
         }
         return false;

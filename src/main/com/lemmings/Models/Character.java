@@ -108,7 +108,7 @@ public abstract class Character {
         if (this.currentGround != null
                 && (this.lastGround == null || this.lastGround.getUniqueId() != newGround.getUniqueId())) {
             this.lastGround = this.currentGround;
-            System.out.printf("Character.setLastGround:\nlast ground: %d\ncurrent ground: %d", getLastGround().getUniqueId(), getCurrentGround().getUniqueId());
+            System.out.printf("Character.setLastGround:\nlast ground: %d\ncurrent ground: %d\n", getLastGround().getUniqueId(), getCurrentGround().getUniqueId());
         }
     }
     

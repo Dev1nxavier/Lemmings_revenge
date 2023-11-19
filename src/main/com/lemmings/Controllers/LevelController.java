@@ -63,13 +63,13 @@ public class LevelController implements GameObjectClickListener {
     }
 
     private ArrayList<CharacterView> createCharacterViews() {
-        //FIXME: Move CharactersArray to LevelModel
+        // FIXME: Move CharactersArray to LevelModel
         ArrayList<CharacterView> characterViews = new ArrayList<>();
         ArrayList<Character> characters = lvl.getCharacters();
         for (Character ch : characters) {
             // initialize a new view
             CharacterView chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
-            if (ch.getSkillType()!=null) {
+            if (ch.getSkillType() != null) {
                 chView.hasSkill = true;
             }
             lvl.setCharacterViews(chView);
@@ -116,17 +116,8 @@ public class LevelController implements GameObjectClickListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // update character
-                for (CharacterController ctrl : chControllers) {
-
-                    GameObject collider = ctrl.detectCollision(env); // returns the object that this character collides
-                                                                     // with
-                    GameObject ground = ctrl.detectGround(env); // returns the ground object that this character is
-                                                                // standing on
-                    invokeSkill(ctrl, ground);
-                    ctrl.updateCharacter();
-                }
+                updateGameState(env);
             }
-
         });
 
         timer.start();
@@ -141,6 +132,16 @@ public class LevelController implements GameObjectClickListener {
         // add click listeners to each Ground object
         for (GameObject obj : lvl.getGameObjects()) {
             obj.setGameObjectClickListener(this);
+        }
+    }
+
+    private void updateGameState(ArrayList<GameObject>env) {
+        for (CharacterController ctrl : chControllers) {
+            ctrl.detectCollision(env); // returns the object that this character collides with
+            GameObject ground = ctrl.detectGround(env); // returns the ground object that this character is standing on
+            invokeSkill(ctrl, ground);
+            ctrl.detectGround(env);
+            ctrl.updateCharacter();
         }
     }
 
@@ -181,6 +182,6 @@ public class LevelController implements GameObjectClickListener {
         addObjectsToGameView(lvl.getGameObjects());
         // add characters back to gameView
         addCharacterViewsToGameView(gameView, lvl.getCharacterViews());
-
+        // recheck
     }
 }
