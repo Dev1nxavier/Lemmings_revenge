@@ -28,11 +28,13 @@ public abstract class GameObject extends JLabel {
     private int height;
     private Point rowAndCol;
     private static int id;
+    private int uniqueID;
     private ENV_TYPE type;
     private GameObjectClickListener mouseClickListener;
 
     public GameObject(int x, int y, int width, int height, Point rowAndCol) {
         id++;
+        this.uniqueID = this.id;
         this.rowAndCol = rowAndCol;
         this.xPos = x;
         this.yPos = y;
@@ -135,12 +137,12 @@ public abstract class GameObject extends JLabel {
         this.rowAndCol = rowAndCol;
     }
 
-    public static int getId() {
-        return id;
+    public int getUniqueId() {
+        return this.uniqueID;
     }
 
-    public static void setId(int id) {
-        GameObject.id = id;
+    public void setUniqueId(int id) {
+        this.uniqueID = id;
     }
 
     /**

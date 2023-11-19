@@ -1,6 +1,7 @@
 package src.main.com.lemmings.Models;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 /**
  * Lemming.java
@@ -24,22 +25,29 @@ public class Lemming extends Character {
         } else if (!isGround()) {
             y_pos += 7.5;
         }
-
     }
 
-    // this method detects if the character's rectangular hitbox has crossed the x,y
-    // coordinates of an obstacle
     @Override
-    public void detectCollision(Rectangle ob) {
-        Rectangle r = this.getBounds();
+    public GameObject detectCollision(ArrayList<GameObject> gameObjects) {
 
-        // Check if there is overlap along the X axis and Y axis
-        boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
-        boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
+        GameObject collider = null;
 
-        if (xOverlap && yOverlap) {
-            this.toggleDirection();
+        for (GameObject go : gameObjects) {
+            if (go.getType() != GameObject.ENV_TYPE.GROUND) {
+                Rectangle r = this.getBounds();
+                Rectangle ob = go.getBounds();
+                // Check if there is overlap along the X axis and Y axis
+                boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
+                boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
+
+                if (xOverlap && yOverlap) {
+                    this.toggleDirection();
+                    collider = go;
+                    break;
+                }
+            }
         }
+        return collider;
     }
 
     // this method detects the right and left bounds of the game panel.

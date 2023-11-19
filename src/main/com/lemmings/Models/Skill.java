@@ -9,5 +9,15 @@ package src.main.com.lemmings.Models;
  * 
  */
 public interface Skill {
+    enum SKILL_TYPE{
+        BUILDER,
+        EXCAVATOR,
+        MINER,
+        BLOCKER,
+        BOMBER,
+        CLIMBER
+    }
+    public boolean useSkill(Character c, GameObject obj);
     public boolean useSkill(Character c);
+    public SKILL_TYPE getSkillType();
 }

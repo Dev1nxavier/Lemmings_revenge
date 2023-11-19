@@ -1,6 +1,9 @@
 package src.main.com.lemmings.Models;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+
+import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
 
 /**
  * Character.java
@@ -19,7 +22,9 @@ public abstract class Character {
     protected boolean isCollided;
     private boolean isGround = false;
     private Ground currentGround = null;
+    private Ground lastGround = null;
     private Skill skill;
+    private SKILL_TYPE type;
 
     public int speed;
 
@@ -29,6 +34,7 @@ public abstract class Character {
         this.y_pos = 200;
         isCollided = false;
         speed = 5;
+        this.type = null;
     }
 
     // updates character's position
@@ -36,10 +42,9 @@ public abstract class Character {
 
     public void toggleDirection() {
         isMovingRight = !isMovingRight;
-        System.out.println("moving right? " + isMovingRight);
     }
 
-    public abstract void detectCollision(Rectangle object);
+    public abstract GameObject detectCollision(ArrayList<GameObject> object);
 
     // this method detects the right and left bounds of the game panel.
     public abstract void detectBounds();
@@ -62,31 +67,51 @@ public abstract class Character {
         return this.y_pos;
     }
 
-    public void setGround(Ground g) {
-        this.currentGround = g;
-    }
-
-    public boolean useSkill() {
-        if (skill.useSkill(this) == true) {
-            return true;
-        }
-        return false;
+    /**
+     * This method calls the Skill class's useSkill method for the instance of
+     * this Skill class assigned to this Character model.
+     * 
+     * @param ground
+     * 
+     * @return true if the Skill class's useSkill method returns true, otherwise
+     *         false.
+     */
+    public boolean useSkill(GameObject ground) {
+        boolean val = this.skill.useSkill(this);
+        return val;
     }
 
     // this method determines if object has collided with an obstacle of type
-    // 'ground'. If yes, it sets isGround to true and returns the current ground
-    // object.
-    public void isOnGround(Ground g) {
-
-        Rectangle r = this.getBounds();
-        Rectangle ground = g.getBounds();
-        if (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + C_WIDTH > ground.x) {
-            isGround = true;
-            setGround(g);
+    // 'ground'. If yes, it sets isGround to true.
+    public GameObject isOnGround(ArrayList<GameObject> gameObjects) {
+        GameObject tempGround = null;
+        for (GameObject g : gameObjects) {
+            if (g.getType() == GameObject.ENV_TYPE.GROUND) {
+                Rectangle r = this.getBounds();
+                Rectangle ground = g.getBounds();
+                if (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + C_WIDTH > ground.x) {
+                    isGround = true;
+                    tempGround = g;
+                }
+            }
         }
 
+        if (tempGround != null) {
+            setLastGround(tempGround); //update last
+            setCurrentGround((Ground) tempGround); // update current
+        }
+
+        return getCurrentGround();
     }
 
+    private void setLastGround(GameObject newGround) {
+        if (this.currentGround != null
+                && (this.lastGround == null || this.lastGround.getUniqueId() != newGround.getUniqueId())) {
+            this.lastGround = this.currentGround;
+            System.out.printf("Character.setLastGround:\nlast ground: %d\ncurrent ground: %d", getLastGround().getUniqueId(), getCurrentGround().getUniqueId());
+        }
+    }
+    
     public boolean isMovingRight() {
         return isMovingRight;
     }
@@ -136,7 +161,7 @@ public abstract class Character {
     }
 
     public Ground getCurrentGround() {
-        return currentGround;
+        return this.currentGround;
     }
 
     public void setCurrentGround(Ground currentGround) {
@@ -153,9 +178,22 @@ public abstract class Character {
 
     public void setSkill(Skill skill) {
         this.skill = skill;
+        setSkillType();
     }
 
-    public Skill getSkill(){
+    public Skill getSkill() {
         return this.skill;
+    }
+
+    public void setSkillType() {
+        this.type = getSkill().getSkillType();
+    }
+
+    public SKILL_TYPE getSkillType() {
+        return this.type;
+    }
+
+    public Ground getLastGround() {
+        return this.lastGround;
     }
 }

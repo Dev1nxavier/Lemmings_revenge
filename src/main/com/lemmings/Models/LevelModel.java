@@ -24,9 +24,9 @@ public class LevelModel {
             { 1, 1, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 2, 0, 0, 0, 0, 0, 0 },
-            { 1, 1, 1, 1, 1, 1, 1, 1 },
-            { 1, 1, 1, 1, 2, 0, 2, 1 },
-            { 1, 1, 1, 1, 1, 1, 1, 1 }
+            { 1, 1, 1, 1, 1, 0, 1, 1 },
+            { 1, 1, 1, 1, 1, 0, 1, 1 },
+            { 1, 1, 0, 1, 1, 1, 1, 1 }
     };
     // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
     private ArrayList<Character> characters = new ArrayList<>();
@@ -46,15 +46,15 @@ public class LevelModel {
         generateCharacters();
     }
 
-    public void updateGameState(){
+    public void updateGameState() {
         gameObjects.clear();
     }
 
-    public void setCharacterViews(CharacterView cView){
+    public void setCharacterViews(CharacterView cView) {
         characterViews.add(cView);
     }
 
-    public ArrayList<CharacterView>getCharacterViews(){
+    public ArrayList<CharacterView> getCharacterViews() {
         return this.characterViews;
     }
 
@@ -64,10 +64,12 @@ public class LevelModel {
             // slightly offset each character
             ch.setPosition((i + 2) * 20, 100);
 
-            //TODO: For testing purposes only. Remove after testing!
-            if (i == 5) {
-                ch.setSkill(new Excavator());
+            // ----------------------------------
+            // TODO: For testing purposes only. Remove after testing!
+            if (i == 0) {
+                ch.setSkill(new Miner());
             }
+            // ----------------------------------
             characters.add(ch);
         }
     }
@@ -151,7 +153,7 @@ public class LevelModel {
     }
 
     public void setMap(int[][] map) {
-        //make sure map is empty
+        // make sure map is empty
         this.map = map;
     }
 

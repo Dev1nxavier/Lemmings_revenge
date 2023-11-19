@@ -15,6 +15,7 @@ public class CharacterView extends JLabel {
     private int posX, posY;
     private final int WIDTH = 10;
     private final int HEIGHT = 20;
+    public boolean hasSkill = false;
 
     public CharacterView(int x, int y) {
         this.posX = x;
@@ -81,8 +82,23 @@ public class CharacterView extends JLabel {
 
         try {
             if (animationFrames.get(currentFrame) != null) {
-                g2d.drawImage(animationFrames.get(currentFrame), 0, 0, WIDTH, HEIGHT, null); // draw it relative to this                                                                               // frame
-            }else{
+                g2d.drawImage(animationFrames.get(currentFrame), 0, 0, WIDTH, HEIGHT, null); // draw it relative to this
+
+                if (hasSkill) {
+                    // draw icon over character
+                    int iconWidth = 20;
+                    int iconHeight = 10;
+                    int iconPosX = (this.WIDTH - iconWidth) / 2; // center horizontally
+                    int iconPosY = -5; // adjust as needed
+
+                    // make three points for triangle
+                    int[] triangleBase = { iconPosX, iconPosY + iconWidth / 2, iconPosX + iconWidth };
+                    int[] triangleVert = { iconPosY, iconPosY + iconHeight, iconPosY };
+                    g2d.setColor(Color.magenta);
+                    g2d.fillPolygon(triangleBase, triangleVert, 3);
+                }
+
+            } else {
                 System.err.println("Unable to load character images");
             }
         } catch (Exception e) {

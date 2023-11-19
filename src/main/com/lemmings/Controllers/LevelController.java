@@ -3,14 +3,13 @@ package src.main.com.lemmings.Controllers;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectClickListener;
-import src.main.com.lemmings.Models.Ground;
 import src.main.com.lemmings.Models.LevelModel;
+import src.main.com.lemmings.Models.Skill;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.Views.CharacterView;
 
@@ -50,7 +49,7 @@ public class LevelController implements GameObjectClickListener {
         this.chControllers = createCharacterControllers();
     }
 
-    private void addObjectsToGameView(ArrayList<GameObject>gameObjects) {
+    private void addObjectsToGameView(ArrayList<GameObject> gameObjects) {
 
         gameView.clearGameObjectsFromView();
         if (gameObjects.size() != 0) {
@@ -64,11 +63,15 @@ public class LevelController implements GameObjectClickListener {
     }
 
     private ArrayList<CharacterView> createCharacterViews() {
+        //FIXME: Move CharactersArray to LevelModel
         ArrayList<CharacterView> characterViews = new ArrayList<>();
         ArrayList<Character> characters = lvl.getCharacters();
         for (Character ch : characters) {
             // initialize a new view
             CharacterView chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
+            if (ch.getSkillType()!=null) {
+                chView.hasSkill = true;
+            }
             lvl.setCharacterViews(chView);
             // add view to panel
             characterViews.add(chView);
@@ -106,36 +109,24 @@ public class LevelController implements GameObjectClickListener {
         // refresh at frame rate
         Timer timer = new Timer(100, new ActionListener() {
 
+            // check for collisions
+            ArrayList<GameObject> env = lvl.getGameObjects();
+            ArrayList<Character> characters = lvl.getCharacters();
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 // update character
                 for (CharacterController ctrl : chControllers) {
+
+                    GameObject collider = ctrl.detectCollision(env); // returns the object that this character collides
+                                                                     // with
+                    GameObject ground = ctrl.detectGround(env); // returns the ground object that this character is
+                                                                // standing on
+                    invokeSkill(ctrl, ground);
                     ctrl.updateCharacter();
-
-                    //FIXME: Dont invoke twice
-                    if (ctrl.invokeSkill()!=null){
-                        gameObjectClicked(ctrl.invokeSkill());
-                    }
-                }
-
-                // check for collisions
-                ArrayList<GameObject> env = lvl.getGameObjects();
-                ArrayList<Character> characters = lvl.getCharacters();
-                for (Character ch : characters) {
-                    // check every game object
-                    // reset for each loop
-                    ch.setIsGround(false);
-                    ch.setCurrentGround(null);
-                    for (GameObject obj : env) {
-                        if (obj.getType() == GameObject.ENV_TYPE.GROUND) {
-                            ch.isOnGround((Ground)obj);
-                        } else {
-                            // check if this is an obstacle
-                            ch.detectCollision(obj.getBounds());
-                        }
-                    }
                 }
             }
+
         });
 
         timer.start();
@@ -150,6 +141,29 @@ public class LevelController implements GameObjectClickListener {
         // add click listeners to each Ground object
         for (GameObject obj : lvl.getGameObjects()) {
             obj.setGameObjectClickListener(this);
+        }
+    }
+
+    private void invokeSkill(CharacterController ctrl, GameObject ground) {
+        try {
+            Skill.SKILL_TYPE type = ctrl.getSkillType();
+            if (type != null && ground != null && ctrl.invokeSkill(ground)) {
+                switch (type) {
+                    case EXCAVATOR:
+                        // dig down two levels
+                        gameObjectClicked(ground);
+                        break;
+                    case MINER:
+                        // dig diagonally
+                        gameObjectClicked(ground);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            ;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
