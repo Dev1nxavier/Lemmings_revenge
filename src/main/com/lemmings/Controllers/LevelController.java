@@ -11,7 +11,10 @@ import src.main.com.lemmings.Models.GameObjectClickListener;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.Skill;
 import src.main.com.lemmings.Views.LevelView;
+import src.main.com.lemmings.Views.SkillIcon;
+import src.main.com.lemmings.utilities.ImageLoader;
 import src.main.com.lemmings.Views.CharacterView;
+import src.main.com.lemmings.Views.GameView;
 
 /**
  * LevelController.java
@@ -70,7 +73,10 @@ public class LevelController implements GameObjectClickListener {
             // initialize a new view
             CharacterView chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
             if (ch.getSkillType() != null) {
-                chView.hasSkill = true;
+                SkillIcon skillIcon = new SkillIcon(ImageLoader.GAME_IMAGES.get("miner_icon.png"), ch.getXPosition(), ch.getYPosition()+30);
+                chView.setSkillIcon(skillIcon);
+                lvl.addSkillToSkillViews(skillIcon);
+
             }
             lvl.setCharacterViews(chView);
             // add view to panel
@@ -88,16 +94,16 @@ public class LevelController implements GameObjectClickListener {
     private void addCharacterViewsToGameView(LevelView gameView, ArrayList<CharacterView> characterViews) {
         for (CharacterView cView : characterViews) {
             gameView.addCharacterToView(cView, JLayeredPane.MODAL_LAYER);
+            if (cView.getSkillIcon()!=null) {
+                gameView.addSkillIconToView(cView.getSkillIcon(), JLayeredPane.MODAL_LAYER);
+            }
         }
     }
 
     private ArrayList<CharacterController> createCharacterControllers() {
-        ArrayList<CharacterView> cViews = lvl.getCharacterViews();
-        ArrayList<Character> characters = lvl.getCharacters();
         ArrayList<CharacterController> characterControllers = new ArrayList<>();
-        for (int i = 0; i < characters.size(); i++) {
-            // create a new controller
-            CharacterController ctrlr = new CharacterController(characters.get(i), cViews.get(i));
+        for (int i = 0; i < lvl.getCharacters().size(); i++) {
+            CharacterController ctrlr = new CharacterController(lvl.getCharacter(i), (CharacterView)lvl.getGameView(i));
             ctrlr.updateCharacter();
             characterControllers.add(ctrlr);
         }
@@ -111,7 +117,7 @@ public class LevelController implements GameObjectClickListener {
 
             // check for collisions
             ArrayList<GameObject> env = lvl.getGameObjects();
-            ArrayList<Character> characters = lvl.getCharacters();
+            // ArrayList<Character> characters = lvl.getCharacters();
 
             @Override
             public void actionPerformed(ActionEvent e) {

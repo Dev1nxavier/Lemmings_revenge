@@ -193,6 +193,15 @@ public abstract class Character {
         return this.type;
     }
 
+    public boolean removeSkill(){
+        this.type = null;
+        setSkill(null);
+        if (getSkill() == null) {
+            return true;
+        }
+        return false;
+    }
+
     public Ground getLastGround() {
         return this.lastGround;
     }

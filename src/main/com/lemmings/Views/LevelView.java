@@ -34,7 +34,7 @@ public class LevelView extends JPanel {
 
         layoutComponents();
     }
-    
+
     private void layoutComponents() {
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -51,6 +51,14 @@ public class LevelView extends JPanel {
         repaint();
     }
 
+    // TODO: Make an abstract CharacterView class!!!
+    public void addSkillIconToView(SkillIcon skillIcon, int layer) {
+
+        layeredPane.add(skillIcon, Integer.valueOf(layer));
+        skillIcon.setBounds(skillIcon.getPosX(), skillIcon.getPosY(), skillIcon.getWIDTH(), skillIcon.getHEIGHT());
+        repaint();
+    }
+
     public void addGameObjectsToView(GameObject go, int layer) {
         layeredPane.add(go, Integer.valueOf(layer));
         layeredPane.revalidate();
@@ -60,7 +68,7 @@ public class LevelView extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-  
+
         // typecast to Graphics2D for finer control
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
@@ -75,10 +83,10 @@ public class LevelView extends JPanel {
         TextArea mouseLocation = new TextArea(1, 20);
         mouseLocation.setForeground(Color.WHITE);
         mouseLocation.setBackground(Color.BLACK);
-        mouseLocation.setText(""+mouseLoc.x+","+mouseLoc.y);
-       layeredPane.add(mouseLocation, 1);
-       mouseLocation.setBounds(500, 100, 100, 200);
-        
+        mouseLocation.setText("" + mouseLoc.x + "," + mouseLoc.y);
+        layeredPane.add(mouseLocation, 1);
+        mouseLocation.setBounds(500, 100, 100, 200);
+
     }
 
     public void clearGameObjectsFromView() {

@@ -5,9 +5,9 @@ package src.main.com.lemmings.Models;
  */
 public class Excavator implements Skill {
     private final Skill.SKILL_TYPE type = SKILL_TYPE.EXCAVATOR;
-
+    private int count; // counts the number of times this skill can be invoked
     public Excavator(){
-        
+        count = 2;
     }
 
     /**
@@ -20,9 +20,10 @@ public class Excavator implements Skill {
     public boolean useSkill(Character c, GameObject obj) {
         // TODO: this skill removes a block of ground directly beneath character
         // check if object is ground and...
-        if (c.isGround()) {
+        if (c.isGround() && decrementCount() >0) {
             return true;
         }
+        // c.removeSkill();
         return false;
     }
 
@@ -37,6 +38,23 @@ public class Excavator implements Skill {
             return true;
         }
         return false;
+    }
+
+    public int getCount(){
+        return this.count;
+    }
+
+    public void setCount(int count){
+        this.count = count;
+    }
+
+    /**
+     * Decrements count and returns remaining count. 
+     * @return the remaining count of this Skill instance.
+     */
+    public int decrementCount(){
+       this.count--;
+       return getCount();
     }
 
 }

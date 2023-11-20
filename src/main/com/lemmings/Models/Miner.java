@@ -7,6 +7,7 @@ public class Miner extends Excavator {
     private final Skill.SKILL_TYPE type = SKILL_TYPE.MINER;
 
     public Miner() {
+        setCount(2);
     };
 
     @Override
@@ -16,14 +17,13 @@ public class Miner extends Excavator {
 
     @Override
     public boolean useSkill(Character c) {
-        // put an arrow on him
-
-        // System.out.printf("Miner.useSkill:\nObject: %d\nLast ground: %d", c.getCurrentGround().getUniqueId(), c.getLastGround().getUniqueId() );
-        if (c.getLastGround().getxPos() != c.getCurrentGround().getxPos()) {
-            // c.updatePosition();
-            return true;
+        if (getCount() > 0) {
+            if (c.getLastGround().getxPos() != c.getCurrentGround().getxPos()) {
+                decrementCount();
+                return true;
+            }
         }
+        // c.removeSkill();
         return false;
     }
-
 }

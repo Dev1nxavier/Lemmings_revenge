@@ -32,10 +32,13 @@ public class CharacterController {
 
     /**
      * This method checks if the character has an assigned skill. If it does, it
-     * checks the result of the useSkill method and returns a payload
+     * checks the result of the useSkill method and returns true if the skill was used. 
      */
     public boolean invokeSkill(GameObject ground) {
         if (ch.getSkillType() != null) {
+            if (ch.getSkill().getCount() <=0) {
+                chView.setSkillIcon(null);
+            }
             return ch.useSkill(ground);
         }
         return false;

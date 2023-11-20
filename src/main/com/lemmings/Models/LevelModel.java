@@ -2,9 +2,10 @@ package src.main.com.lemmings.Models;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Random;
 
 import src.main.com.lemmings.Views.CharacterView;
+import src.main.com.lemmings.Views.GameView;
+import src.main.com.lemmings.Views.SkillIcon;
 
 /**
  * LevelModel.java
@@ -26,12 +27,13 @@ public class LevelModel {
             { 0, 2, 0, 0, 0, 0, 0, 0 },
             { 1, 1, 1, 1, 1, 0, 1, 1 },
             { 1, 1, 1, 1, 1, 0, 1, 1 },
-            { 1, 1, 0, 1, 1, 1, 1, 1 }
+            { 1, 1, 0, 0, 0, 1, 1, 1 }
     };
     // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
     private ArrayList<Character> characters = new ArrayList<>();
     private ArrayList<CharacterView> characterViews = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private ArrayList<GameView>skillViews = new ArrayList<>();
     private int score = 0;
     private long timer;
 
@@ -56,6 +58,19 @@ public class LevelModel {
 
     public ArrayList<CharacterView> getCharacterViews() {
         return this.characterViews;
+    }
+
+    
+    public Character getCharacter(int i){
+        return this.characters.get(i);
+    }
+
+    public GameView getGameView(int i){
+        return this.characterViews.get(i);
+    }
+
+    public void addSkillToSkillViews(SkillIcon skill){
+        this.skillViews.add(skill);
     }
 
     public void generateCharacters() {
@@ -96,27 +111,6 @@ public class LevelModel {
             }
             px = 0;
             py += 75;
-        }
-    }
-
-    private void generateMap() {
-
-        // last three rows are ground
-        int isGround = map.length - 3;
-        // randomly pick between air and obstacle
-        Random rand = new Random();
-        for (int row = 0; row < map.length; row++) {
-            for (int col = 0; col < map.length; col++) {
-                if (row >= isGround) {
-                    map[row][col] = 1;
-                } else {
-                    if (rand.nextInt(2) == 1) {
-                        map[row][col] = 0;
-                    } else {
-                        map[row][col] = 2;
-                    }
-                }
-            }
         }
     }
 
