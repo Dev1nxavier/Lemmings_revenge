@@ -12,20 +12,20 @@ public class Lemming extends Character {
         super();
     }
 
-    @Override
-    public void updatePosition() {
-        if (isGround()) {
-            if (isMovingRight) {
-                // if we are moving right
-                x_pos += speed;
-            } else {
-                x_pos -= speed;
-            }
+    // @Override
+    // public void updatePosition() {
+    //     if (isGround()) {
+    //         if (isMovingRight) {
+    //             // if we are moving right
+    //             x_pos += speed;
+    //         } else {
+    //             x_pos -= speed;
+    //         }
 
-        } else if (!isGround()) {
-            y_pos += 7.5;
-        }
-    }
+    //     } else if (!isGround()) {
+    //         y_pos += 7.5;
+    //     }
+    // }
 
     @Override
     public GameObject detectCollision(ArrayList<GameObject> gameObjects) {
@@ -48,15 +48,5 @@ public class Lemming extends Character {
             }
         }
         return collider;
-    }
-
-    // this method detects the right and left bounds of the game panel.
-    @Override
-    public void detectBounds() {
-        if (this.getXPosition() >= 550 || this.getXPosition() <= 0) {
-            // update direction
-            this.toggleDirection();
-            return;
-        }
     }
 }

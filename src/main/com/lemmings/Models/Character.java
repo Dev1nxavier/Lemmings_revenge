@@ -14,9 +14,10 @@ import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
  *       this class models a character.
  */
 public abstract class Character {
+    private static final int GRAVITY = 8;
     protected boolean isMovingRight;
-    public int x_pos;
-    public int y_pos;
+    private int x_pos;
+    private int y_pos;
     private final int C_HEIGHT = 20;
     private final int C_WIDTH = 10;
     protected boolean isCollided;
@@ -38,7 +39,21 @@ public abstract class Character {
     }
 
     // updates character's position
-    public abstract void updatePosition();
+    public void updatePosition() {
+        System.out.println("IsGround: " + isGround());
+        if (isGround())
+            moveHorizontally();
+        else
+            moveVertically();
+    };
+
+    private void moveHorizontally() {
+        x_pos += isMovingRight ? speed : -speed;
+    }
+
+    private void moveVertically() {
+        y_pos += GRAVITY;
+    }
 
     public void toggleDirection() {
         isMovingRight = !isMovingRight;
@@ -47,7 +62,13 @@ public abstract class Character {
     public abstract GameObject detectCollision(ArrayList<GameObject> object);
 
     // this method detects the right and left bounds of the game panel.
-    public abstract void detectBounds();
+    public void detectBounds() {
+        if (this.getXPosition() >= 595 || this.getXPosition() <= 0) {
+            // update direction
+            this.toggleDirection();
+            return;
+        }
+    }
 
     // returns the characters hitbox
     public Rectangle getBounds() {
@@ -87,9 +108,12 @@ public abstract class Character {
         GameObject tempGround = null;
         for (GameObject g : gameObjects) {
             if (g.getType() == GameObject.ENV_TYPE.GROUND) {
+                System.out.println("Inside isOnGround");
                 Rectangle r = this.getBounds();
+                System.out.println("Character bounds: " + r);
                 Rectangle ground = g.getBounds();
-                if (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + C_WIDTH > ground.x) {
+                System.out.println("Ground bounds: " + ground);
+                if (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + r.width > ground.x) {
                     isGround = true;
                     tempGround = g;
                 }
@@ -97,7 +121,7 @@ public abstract class Character {
         }
 
         if (tempGround != null) {
-            setLastGround(tempGround); //update last
+            setLastGround(tempGround); // update last
             setCurrentGround((Ground) tempGround); // update current
         }
 
@@ -108,10 +132,11 @@ public abstract class Character {
         if (this.currentGround != null
                 && (this.lastGround == null || this.lastGround.getUniqueId() != newGround.getUniqueId())) {
             this.lastGround = this.currentGround;
-            System.out.printf("Character.setLastGround:\nlast ground: %d\ncurrent ground: %d\n", getLastGround().getUniqueId(), getCurrentGround().getUniqueId());
+            System.out.printf("Character.setLastGround:\nlast ground: %d\ncurrent ground: %d\n",
+                    getLastGround().getUniqueId(), getCurrentGround().getUniqueId());
         }
     }
-    
+
     public boolean isMovingRight() {
         return isMovingRight;
     }
@@ -193,7 +218,7 @@ public abstract class Character {
         return this.type;
     }
 
-    public boolean removeSkill(){
+    public boolean removeSkill() {
         this.type = null;
         setSkill(null);
         if (getSkill() == null) {
