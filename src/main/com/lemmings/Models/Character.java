@@ -40,7 +40,7 @@ public abstract class Character {
 
     // updates character's position
     public void updatePosition() {
-        System.out.println("IsGround: " + isGround());
+
         if (isGround())
             moveHorizontally();
         else
@@ -58,8 +58,6 @@ public abstract class Character {
     public void toggleDirection() {
         isMovingRight = !isMovingRight;
     }
-
-    public abstract GameObject detectCollision(ArrayList<GameObject> object);
 
     // this method detects the right and left bounds of the game panel.
     public void detectBounds() {
@@ -105,27 +103,27 @@ public abstract class Character {
     // this method determines if object has collided with an obstacle of type
     // 'ground'. If yes, it sets isGround to true.
     public GameObject isOnGround(ArrayList<GameObject> gameObjects) {
-        GameObject tempGround = null;
+        // GameObject tempGround = null;
+        setIsGround(false);
+
         for (GameObject g : gameObjects) {
             if (g.getType() == GameObject.ENV_TYPE.GROUND) {
-                System.out.println("Inside isOnGround");
-                Rectangle r = this.getBounds();
-                System.out.println("Character bounds: " + r);
-                Rectangle ground = g.getBounds();
-                System.out.println("Ground bounds: " + ground);
-                if (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + r.width > ground.x) {
-                    isGround = true;
-                    tempGround = g;
+                if (isOverlapping(this.getBounds(), g.getBounds())) {
+                    setIsGround(true);
+                    setLastGround(g);
+                    setCurrentGround((Ground) g);
+                    return g;
                 }
             }
         }
+        return null;
+    }
 
-        if (tempGround != null) {
-            setLastGround(tempGround); // update last
-            setCurrentGround((Ground) tempGround); // update current
-        }
+    private boolean isOverlapping(Rectangle Char, Rectangle g) {
+        Rectangle r = this.getBounds();
+        Rectangle ground = g.getBounds();
 
-        return getCurrentGround();
+        return (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + r.width > ground.x);
     }
 
     private void setLastGround(GameObject newGround) {
@@ -137,8 +135,26 @@ public abstract class Character {
         }
     }
 
-    public boolean isMovingRight() {
-        return isMovingRight;
+    public GameObject detectCollision(ArrayList<GameObject> gameObjects) {
+
+        GameObject collider = null;
+
+        for (GameObject go : gameObjects) {
+            if (go.getType() != GameObject.ENV_TYPE.GROUND) {
+                Rectangle r = this.getBounds();
+                Rectangle ob = go.getBounds();
+                // Check if there is overlap along the X axis and Y axis
+                boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
+                boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
+
+                if (xOverlap && yOverlap) {
+                    this.toggleDirection();
+                    collider = go;
+                    break;
+                }
+            }
+        }
+        return collider;
     }
 
     public void setMovingRight(boolean isMovingRight) {
