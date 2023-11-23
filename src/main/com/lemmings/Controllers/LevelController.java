@@ -14,7 +14,6 @@ import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.Views.SkillIcon;
 import src.main.com.lemmings.utilities.ImageLoader;
 import src.main.com.lemmings.Views.CharacterView;
-import src.main.com.lemmings.Views.GameView;
 
 /**
  * LevelController.java
@@ -48,8 +47,9 @@ public class LevelController implements GameObjectClickListener {
 
         // initialize characters
         updateCharacterViewsInGameModel(createCharacterViews()); // add character views to game model
-        addCharacterViewsToGameView(gameView, lvl.getCharacterViews());// add views to gameView
+        // addCharacterViewsToGameView(gameView, lvl.getCharacterViews());// add views to gameView
         this.chControllers = createCharacterControllers();
+        this.gameView.redrawView(lvl.getGameObjects(), lvl.getCharacterViews());
     }
 
     private void addObjectsToGameView(ArrayList<GameObject> gameObjects) {
@@ -57,7 +57,7 @@ public class LevelController implements GameObjectClickListener {
         gameView.clearGameObjectsFromView();
         if (gameObjects.size() != 0) {
             for (GameObject go : gameObjects) {
-                gameView.addGameObjectsToView(go, JLayeredPane.DEFAULT_LAYER);
+                gameView.addObjectToView(go, JLayeredPane.DEFAULT_LAYER);
             }
         } else {
             System.err.println("Unable to load Game Objects");
@@ -91,14 +91,14 @@ public class LevelController implements GameObjectClickListener {
         }
     }
 
-    private void addCharacterViewsToGameView(LevelView gameView, ArrayList<CharacterView> characterViews) {
-        for (CharacterView cView : characterViews) {
-            gameView.addCharacterToView(cView, JLayeredPane.MODAL_LAYER);
-            if (cView.getSkillIcon()!=null) {
-                gameView.addSkillIconToView(cView.getSkillIcon(), JLayeredPane.MODAL_LAYER);
-            }
-        }
-    }
+    // private void addCharacterViewsToGameView(LevelView gameView, ArrayList<CharacterView> characterViews) {
+    //     for (CharacterView cView : characterViews) {
+    //         gameView.addObjectToView(cView, JLayeredPane.MODAL_LAYER);
+    //         if (cView.getSkillIcon()!=null) {
+    //             gameView.addObjectToView(cView.getSkillIcon(), JLayeredPane.MODAL_LAYER);
+    //         }
+    //     }
+    // }
 
     private ArrayList<CharacterController> createCharacterControllers() {
         ArrayList<CharacterController> characterControllers = new ArrayList<>();
@@ -182,12 +182,6 @@ public class LevelController implements GameObjectClickListener {
         lvl.getGameObjects().remove(clickedObject);
         // update map
         lvl.setMap(lvl.removePointFromMap(xy));
-        // // recreate game objects
-        gameView.clearGameObjectsFromView();
-        // add the objects to gameview
-        addObjectsToGameView(lvl.getGameObjects());
-        // add characters back to gameView
-        addCharacterViewsToGameView(gameView, lvl.getCharacterViews());
-        // recheck
+        gameView.redrawView(lvl.getGameObjects(), lvl.getCharacterViews());
     }
 }

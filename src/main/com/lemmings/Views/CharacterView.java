@@ -24,18 +24,21 @@ public class CharacterView extends GameView {
 
     }
 
+    @Override
     public void update(int xPos, int yPos) {
         super.setPosX(xPos);
         super.setPosY(yPos);
         setCurrentFrame();
         
+        setCharacterViewBounds(xPos, yPos);
+    }
+
+    private void setCharacterViewBounds(int xPos, int yPos) {
         this.setBounds(getPosX(), getPosY(), WIDTH, HEIGHT);
 
         if (icon != null) {
             icon.update(xPos, yPos - 40);
         }
-
-        this.repaint();
     }
 
     public void setCurrentFrame() {
@@ -67,7 +70,5 @@ public class CharacterView extends GameView {
         } catch (Exception e) {
             System.out.println("Unable to load characters!");
         }
-
     }
-
 }

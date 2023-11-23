@@ -17,13 +17,21 @@ public class Miner extends Excavator {
 
     @Override
     public boolean useSkill(Character c) {
-        if (getCount() > 0) {
-            if (c.getLastGround().getxPos() != c.getCurrentGround().getxPos()) {
-                decrementCount();
-                return true;
+        try {
+            if (getCount() > 0) {
+                if (c.getLastGround().getxPos() != c.getCurrentGround().getxPos()) {
+                    decrementCount();
+                    return true;
+                }
+            } else {
+                c.removeSkill();
+
             }
+            return false;
+        } catch (Exception e) {
+            System.err.println("unable to update");
         }
-        // c.removeSkill();
+
         return false;
     }
 }

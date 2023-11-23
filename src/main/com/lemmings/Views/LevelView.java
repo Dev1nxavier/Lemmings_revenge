@@ -8,10 +8,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.utilities.ImageLoader;
 
@@ -20,14 +23,10 @@ import src.main.com.lemmings.utilities.ImageLoader;
  */
 public class LevelView extends JPanel {
     private JLayeredPane layeredPane; // for rendering characters
-    private final int HEIGHT = 600;
-    private final int WIDTH = 600;
-    // TODO: Delete after testing
-    public Point pointer;
-
+    private final int HEIGHT = 6000;
+    private final int WIDTH = 1000;
     private BufferedImage background;
     CharacterView lemming;
-
     int[][] map;
 
     public LevelView() {
@@ -43,23 +42,7 @@ public class LevelView extends JPanel {
         this.add(layeredPane, BorderLayout.CENTER);
     }
 
-    public void addCharacterToView(CharacterView chView, int layer) {
-
-        layeredPane.add(chView, Integer.valueOf(layer));
-        chView.setBounds(chView.getPosX(), chView.getPosY(), chView.getWIDTH(), chView.getHEIGHT());
-
-        repaint();
-    }
-
-    // TODO: Make an abstract CharacterView class!!!
-    public void addSkillIconToView(SkillIcon skillIcon, int layer) {
-
-        layeredPane.add(skillIcon, Integer.valueOf(layer));
-        skillIcon.setBounds(skillIcon.getPosX(), skillIcon.getPosY(), skillIcon.getWIDTH(), skillIcon.getHEIGHT());
-        repaint();
-    }
-
-    public void addGameObjectsToView(GameObject go, int layer) {
+    public void addObjectToView(JLabel go, int layer) {
         layeredPane.add(go, Integer.valueOf(layer));
         layeredPane.revalidate();
         layeredPane.repaint();
@@ -91,6 +74,16 @@ public class LevelView extends JPanel {
 
     public void clearGameObjectsFromView() {
         this.layeredPane.removeAll();
+        revalidate();
     }
 
+    public void redrawView(ArrayList<GameObject>gameObjects, ArrayList<CharacterView> characters){
+        clearGameObjectsFromView();
+        for (GameObject go : gameObjects) {
+            addObjectToView(go, JLayeredPane.DEFAULT_LAYER);
+        }
+        for (CharacterView chView : characters) {
+            addObjectToView(chView, JLayeredPane.MODAL_LAYER);
+        }
+    }
 }

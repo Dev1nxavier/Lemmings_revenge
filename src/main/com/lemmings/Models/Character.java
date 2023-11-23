@@ -26,6 +26,7 @@ public abstract class Character {
     private Ground lastGround = null;
     private Skill skill;
     private SKILL_TYPE type;
+    private ArrayList <CharacterModelListener> modelListeners;
 
     public int speed;
 
@@ -36,6 +37,24 @@ public abstract class Character {
         isCollided = false;
         speed = 5;
         this.type = null;
+    }
+
+    /**
+     * This method adds instances of a CharacterModelListener to this model
+     */
+    public void addListeners(CharacterModelListener modelListener) {
+        modelListeners.add(modelListener);
+    }
+
+    public void updateCharacterModel(){
+        updatePosition();
+        notifySubscribedWatchers();
+    }
+
+    private void notifySubscribedWatchers() {
+        for (CharacterModelListener listener : modelListeners) {
+            listener.onCharacterModelUpdate(this); // send this model through to subscribers
+        }
     }
 
     // updates character's position
@@ -130,8 +149,6 @@ public abstract class Character {
         if (this.currentGround != null
                 && (this.lastGround == null || this.lastGround.getUniqueId() != newGround.getUniqueId())) {
             this.lastGround = this.currentGround;
-            System.out.printf("Character.setLastGround:\nlast ground: %d\ncurrent ground: %d\n",
-                    getLastGround().getUniqueId(), getCurrentGround().getUniqueId());
         }
     }
 
@@ -245,5 +262,17 @@ public abstract class Character {
 
     public Ground getLastGround() {
         return this.lastGround;
+    }
+
+    /**
+     * InnerCharacter.java
+     * 
+     * This is an interclass-innerface that defines the event listener for the Character model
+     * It contains a single method for updating a View class on update
+     */
+    public interface CharacterModelListener {
+        
+        public void onCharacterModelUpdate(Character model);
+        
     }
 }
