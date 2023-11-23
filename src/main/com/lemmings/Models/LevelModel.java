@@ -82,7 +82,7 @@ public class LevelModel {
             // ----------------------------------
             // TODO: For testing purposes only. Remove after testing!
             if (i == 0) {
-                ch.setSkill(new Miner());
+                ch.setSkill(new Blocker());
             }
             // ----------------------------------
             characters.add(ch);

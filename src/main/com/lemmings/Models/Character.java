@@ -3,6 +3,7 @@ package src.main.com.lemmings.Models;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import src.main.com.lemmings.Controllers.CharacterController;
 import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
 
 /**
@@ -26,8 +27,9 @@ public abstract class Character {
     private Ground lastGround = null;
     private Skill skill;
     private SKILL_TYPE type;
-    private ArrayList <CharacterModelListener> modelListeners;
-
+    private ArrayList<CharacterModelListener> modelListeners;
+    private boolean isWalking;
+    private int delay = 0; // method execution delay
     public int speed;
 
     Character() {
@@ -37,6 +39,7 @@ public abstract class Character {
         isCollided = false;
         speed = 5;
         this.type = null;
+        this.isWalking = true;
     }
 
     /**
@@ -46,8 +49,10 @@ public abstract class Character {
         modelListeners.add(modelListener);
     }
 
-    public void updateCharacterModel(){
+    public void updateCharacterModel() {
+
         updatePosition();
+
         notifySubscribedWatchers();
     }
 
@@ -59,11 +64,14 @@ public abstract class Character {
 
     // updates character's position
     public void updatePosition() {
+        if (isGround()) {
+            if (isWalking) {
+                moveHorizontally();
+            }
 
-        if (isGround())
-            moveHorizontally();
-        else
+        } else {
             moveVertically();
+        }
     };
 
     private void moveHorizontally() {
@@ -114,8 +122,8 @@ public abstract class Character {
      * @return true if the Skill class's useSkill method returns true, otherwise
      *         false.
      */
-    public boolean useSkill(GameObject ground) {
-        boolean val = this.skill.useSkill(this);
+    public boolean useSkill(CharacterController chController) {
+        boolean val = this.skill.useSkill(this, chController);
         return val;
     }
 
@@ -152,26 +160,31 @@ public abstract class Character {
         }
     }
 
-    public GameObject detectCollision(ArrayList<GameObject> gameObjects) {
+    public GameObject detectCollisions(ArrayList<GameObject> gameObjects) {
 
         GameObject collider = null;
 
         for (GameObject go : gameObjects) {
             if (go.getType() != GameObject.ENV_TYPE.GROUND) {
-                Rectangle r = this.getBounds();
-                Rectangle ob = go.getBounds();
-                // Check if there is overlap along the X axis and Y axis
-                boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
-                boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
-
-                if (xOverlap && yOverlap) {
-                    this.toggleDirection();
-                    collider = go;
-                    break;
-                }
+                collider = detectCollision(go.getBounds()) ? go : null; 
             }
         }
+
         return collider;
+    }
+
+    public boolean detectCollision(Rectangle objectBounds) {
+        Rectangle ob = objectBounds;
+        Rectangle r = this.getBounds();
+        // Check if there is overlap along the X axis and Y axis
+        boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
+        boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
+
+        if (xOverlap && yOverlap) {
+            this.toggleDirection();
+            return true;
+        }
+        return false;
     }
 
     public void setMovingRight(boolean isMovingRight) {
@@ -264,15 +277,28 @@ public abstract class Character {
         return this.lastGround;
     }
 
+    public void setIsWalking(boolean isWalking) {
+        this.isWalking = isWalking;
+    }
+
+    public int getDelay() {
+        return this.delay;
+    }
+
+    // public void setIsWalking(boolean isWalking) {
+    // this.isWalking = isWalking;
+    // }
+
     /**
      * InnerCharacter.java
      * 
-     * This is an interclass-innerface that defines the event listener for the Character model
+     * This is an interclass-innerface that defines the event listener for the
+     * Character model
      * It contains a single method for updating a View class on update
      */
     public interface CharacterModelListener {
-        
+
         public void onCharacterModelUpdate(Character model);
-        
+
     }
 }

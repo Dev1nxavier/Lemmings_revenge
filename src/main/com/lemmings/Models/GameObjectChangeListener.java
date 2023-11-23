@@ -8,7 +8,8 @@ package src.main.com.lemmings.Models;
  * 
  * This interface defines a click listener.
  */
-public interface GameObjectClickListener {
+public interface GameObjectChangeListener {
 
     public void gameObjectClicked(GameObject object);
+    public void modifyGameObject(GameObject object);
 }

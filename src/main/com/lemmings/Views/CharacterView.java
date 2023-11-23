@@ -1,4 +1,5 @@
 package src.main.com.lemmings.Views;
+
 import src.main.com.lemmings.utilities.ImageLoader;
 
 import java.awt.*;
@@ -9,11 +10,14 @@ public class CharacterView extends GameView {
     private ArrayList<BufferedImage> animationFrames;
     private int currentFrame;
     private SkillIcon icon;
+    private int DELAY;
+    private int countUp = 0;
 
     public CharacterView(int x, int y) {
         super(10, 20, x, y);
         currentFrame = 0;
         initializeAnimationFrames();
+        this.DELAY = 0;
     }
 
     private void initializeAnimationFrames() {
@@ -21,7 +25,10 @@ public class CharacterView extends GameView {
         this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-two.png"));
         this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-three.png"));
         this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-0.png"));
+    }
 
+    public ArrayList<BufferedImage> getAnimationFrames() {
+        return this.animationFrames;
     }
 
     @Override
@@ -29,10 +36,16 @@ public class CharacterView extends GameView {
         super.setPosX(xPos);
         super.setPosY(yPos);
         setCurrentFrame();
-        
         setCharacterViewBounds(xPos, yPos);
     }
 
+    /**
+     * Sets the CharacterView's Layout bounds to the size of the Character Model's
+     * rectangular bounds.
+     * 
+     * @param xPos the current x-coordinate of this view
+     * @param yPos the current y-coordinate of this view
+     */
     private void setCharacterViewBounds(int xPos, int yPos) {
         this.setBounds(getPosX(), getPosY(), WIDTH, HEIGHT);
 
@@ -42,9 +55,11 @@ public class CharacterView extends GameView {
     }
 
     public void setCurrentFrame() {
-        currentFrame = (currentFrame + 1) % animationFrames.size();
-    }
+        if (++countUp >= DELAY) {
+            currentFrame = (currentFrame + 1) % animationFrames.size();
+        }
 
+    }
 
     public void setSkillIcon(SkillIcon icon) {
         this.icon = icon;
@@ -70,5 +85,13 @@ public class CharacterView extends GameView {
         } catch (Exception e) {
             System.out.println("Unable to load characters!");
         }
+    }
+
+    public void resetCharacterFrame() {
+        this.currentFrame = 0;
+    }
+
+    public void setDelay(int delay){
+        this.DELAY = delay;
     }
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
-import src.main.com.lemmings.Models.GameObjectClickListener;
+import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.Skill;
 import src.main.com.lemmings.Views.LevelView;
@@ -28,7 +28,7 @@ import src.main.com.lemmings.Views.CharacterView;
  *       environment and characters
  * 
  */
-public class LevelController implements GameObjectClickListener {
+public class LevelController implements GameObjectChangeListener {
     private LevelModel lvl;
     private LevelView gameView;
     // private ArrayList<Character> characters;
@@ -91,15 +91,6 @@ public class LevelController implements GameObjectClickListener {
         }
     }
 
-    // private void addCharacterViewsToGameView(LevelView gameView, ArrayList<CharacterView> characterViews) {
-    //     for (CharacterView cView : characterViews) {
-    //         gameView.addObjectToView(cView, JLayeredPane.MODAL_LAYER);
-    //         if (cView.getSkillIcon()!=null) {
-    //             gameView.addObjectToView(cView.getSkillIcon(), JLayeredPane.MODAL_LAYER);
-    //         }
-    //     }
-    // }
-
     private ArrayList<CharacterController> createCharacterControllers() {
         ArrayList<CharacterController> characterControllers = new ArrayList<>();
         for (int i = 0; i < lvl.getCharacters().size(); i++) {
@@ -144,6 +135,7 @@ public class LevelController implements GameObjectClickListener {
     private void updateGameState(ArrayList<GameObject>env) {
         for (CharacterController ctrl : chControllers) {
             ctrl.detectCollision(env); // returns the object that this character collides with
+            
             GameObject ground = ctrl.detectGround(env); // returns the ground object that this character is standing on
             invokeSkill(ctrl, ground);
             ctrl.detectGround(env);
@@ -182,6 +174,12 @@ public class LevelController implements GameObjectClickListener {
         lvl.getGameObjects().remove(clickedObject);
         // update map
         lvl.setMap(lvl.removePointFromMap(xy));
+        gameView.redrawView(lvl.getGameObjects(), lvl.getCharacterViews());
+    }
+
+    @Override
+    public void modifyGameObject(GameObject go){
+        lvl.getGameObjects().add(go);
         gameView.redrawView(lvl.getGameObjects(), lvl.getCharacterViews());
     }
 }

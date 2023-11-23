@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
+import src.main.com.lemmings.Models.Blocker;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
+import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.Miner;
+import src.main.com.lemmings.Models.Rock;
 import src.main.com.lemmings.Views.ArrowIcon;
 import src.main.com.lemmings.Views.CharacterView;
 import src.main.com.lemmings.Views.SkillIcon;
@@ -40,16 +43,18 @@ public class CharacterController {
 
     private void addListeners() {
         this.chView.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent clickEvent){
+            public void mouseClicked(MouseEvent clickEvent) {
                 isHighlighted = !isHighlighted;
+                ch.setSkill(new Blocker());
 
-                ch.setSkill(new Miner());
-
-                // if (isHighlighted) {
-                //     chView.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
-                // }else{
-                //     chView.setBorder(null);
-                // }
+                chView.getAnimationFrames().clear(); // remove existing images
+                chView.getAnimationFrames().add(ImageLoader.GAME_IMAGES.get("Lemming_police_1.png"));
+                chView.getAnimationFrames().add(ImageLoader.GAME_IMAGES.get("Lemming_police_3.png"));
+                chView.getAnimationFrames().add(ImageLoader.GAME_IMAGES.get("Lemming_police_2.png"));
+                chView.resetCharacterFrame();
+                chView.setDelay(5);
+                updateCharacter();
+                chView.repaint();
             }
         });
     }
@@ -70,7 +75,7 @@ public class CharacterController {
             if (ch.getSkill().getCount() <= 0) {
                 chView.setSkillIcon(null);
             }
-            return ch.useSkill(ground);
+            return ch.useSkill(this);
         }
         return false;
     }
@@ -96,13 +101,19 @@ public class CharacterController {
      *         null.
      */
     public GameObject detectCollision(ArrayList<GameObject> gameObjects) {
-        return ch.detectCollision(gameObjects);
+        return ch.detectCollisions(gameObjects);
     }
 
     public GameObject detectGround(ArrayList<GameObject> gameObjects) {
         // reset isGround
         ch.setIsGround(false);
         return ch.isOnGround(gameObjects);
+    }
+
+    public void onModelUpdate(GameObjectChangeListener changeListener){
+        GameObject barrier = new Rock(ch.getXPosition(), ch.getYPosition(), ch.getC_WIDTH(), ch.getC_HEIGHT(), null);
+        barrier.setImage(ImageLoader.GAME_IMAGES.get("Lemming_police_3"));
+        changeListener.modifyGameObject(barrier);
     }
 
     /**
@@ -115,6 +126,5 @@ public class CharacterController {
     public void onCharacterModelUpdate() {
         chView.update(ch.getXPosition(), ch.getYPosition());
     }
-
 
 }

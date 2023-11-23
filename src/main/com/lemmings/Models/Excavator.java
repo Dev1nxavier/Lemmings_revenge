@@ -1,5 +1,7 @@
 package src.main.com.lemmings.Models;
 
+import src.main.com.lemmings.Controllers.CharacterController;
+
 /**
  * Excavator
  */
@@ -55,6 +57,12 @@ public class Excavator implements Skill {
     public int decrementCount(){
        this.count--;
        return getCount();
+    }
+
+    @Override
+    public boolean useSkill(Character c, CharacterController controller) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
     }
 
 }

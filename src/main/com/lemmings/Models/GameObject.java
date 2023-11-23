@@ -30,7 +30,7 @@ public abstract class GameObject extends JLabel {
     private static int id;
     private int uniqueID;
     private ENV_TYPE type;
-    private GameObjectClickListener mouseClickListener;
+    private GameObjectChangeListener mouseClickListener;
 
     public GameObject(int x, int y, int width, int height, Point rowAndCol) {
         id++;
@@ -150,7 +150,7 @@ public abstract class GameObject extends JLabel {
      * instance of a GameObjectClickListener passed as an argument. 
      * @param clickListener an instance of the GameObjectClickListener interface.
      */
-    public void setGameObjectClickListener (GameObjectClickListener clickListener){
+    public void setGameObjectClickListener (GameObjectChangeListener clickListener){
         this.mouseClickListener = clickListener;
     }
 

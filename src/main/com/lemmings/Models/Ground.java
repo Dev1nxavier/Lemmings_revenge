@@ -16,7 +16,6 @@ public class Ground extends GameObject {
         
     }
 
-
     public boolean shouldDestroy(Point mouseXY){
         Rectangle r = this.getBounds();
         boolean xOverlap = (mouseXY.x >= r.x) && (mouseXY.x <= r.x + r.width);
