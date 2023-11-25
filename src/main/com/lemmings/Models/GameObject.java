@@ -150,7 +150,7 @@ public abstract class GameObject extends JLabel {
      * instance of a GameObjectClickListener passed as an argument. 
      * @param clickListener an instance of the GameObjectClickListener interface.
      */
-    public void setGameObjectClickListener (GameObjectChangeListener clickListener){
+    public void setGameObjectChangeListener (GameObjectChangeListener clickListener){
         this.mouseClickListener = clickListener;
     }
 

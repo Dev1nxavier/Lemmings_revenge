@@ -1,7 +1,5 @@
 package src.main.com.lemmings.Models;
-
 import src.main.com.lemmings.Controllers.CharacterController;
-import src.main.com.lemmings.Views.CharacterView;
 
 /**
  * Skill.java
@@ -21,9 +19,10 @@ public interface Skill {
         CLIMBER
     }
     public boolean useSkill(Character c, GameObject obj);
-    public boolean useSkill(Character c);
-    public boolean useSkill(Character c, CharacterController controller);
+    public void useSkill(Character c);
+    public GameObject useSkill(Character c, CharacterController controller);
     public SKILL_TYPE getSkillType();
+
         /**
      * Decrements count and returns remaining count. 
      * @return the remaining count of this Skill instance.

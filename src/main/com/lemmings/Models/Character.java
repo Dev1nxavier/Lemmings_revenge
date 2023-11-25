@@ -27,8 +27,7 @@ public abstract class Character {
     private Ground lastGround = null;
     private Skill skill;
     private SKILL_TYPE type;
-    private ArrayList<CharacterModelListener> modelListeners;
-    private boolean isWalking;
+    private boolean canMoveHoriztonally; // flag for setting model's ability to move horizontally
     private int delay = 0; // method execution delay
     public int speed;
 
@@ -39,36 +38,21 @@ public abstract class Character {
         isCollided = false;
         speed = 5;
         this.type = null;
-        this.isWalking = true;
-    }
-
-    /**
-     * This method adds instances of a CharacterModelListener to this model
-     */
-    public void addListeners(CharacterModelListener modelListener) {
-        modelListeners.add(modelListener);
+        this.canMoveHoriztonally = true;
     }
 
     public void updateCharacterModel() {
 
         updatePosition();
 
-        notifySubscribedWatchers();
-    }
-
-    private void notifySubscribedWatchers() {
-        for (CharacterModelListener listener : modelListeners) {
-            listener.onCharacterModelUpdate(this); // send this model through to subscribers
-        }
     }
 
     // updates character's position
     public void updatePosition() {
         if (isGround()) {
-            if (isWalking) {
+            if (canMoveHoriztonally) {
                 moveHorizontally();
             }
-
         } else {
             moveVertically();
         }
@@ -122,9 +106,8 @@ public abstract class Character {
      * @return true if the Skill class's useSkill method returns true, otherwise
      *         false.
      */
-    public boolean useSkill(CharacterController chController) {
-        boolean val = this.skill.useSkill(this, chController);
-        return val;
+    public void useSkill() {
+        this.skill.useSkill(this);
     }
 
     // this method determines if object has collided with an obstacle of type
@@ -160,17 +143,24 @@ public abstract class Character {
         }
     }
 
-    public GameObject detectCollisions(ArrayList<GameObject> gameObjects) {
+    public void detectCollisions(ArrayList<? extends Object> gameObjects) {
 
-        GameObject collider = null;
-
-        for (GameObject go : gameObjects) {
-            if (go.getType() != GameObject.ENV_TYPE.GROUND) {
-                collider = detectCollision(go.getBounds()) ? go : null; 
+        for (Object obj : gameObjects) {
+            if (obj instanceof GameObject) {
+                // set as a GameObjecct
+                GameObject go = (GameObject) obj;
+                if (go.getType() != GameObject.ENV_TYPE.GROUND) {
+                    detectCollision(go.getBounds());
+                }
+            } else if(obj instanceof Character){
+                // set as type Character
+                Character ch = (Character) obj;
+                if (ch.getSkillType() == SKILL_TYPE.BLOCKER) {
+                    detectCollision(ch.getBounds());
+                }
             }
-        }
 
-        return collider;
+        }
     }
 
     public boolean detectCollision(Rectangle objectBounds) {
@@ -277,28 +267,11 @@ public abstract class Character {
         return this.lastGround;
     }
 
-    public void setIsWalking(boolean isWalking) {
-        this.isWalking = isWalking;
+    public void setCanMoveHorizontally(boolean moveHorizontally) {
+        this.canMoveHoriztonally = moveHorizontally;
     }
 
     public int getDelay() {
         return this.delay;
-    }
-
-    // public void setIsWalking(boolean isWalking) {
-    // this.isWalking = isWalking;
-    // }
-
-    /**
-     * InnerCharacter.java
-     * 
-     * This is an interclass-innerface that defines the event listener for the
-     * Character model
-     * It contains a single method for updating a View class on update
-     */
-    public interface CharacterModelListener {
-
-        public void onCharacterModelUpdate(Character model);
-
     }
 }

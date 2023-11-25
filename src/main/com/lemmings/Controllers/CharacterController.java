@@ -1,23 +1,10 @@
 package src.main.com.lemmings.Controllers;
 
-import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-
-import src.main.com.lemmings.Models.Blocker;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
-import src.main.com.lemmings.Models.Miner;
-import src.main.com.lemmings.Models.Rock;
-import src.main.com.lemmings.Views.ArrowIcon;
 import src.main.com.lemmings.Views.CharacterView;
-import src.main.com.lemmings.Views.SkillIcon;
-import src.main.com.lemmings.utilities.ImageLoader;
 import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
 
 /**
@@ -31,35 +18,24 @@ import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
  */
 public class CharacterController {
     private Character ch;
+    private GameObjectChangeListener listener;
     private CharacterView chView;
     private boolean isHighlighted = false;
 
-    CharacterController(Character ch, CharacterView chView) {
+    CharacterController(Character ch, GameObjectChangeListener listener) {
         this.ch = ch;
-        this.chView = chView;
+        this.listener = listener;
+        this.chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
 
         addListeners();
     }
 
     private void addListeners() {
-        this.chView.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent clickEvent) {
-                isHighlighted = !isHighlighted;
-                ch.setSkill(new Blocker());
 
-                chView.getAnimationFrames().clear(); // remove existing images
-                chView.getAnimationFrames().add(ImageLoader.GAME_IMAGES.get("Lemming_police_1.png"));
-                chView.getAnimationFrames().add(ImageLoader.GAME_IMAGES.get("Lemming_police_3.png"));
-                chView.getAnimationFrames().add(ImageLoader.GAME_IMAGES.get("Lemming_police_2.png"));
-                chView.resetCharacterFrame();
-                chView.setDelay(5);
-                updateCharacter();
-                chView.repaint();
-            }
-        });
     }
 
     public void updateCharacter() {
+        invokeSkill();
         ch.updatePosition();
         ch.detectBounds();
         onCharacterModelUpdate();
@@ -70,14 +46,10 @@ public class CharacterController {
      * checks the result of the useSkill method and returns true if the skill was
      * used.
      */
-    public boolean invokeSkill(GameObject ground) {
-        if (ch.getSkillType() != null) {
-            if (ch.getSkill().getCount() <= 0) {
-                chView.setSkillIcon(null);
-            }
-            return ch.useSkill(this);
+    public void invokeSkill() {
+        if (ch.getSkill() != null) {
+            ch.useSkill();
         }
-        return false;
     }
 
     /**
@@ -91,6 +63,10 @@ public class CharacterController {
         return ch.getSkillType();
     }
 
+    public CharacterView getCharacterView() {
+        return this.chView;
+    }
+
     /**
      * This method checks for collisions between a character and a game object.
      * it calls Character class's detectCollision method, passing all level
@@ -100,20 +76,14 @@ public class CharacterController {
      * @return the gameObject instance that the character has collided with, or
      *         null.
      */
-    public GameObject detectCollision(ArrayList<GameObject> gameObjects) {
-        return ch.detectCollisions(gameObjects);
+    public void detectCollision(ArrayList<? extends Object> environment) {
+        ch.detectCollisions(environment);
     }
 
     public GameObject detectGround(ArrayList<GameObject> gameObjects) {
         // reset isGround
         ch.setIsGround(false);
         return ch.isOnGround(gameObjects);
-    }
-
-    public void onModelUpdate(GameObjectChangeListener changeListener){
-        GameObject barrier = new Rock(ch.getXPosition(), ch.getYPosition(), ch.getC_WIDTH(), ch.getC_HEIGHT(), null);
-        barrier.setImage(ImageLoader.GAME_IMAGES.get("Lemming_police_3"));
-        changeListener.modifyGameObject(barrier);
     }
 
     /**
@@ -126,5 +96,4 @@ public class CharacterController {
     public void onCharacterModelUpdate() {
         chView.update(ch.getXPosition(), ch.getYPosition());
     }
-
 }

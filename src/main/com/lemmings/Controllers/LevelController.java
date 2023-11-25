@@ -5,15 +5,11 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.LevelModel;
-import src.main.com.lemmings.Models.Skill;
 import src.main.com.lemmings.Views.LevelView;
-import src.main.com.lemmings.Views.SkillIcon;
-import src.main.com.lemmings.utilities.ImageLoader;
-import src.main.com.lemmings.Views.CharacterView;
+import src.main.com.lemmings.Models.Character;
 
 /**
  * LevelController.java
@@ -44,12 +40,9 @@ public class LevelController implements GameObjectChangeListener {
         this.gameView = gameView;
         lvl.createGameObjectsFromMap(); // populate game objects in Model
         addObjectsToGameView(lvl.getGameObjects()); // display game objects in game view
-
-        // initialize characters
-        updateCharacterViewsInGameModel(createCharacterViews()); // add character views to game model
-        // addCharacterViewsToGameView(gameView, lvl.getCharacterViews());// add views to gameView
         this.chControllers = createCharacterControllers();
-        this.gameView.redrawView(lvl.getGameObjects(), lvl.getCharacterViews());
+        updateGameState();
+
     }
 
     private void addObjectsToGameView(ArrayList<GameObject> gameObjects) {
@@ -65,37 +58,10 @@ public class LevelController implements GameObjectChangeListener {
         gameView.repaint();
     }
 
-    private ArrayList<CharacterView> createCharacterViews() {
-        // FIXME: Move CharactersArray to LevelModel
-        ArrayList<CharacterView> characterViews = new ArrayList<>();
-        ArrayList<Character> characters = lvl.getCharacters();
-        for (Character ch : characters) {
-            // initialize a new view
-            CharacterView chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
-            if (ch.getSkillType() != null) {
-                SkillIcon skillIcon = new SkillIcon(ImageLoader.GAME_IMAGES.get("miner_icon.png"), ch.getXPosition(), ch.getYPosition()+30);
-                chView.setSkillIcon(skillIcon);
-                lvl.addSkillToSkillViews(skillIcon);
-
-            }
-            lvl.setCharacterViews(chView);
-            // add view to panel
-            characterViews.add(chView);
-        }
-        return characterViews;
-    }
-
-    public void updateCharacterViewsInGameModel(ArrayList<CharacterView> characterViews) {
-        for (CharacterView characterView : characterViews) {
-            lvl.setCharacterViews(characterView);
-        }
-    }
-
     private ArrayList<CharacterController> createCharacterControllers() {
         ArrayList<CharacterController> characterControllers = new ArrayList<>();
         for (int i = 0; i < lvl.getCharacters().size(); i++) {
-            CharacterController ctrlr = new CharacterController(lvl.getCharacter(i), (CharacterView)lvl.getGameView(i));
-            ctrlr.updateCharacter();
+            CharacterController ctrlr = new CharacterController(lvl.getCharacter(i), this);
             characterControllers.add(ctrlr);
         }
         return characterControllers;
@@ -108,12 +74,12 @@ public class LevelController implements GameObjectChangeListener {
 
             // check for collisions
             ArrayList<GameObject> env = lvl.getGameObjects();
-            // ArrayList<Character> characters = lvl.getCharacters();
+            ArrayList<Character> characters = lvl.getCharacters();
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 // update character
-                updateGameState(env);
+                updateGameState(env, characters);
             }
         });
 
@@ -128,41 +94,20 @@ public class LevelController implements GameObjectChangeListener {
 
         // add click listeners to each Ground object
         for (GameObject obj : lvl.getGameObjects()) {
-            obj.setGameObjectClickListener(this);
+            obj.setGameObjectChangeListener(this);
         }
     }
 
-    private void updateGameState(ArrayList<GameObject>env) {
-        for (CharacterController ctrl : chControllers) {
-            ctrl.detectCollision(env); // returns the object that this character collides with
-            
-            GameObject ground = ctrl.detectGround(env); // returns the ground object that this character is standing on
-            invokeSkill(ctrl, ground);
-            ctrl.detectGround(env);
-            ctrl.updateCharacter();
-        }
-    }
+    private void updateGameState(ArrayList<GameObject> env, ArrayList<Character> characters) {
+        for (CharacterController chController : chControllers) {
+            chController.detectCollision(env); // returns the object that this character collides with
+            chController.detectCollision(characters);
 
-    private void invokeSkill(CharacterController ctrl, GameObject ground) {
-        try {
-            Skill.SKILL_TYPE type = ctrl.getSkillType();
-            if (type != null && ground != null && ctrl.invokeSkill(ground)) {
-                switch (type) {
-                    case EXCAVATOR:
-                        // dig down two levels
-                        gameObjectClicked(ground);
-                        break;
-                    case MINER:
-                        // dig diagonally
-                        gameObjectClicked(ground);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            ;
-        } catch (Exception e) {
-            e.printStackTrace();
+            GameObject ground = chController.detectGround(env); // returns the ground object that this character is
+                                                                // standing on
+            chController.detectGround(env);
+
+            chController.updateCharacter();
         }
     }
 
@@ -170,16 +115,27 @@ public class LevelController implements GameObjectChangeListener {
     public void gameObjectClicked(GameObject clickedObject) {
         // retrieve the map coordinates of the clicked object
         Point xy = clickedObject.getRowAndCol();
+
         // update gameObjects array
         lvl.getGameObjects().remove(clickedObject);
+
         // update map
         lvl.setMap(lvl.removePointFromMap(xy));
-        gameView.redrawView(lvl.getGameObjects(), lvl.getCharacterViews());
+        updateGameState();
     }
 
     @Override
-    public void modifyGameObject(GameObject go){
+    public void modifyGameObject(GameObject go) {
         lvl.getGameObjects().add(go);
-        gameView.redrawView(lvl.getGameObjects(), lvl.getCharacterViews());
+        updateGameState();
+    }
+
+    @Override
+    public void updateGameState() {
+        gameView.redrawView(lvl.getGameObjects(), getCharacterControllers());
+    }
+
+    private ArrayList<CharacterController> getCharacterControllers() {
+        return this.chControllers;
     }
 }

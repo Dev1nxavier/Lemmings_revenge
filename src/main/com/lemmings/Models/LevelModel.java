@@ -31,7 +31,7 @@ public class LevelModel {
     };
     // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
     private ArrayList<Character> characters = new ArrayList<>();
-    private ArrayList<CharacterView> characterViews = new ArrayList<>();
+    // private ArrayList<CharacterView> characterViews = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private ArrayList<GameView>skillViews = new ArrayList<>();
     private int score = 0;
@@ -51,23 +51,14 @@ public class LevelModel {
     public void updateGameState() {
         gameObjects.clear();
     }
-
-    public void setCharacterViews(CharacterView cView) {
-        characterViews.add(cView);
-    }
-
-    public ArrayList<CharacterView> getCharacterViews() {
-        return this.characterViews;
-    }
-
     
     public Character getCharacter(int i){
         return this.characters.get(i);
     }
 
-    public GameView getGameView(int i){
-        return this.characterViews.get(i);
-    }
+    // public GameView getGameView(int i){
+    //     return this.characterViews.get(i);
+    // }
 
     public void addSkillToSkillViews(SkillIcon skill){
         this.skillViews.add(skill);

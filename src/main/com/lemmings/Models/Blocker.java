@@ -1,7 +1,7 @@
 package src.main.com.lemmings.Models;
 
 import src.main.com.lemmings.Controllers.CharacterController;
-import src.main.com.lemmings.Views.CharacterView;
+import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
  * Blocker.java
@@ -15,6 +15,7 @@ import src.main.com.lemmings.Views.CharacterView;
  * 
  */
 public class Blocker implements Skill{
+    GameObject barrier;
 
     @Override
     public boolean useSkill(Character c, GameObject obj) {
@@ -26,12 +27,13 @@ public class Blocker implements Skill{
      * This method creates a new GameObject in the same location as the Character object. 
      */
     @Override
-    public boolean useSkill(Character c, CharacterController controller) {
+    public void useSkill(Character c) {
         // prevent this Character from updating its position
-        c.setIsWalking(false);
-        //new GameObject of type "Rock"
-        
-        return true;
+        c.setCanMoveHorizontally(false);
+    }
+
+    public GameObject getGameObject(){
+        return this.barrier;
     }
 
     @Override
@@ -49,10 +51,10 @@ public class Blocker implements Skill{
        return 5;
     }
 
-	@Override
-	public boolean useSkill(Character c) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
-	}
+    @Override
+    public GameObject useSkill(Character c, CharacterController controller) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
+    }
     
 }

@@ -35,11 +35,8 @@ public class Excavator implements Skill {
     }
 
     @Override
-    public boolean useSkill(Character c) {
-        if (c.isGround()) {
-            return true;
-        }
-        return false;
+    public void  useSkill(Character c) {
+     
     }
 
     public int getCount(){
@@ -60,7 +57,7 @@ public class Excavator implements Skill {
     }
 
     @Override
-    public boolean useSkill(Character c, CharacterController controller) {
+    public GameObject useSkill(Character c, CharacterController controller) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
     }

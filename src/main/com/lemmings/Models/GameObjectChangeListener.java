@@ -12,4 +12,5 @@ public interface GameObjectChangeListener {
 
     public void gameObjectClicked(GameObject object);
     public void modifyGameObject(GameObject object);
+    public void updateGameState();
 }

@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import src.main.com.lemmings.Controllers.CharacterController;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.utilities.ImageLoader;
@@ -77,13 +78,13 @@ public class LevelView extends JPanel {
         revalidate();
     }
 
-    public void redrawView(ArrayList<GameObject>gameObjects, ArrayList<CharacterView> characters){
+    public void redrawView(ArrayList<GameObject>gameObjects, ArrayList<CharacterController> characters){
         clearGameObjectsFromView();
         for (GameObject go : gameObjects) {
             addObjectToView(go, JLayeredPane.DEFAULT_LAYER);
         }
-        for (CharacterView chView : characters) {
-            addObjectToView(chView, JLayeredPane.MODAL_LAYER);
+        for (CharacterController ch: characters) {
+            addObjectToView(ch.getCharacterView(), JLayeredPane.MODAL_LAYER);
         }
     }
 }
