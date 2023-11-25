@@ -31,6 +31,10 @@ public class CharacterView extends GameView {
         return this.animationFrames;
     }
 
+    public void setAnimationFrames(ArrayList<BufferedImage> animationFrames){
+        this.animationFrames = animationFrames;
+    }
+
     @Override
     public void update(int xPos, int yPos) {
         super.setPosX(xPos);

@@ -115,7 +115,7 @@ public class LevelController implements GameObjectChangeListener {
     public void gameObjectClicked(GameObject clickedObject) {
         // retrieve the map coordinates of the clicked object
         Point xy = clickedObject.getRowAndCol();
-
+        System.out.println("LvlController.gameObjectClicked" + xy);
         // update gameObjects array
         lvl.getGameObjects().remove(clickedObject);
 

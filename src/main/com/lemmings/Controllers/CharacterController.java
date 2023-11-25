@@ -1,9 +1,20 @@
 package src.main.com.lemmings.Controllers;
 
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+
+import src.main.com.lemmings.Models.Blocker;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
+import src.main.com.lemmings.Models.Miner;
+import src.main.com.lemmings.Models.Skill;
 import src.main.com.lemmings.Views.CharacterView;
 import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
 
@@ -18,20 +29,26 @@ import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
  */
 public class CharacterController {
     private Character ch;
-    private GameObjectChangeListener listener;
     private CharacterView chView;
     private boolean isHighlighted = false;
+    private GameObjectChangeListener listener;
 
     CharacterController(Character ch, GameObjectChangeListener listener) {
         this.ch = ch;
-        this.listener = listener;
         this.chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
-
+        this.listener = listener;
         addListeners();
     }
 
     private void addListeners() {
-
+        this.chView.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent clickEvent){
+                super.mouseClicked(clickEvent);
+                chView.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+                ch.setSkill(new Miner(listener));
+            }
+        });
     }
 
     public void updateCharacter() {
@@ -61,6 +78,10 @@ public class CharacterController {
      */
     public SKILL_TYPE getSkillType() {
         return ch.getSkillType();
+    }
+
+    public void setSkill(Skill skill){
+        ch.setSkill(skill);
     }
 
     public CharacterView getCharacterView() {

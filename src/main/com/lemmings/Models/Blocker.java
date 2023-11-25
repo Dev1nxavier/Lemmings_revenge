@@ -1,7 +1,11 @@
 package src.main.com.lemmings.Models;
 
-import src.main.com.lemmings.Controllers.CharacterController;
+import java.awt.image.BufferedImage;
+import java.nio.Buffer;
+import java.util.ArrayList;
+
 import src.main.com.lemmings.utilities.ImageLoader;
+
 
 /**
  * Blocker.java
@@ -15,7 +19,15 @@ import src.main.com.lemmings.utilities.ImageLoader;
  * 
  */
 public class Blocker implements Skill{
-    GameObject barrier;
+    private ArrayList<BufferedImage> animationFrames;
+    
+    public Blocker(){
+        animationFrames = new ArrayList<>();
+        animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_police_1.png"));
+        animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_police_3.png"));
+        animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_police_2.png"));
+        
+    }
 
     @Override
     public boolean useSkill(Character c, GameObject obj) {
@@ -23,6 +35,9 @@ public class Blocker implements Skill{
         throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
     }
 
+    public ArrayList<BufferedImage> getAnimationFrames(){
+        return this.animationFrames;
+    }
     /**
      * This method creates a new GameObject in the same location as the Character object. 
      */
@@ -30,10 +45,6 @@ public class Blocker implements Skill{
     public void useSkill(Character c) {
         // prevent this Character from updating its position
         c.setCanMoveHorizontally(false);
-    }
-
-    public GameObject getGameObject(){
-        return this.barrier;
     }
 
     @Override
@@ -49,12 +60,6 @@ public class Blocker implements Skill{
     @Override
     public int getCount() {
        return 5;
-    }
-
-    @Override
-    public GameObject useSkill(Character c, CharacterController controller) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
     }
     
 }

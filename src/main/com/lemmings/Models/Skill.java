@@ -1,4 +1,7 @@
 package src.main.com.lemmings.Models;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import src.main.com.lemmings.Controllers.CharacterController;
 
 /**
@@ -20,7 +23,7 @@ public interface Skill {
     }
     public boolean useSkill(Character c, GameObject obj);
     public void useSkill(Character c);
-    public GameObject useSkill(Character c, CharacterController controller);
+    public ArrayList<BufferedImage> getAnimationFrames();
     public SKILL_TYPE getSkillType();
 
         /**

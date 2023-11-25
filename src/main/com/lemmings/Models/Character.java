@@ -19,15 +19,15 @@ public abstract class Character {
     protected boolean isMovingRight;
     private int x_pos;
     private int y_pos;
-    private final int C_HEIGHT = 20;
-    private final int C_WIDTH = 10;
+    private int C_HEIGHT = 20;
+    private int C_WIDTH = 10;
     protected boolean isCollided;
     private boolean isGround = false;
     private Ground currentGround = null;
     private Ground lastGround = null;
     private Skill skill;
     private SKILL_TYPE type;
-    private boolean canMoveHoriztonally; // flag for setting model's ability to move horizontally
+    private boolean canMoveHorizontally; // flag for setting model's ability to move horizontally
     private int delay = 0; // method execution delay
     public int speed;
 
@@ -38,7 +38,7 @@ public abstract class Character {
         isCollided = false;
         speed = 5;
         this.type = null;
-        this.canMoveHoriztonally = true;
+        this.canMoveHorizontally = true;
     }
 
     public void updateCharacterModel() {
@@ -50,7 +50,7 @@ public abstract class Character {
     // updates character's position
     public void updatePosition() {
         if (isGround()) {
-            if (canMoveHoriztonally) {
+            if (canMoveHorizontally) {
                 moveHorizontally();
             }
         } else {
@@ -107,6 +107,7 @@ public abstract class Character {
      *         false.
      */
     public void useSkill() {
+
         this.skill.useSkill(this);
     }
 
@@ -117,10 +118,16 @@ public abstract class Character {
         setIsGround(false);
 
         for (GameObject g : gameObjects) {
-            if (g.getType() == GameObject.ENV_TYPE.GROUND) {
+            if (g instanceof Ground) {
                 if (isOverlapping(this.getBounds(), g.getBounds())) {
                     setIsGround(true);
-                    setLastGround(g);
+
+                    if (this.currentGround != null && this.currentGround != g) {
+                        setLastGround(this.currentGround);
+                        System.out.printf("Last Ground: %d, %d\nCurrent Ground: %d, %d\n",
+                                this.lastGround.getRowAndCol().x,
+                                this.lastGround.getRowAndCol().y, g.getRowAndCol().x, g.getRowAndCol().y);
+                    }
                     setCurrentGround((Ground) g);
                     return g;
                 }
@@ -133,13 +140,14 @@ public abstract class Character {
         Rectangle r = this.getBounds();
         Rectangle ground = g.getBounds();
 
-        return (r.y + r.height >= ground.y && r.x < ground.x + ground.width && r.x + r.width > ground.x);
+        return (r.y + r.height >= ground.y && r.y + r.height <=ground.y + ground.height && r.x < ground.x + ground.width && r.x + r.width > ground.x);
     }
 
-    private void setLastGround(GameObject newGround) {
-        if (this.currentGround != null
-                && (this.lastGround == null || this.lastGround.getUniqueId() != newGround.getUniqueId())) {
-            this.lastGround = this.currentGround;
+    private void setLastGround(Ground newGround) {
+
+        if (this.lastGround != newGround) {
+
+            this.lastGround = newGround;
         }
     }
 
@@ -152,10 +160,10 @@ public abstract class Character {
                 if (go.getType() != GameObject.ENV_TYPE.GROUND) {
                     detectCollision(go.getBounds());
                 }
-            } else if(obj instanceof Character){
+            } else if (obj instanceof Character) {
                 // set as type Character
                 Character ch = (Character) obj;
-                if (ch.getSkillType() == SKILL_TYPE.BLOCKER) {
+                if (ch.getSkillType() == SKILL_TYPE.BLOCKER && this != ch) {
                     detectCollision(ch.getBounds());
                 }
             }
@@ -268,7 +276,7 @@ public abstract class Character {
     }
 
     public void setCanMoveHorizontally(boolean moveHorizontally) {
-        this.canMoveHoriztonally = moveHorizontally;
+        this.canMoveHorizontally = moveHorizontally;
     }
 
     public int getDelay() {

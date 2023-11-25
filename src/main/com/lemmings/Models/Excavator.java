@@ -1,5 +1,8 @@
 package src.main.com.lemmings.Models;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import src.main.com.lemmings.Controllers.CharacterController;
 
 /**
@@ -57,9 +60,9 @@ public class Excavator implements Skill {
     }
 
     @Override
-    public GameObject useSkill(Character c, CharacterController controller) {
+    public ArrayList<BufferedImage> getAnimationFrames() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
+        throw new UnsupportedOperationException("Unimplemented method 'getAnimationFrames'");
     }
 
 }

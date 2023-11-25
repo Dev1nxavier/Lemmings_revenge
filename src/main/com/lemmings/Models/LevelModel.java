@@ -3,7 +3,6 @@ package src.main.com.lemmings.Models;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import src.main.com.lemmings.Views.CharacterView;
 import src.main.com.lemmings.Views.GameView;
 import src.main.com.lemmings.Views.SkillIcon;
 
@@ -24,8 +23,8 @@ public class LevelModel {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 2, 0 },
-            { 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 1, 1, 1, 1, 1, 1, 1, 0 },
             { 1, 1, 1, 1, 1, 1, 1, 1 },
             { 1, 1, 0, 0, 0, 1, 1, 1 }
     };
@@ -56,10 +55,6 @@ public class LevelModel {
         return this.characters.get(i);
     }
 
-    // public GameView getGameView(int i){
-    //     return this.characterViews.get(i);
-    // }
-
     public void addSkillToSkillViews(SkillIcon skill){
         this.skillViews.add(skill);
     }
@@ -69,13 +64,6 @@ public class LevelModel {
             Character ch = new Lemming();
             // slightly offset each character
             ch.setPosition((i + 2) * 20, 100);
-
-            // ----------------------------------
-            // TODO: For testing purposes only. Remove after testing!
-            if (i == 0) {
-                ch.setSkill(new Blocker());
-            }
-            // ----------------------------------
             characters.add(ch);
         }
     }

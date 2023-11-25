@@ -15,8 +15,8 @@ import javax.swing.JLabel;
  */
 public abstract class GameView extends JLabel {
     protected int posX, posY;
-    protected final int WIDTH;
-    protected final int HEIGHT;
+    protected int WIDTH;
+    protected int HEIGHT;
 
     public GameView(int width, int height, int x, int y){
         this.WIDTH = width;
@@ -53,6 +53,14 @@ public abstract class GameView extends JLabel {
 
     public int getWIDTH(){
         return this.WIDTH;
+    }
+
+    public void setWIDTH(int width){
+        this.WIDTH = width;
+    }
+
+    public void setHEIGHT(int height){
+        this.HEIGHT = height;
     }
 
     public int getHEIGHT(){
