@@ -2,8 +2,6 @@ package src.main.com.lemmings.Models;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-
-import src.main.com.lemmings.Controllers.CharacterController;
 import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
 
 /**
@@ -15,7 +13,7 @@ import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
  *       this class models a character.
  */
 public abstract class Character {
-    private static final int GRAVITY = 8;
+    private double GRAVITY = 8;
     protected boolean isMovingRight;
     private int x_pos;
     private int y_pos;
@@ -42,9 +40,7 @@ public abstract class Character {
     }
 
     public void updateCharacterModel() {
-
         updatePosition();
-
     }
 
     // updates character's position
@@ -106,9 +102,21 @@ public abstract class Character {
      * @return true if the Skill class's useSkill method returns true, otherwise
      *         false.
      */
-    public void useSkill() {
+    public void useSkill(ArrayList<GameObject> env) {
+        if (this.skill.getCount() <= 0) {
+            return;
+        }
 
-        this.skill.useSkill(this);
+        switch (this.getSkillType()) {
+            case BUILDER:
+                this.skill.useSkill(this, env);
+                break;
+
+            default:
+                this.skill.useSkill(this);
+                break;
+        }
+
     }
 
     // this method determines if object has collided with an obstacle of type
@@ -124,9 +132,6 @@ public abstract class Character {
 
                     if (this.currentGround != null && this.currentGround != g) {
                         setLastGround(this.currentGround);
-                        System.out.printf("Last Ground: %d, %d\nCurrent Ground: %d, %d\n",
-                                this.lastGround.getRowAndCol().x,
-                                this.lastGround.getRowAndCol().y, g.getRowAndCol().x, g.getRowAndCol().y);
                     }
                     setCurrentGround((Ground) g);
                     return g;
@@ -136,19 +141,19 @@ public abstract class Character {
         return null;
     }
 
-    private boolean isOverlapping(Rectangle Char, Rectangle g) {
-        Rectangle r = this.getBounds();
-        Rectangle ground = g.getBounds();
-
-        return (r.y + r.height >= ground.y && r.y + r.height <=ground.y + ground.height && r.x < ground.x + ground.width && r.x + r.width > ground.x);
-    }
-
     private void setLastGround(Ground newGround) {
-
         if (this.lastGround != newGround) {
 
             this.lastGround = newGround;
         }
+    }
+
+    private boolean isOverlapping(Rectangle Char, Rectangle g) {
+        Rectangle r = this.getBounds();
+        Rectangle ground = g.getBounds();
+
+        return (r.y + r.height >= ground.y && r.y + r.height <= ground.y + ground.height
+                && r.x < ground.x + ground.width && r.x + r.width > ground.x);
     }
 
     public void detectCollisions(ArrayList<? extends Object> gameObjects) {

@@ -42,7 +42,7 @@ public abstract class GameObject extends JLabel {
         this.height = height;
         setPreferredsize();
         setObjectBounds();
-        setMouseClickedListener();
+        // setMouseClickedListener();
 
     }
 
@@ -162,9 +162,8 @@ public abstract class GameObject extends JLabel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event){
-                mouseClickListener.gameObjectClicked(GameObject.this);
+                mouseClickListener.removeGameObjectSelected(GameObject.this);
             }
         });
     }
-
 }

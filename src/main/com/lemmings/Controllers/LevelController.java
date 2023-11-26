@@ -103,25 +103,40 @@ public class LevelController implements GameObjectChangeListener {
             chController.detectCollision(env); // returns the object that this character collides with
             chController.detectCollision(characters);
 
-            GameObject ground = chController.detectGround(env); // returns the ground object that this character is
-                                                                // standing on
-            chController.detectGround(env);
+            chController.detectGround(env); // returns the ground object that this character is
+                                            // standing on
 
-            chController.updateCharacter();
+            chController.updateCharacter(env);
         }
     }
 
     @Override
-    public void gameObjectClicked(GameObject clickedObject) {
+    public void removeGameObjectSelected(GameObject clickedObject) {
         // retrieve the map coordinates of the clicked object
         Point xy = clickedObject.getRowAndCol();
-        System.out.println("LvlController.gameObjectClicked" + xy);
+
         // update gameObjects array
         lvl.getGameObjects().remove(clickedObject);
 
         // update map
         lvl.setMap(lvl.removePointFromMap(xy));
         updateGameState();
+    }
+
+    @Override
+    public void removeGameObjectSelected(Point clickedObject) {
+        ArrayList<GameObject> itemsToRemove = new ArrayList<>();
+
+        // find the GameObject by its xy coordinates
+        for (GameObject obj : lvl.getGameObjects()) {
+            if (obj.getRowAndCol().equals(clickedObject)) {
+                itemsToRemove.add(obj);
+            }
+        }
+
+        for (GameObject item : itemsToRemove) {
+            removeGameObjectSelected(item);
+        }
     }
 
     @Override

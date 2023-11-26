@@ -1,5 +1,7 @@
 package src.main.com.lemmings.Models;
 
+import java.awt.Point;
+
 /**
  * GameObjectClickListener
  * 
@@ -10,7 +12,8 @@ package src.main.com.lemmings.Models;
  */
 public interface GameObjectChangeListener {
 
-    public void gameObjectClicked(GameObject object);
+    public void removeGameObjectSelected(GameObject object);
+    public void removeGameObjectSelected(Point point);
     public void modifyGameObject(GameObject object);
     public void updateGameState();
 }

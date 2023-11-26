@@ -11,8 +11,16 @@ import src.main.com.lemmings.Controllers.CharacterController;
 public class Excavator implements Skill {
     private final Skill.SKILL_TYPE type = SKILL_TYPE.EXCAVATOR;
     private int count; // counts the number of times this skill can be invoked
+    private GameObjectChangeListener listener;
+    
+
     public Excavator(){
-        count = 2;
+        setCount(3);
+    }
+
+    public Excavator(GameObjectChangeListener listener){
+        this();
+        setListener(listener);
     }
 
     /**
@@ -22,24 +30,18 @@ public class Excavator implements Skill {
      * @return true if character is currently on ground, otherwise returns false. 
      */
     @Override
-    public boolean useSkill(Character c, GameObject obj) {
+    public void useSkill(Character c) {
         // TODO: this skill removes a block of ground directly beneath character
         // check if object is ground and...
-        if (c.isGround() && decrementCount() >0) {
-            return true;
+        if (getCount() > 0 && c.isGround()) {
+            getListener().removeGameObjectSelected(c.getCurrentGround());
+            decrementCount();
         }
-        // c.removeSkill();
-        return false;
     }
 
     @Override
     public SKILL_TYPE getSkillType() {
         return this.type;
-    }
-
-    @Override
-    public void  useSkill(Character c) {
-     
     }
 
     public int getCount(){
@@ -48,6 +50,10 @@ public class Excavator implements Skill {
 
     public void setCount(int count){
         this.count = count;
+    }
+
+    public GameObjectChangeListener getListener(){
+        return this.listener;
     }
 
     /**
@@ -63,6 +69,17 @@ public class Excavator implements Skill {
     public ArrayList<BufferedImage> getAnimationFrames() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAnimationFrames'");
+    }
+
+    @Override
+    public void useSkill(Character c, ArrayList<GameObject> env) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
+    }
+
+    @Override
+    public void setListener(GameObjectChangeListener listener) {
+        this.listener = listener;
     }
 
 }

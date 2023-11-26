@@ -1,7 +1,6 @@
 package src.main.com.lemmings.Models;
 
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.utilities.ImageLoader;
@@ -20,6 +19,8 @@ import src.main.com.lemmings.utilities.ImageLoader;
  */
 public class Blocker implements Skill{
     private ArrayList<BufferedImage> animationFrames;
+    private GameObjectChangeListener listener;
+    private int count;
     
     public Blocker(){
         animationFrames = new ArrayList<>();
@@ -29,10 +30,9 @@ public class Blocker implements Skill{
         
     }
 
-    @Override
-    public boolean useSkill(Character c, GameObject obj) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
+    public Blocker(GameObjectChangeListener listener){
+        this();
+        setListener(listener);
     }
 
     public ArrayList<BufferedImage> getAnimationFrames(){
@@ -59,7 +59,28 @@ public class Blocker implements Skill{
 
     @Override
     public int getCount() {
-       return 5;
+        return this.count;
+    }
+
+    @Override
+    public void useSkill(Character c, ArrayList<GameObject> env) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
+    }
+
+    @Override
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    @Override
+    public void setListener(GameObjectChangeListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public GameObjectChangeListener getListener() {
+       return this.listener;
     }
     
 }

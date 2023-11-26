@@ -21,7 +21,7 @@ public interface Skill {
         BOMBER,
         CLIMBER
     }
-    public boolean useSkill(Character c, GameObject obj);
+    public void useSkill(Character c, ArrayList<GameObject> env);
     public void useSkill(Character c);
     public ArrayList<BufferedImage> getAnimationFrames();
     public SKILL_TYPE getSkillType();
@@ -33,5 +33,11 @@ public interface Skill {
     public int decrementCount();
 
     public int getCount();
+
+    public void setCount(int count);
+
+    public void setListener(GameObjectChangeListener listener);
+
+    public GameObjectChangeListener getListener();
  
 }

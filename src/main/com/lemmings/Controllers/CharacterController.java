@@ -10,10 +10,12 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import src.main.com.lemmings.Models.Blocker;
+import src.main.com.lemmings.Models.Builder;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.Miner;
+import src.main.com.lemmings.Models.Ordinance;
 import src.main.com.lemmings.Models.Skill;
 import src.main.com.lemmings.Views.CharacterView;
 import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
@@ -43,16 +45,16 @@ public class CharacterController {
     private void addListeners() {
         this.chView.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent clickEvent){
+            public void mouseClicked(MouseEvent clickEvent) {
                 super.mouseClicked(clickEvent);
                 chView.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
-                ch.setSkill(new Miner(listener));
+                ch.setSkill(new Builder(listener));
             }
         });
     }
 
-    public void updateCharacter() {
-        invokeSkill();
+    public void updateCharacter(ArrayList<GameObject> env) {
+        invokeSkill(env);
         ch.updatePosition();
         ch.detectBounds();
         onCharacterModelUpdate();
@@ -63,10 +65,12 @@ public class CharacterController {
      * checks the result of the useSkill method and returns true if the skill was
      * used.
      */
-    public void invokeSkill() {
-        if (ch.getSkill() != null) {
-            ch.useSkill();
+    public void invokeSkill(ArrayList<GameObject> env) {
+        if (ch.getSkill() == null) {
+            return;
         }
+
+        ch.useSkill(env);
     }
 
     /**
@@ -80,7 +84,7 @@ public class CharacterController {
         return ch.getSkillType();
     }
 
-    public void setSkill(Skill skill){
+    public void setSkill(Skill skill) {
         ch.setSkill(skill);
     }
 
@@ -102,6 +106,7 @@ public class CharacterController {
     }
 
     public GameObject detectGround(ArrayList<GameObject> gameObjects) {
+
         // reset isGround
         ch.setIsGround(false);
         return ch.isOnGround(gameObjects);
