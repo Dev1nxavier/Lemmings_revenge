@@ -9,16 +9,16 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
-import src.main.com.lemmings.Models.Blocker;
-import src.main.com.lemmings.Models.Builder;
 import src.main.com.lemmings.Models.Character;
-import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
-import src.main.com.lemmings.Models.Miner;
-import src.main.com.lemmings.Models.Ordinance;
-import src.main.com.lemmings.Models.Skill;
+import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.Models.Skills.Blocker;
+import src.main.com.lemmings.Models.Skills.Builder;
+import src.main.com.lemmings.Models.Skills.Miner;
+import src.main.com.lemmings.Models.Skills.Ordinance;
+import src.main.com.lemmings.Models.Skills.Skill;
+import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
 import src.main.com.lemmings.Views.CharacterView;
-import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
 
 /**
  * CharacterController.java

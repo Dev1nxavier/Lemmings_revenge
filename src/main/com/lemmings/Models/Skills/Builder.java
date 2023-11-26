@@ -1,8 +1,14 @@
-package src.main.com.lemmings.Models;
+package src.main.com.lemmings.Models.Skills;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import src.main.com.lemmings.Models.Character;
+import src.main.com.lemmings.Models.GameObjectChangeListener;
+import src.main.com.lemmings.Models.GameObjects.Bridge;
+import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.Models.GameObjects.Ground;
 
 /**
  * Builder.java
@@ -30,20 +36,19 @@ public class Builder implements Skill {
             // we need to detect an edge
             if (c.isGround()) {
                 Point currentGround = c.getCurrentGround().getRowAndCol();
-                Point nextGround = null;
+                Point gap = null;
                 boolean isEdge = true; // set flag for edge.
+                Ground bridge = null;
 
-                if (c.isMovingRight && currentGround.y+1 < 8) {
-                    nextGround = new Point(currentGround.x, currentGround.y + 1);
+                if (c.getIsMovingRight() && currentGround.y + 1 < 8) {
+                    gap = new Point(currentGround.x, currentGround.y + 1);
 
-                } else {
-                    if (currentGround.y - 1 >= 0) {
-                        nextGround = new Point(currentGround.x, currentGround.y - 1);
-                    }
+                } else if (currentGround.y - 1 >= 0) {
+                    gap = new Point(currentGround.x, currentGround.y - 1);
                 }
-                if (nextGround != null) {
+                if (gap != null) {
                     for (GameObject go : env) {
-                        if (nextGround.equals(go.getRowAndCol())) {
+                        if (gap.equals(go.getRowAndCol())) {
                             isEdge = false;
                             break;
                         }
@@ -51,9 +56,7 @@ public class Builder implements Skill {
 
                     if (isEdge) {
                         decrementCount();
-
-                        // build the bridge
-                        Ground bridge = new Bridge(c.getXPosition(), c.getYPosition(), nextGround);
+                        bridge = new Bridge(c.getXPosition() + (c.getIsMovingRight() ? 0 : -150), c.getYPosition(), gap);
                         listener.modifyGameObject(bridge);
                         destroyAfterDelay(bridge);
                     }

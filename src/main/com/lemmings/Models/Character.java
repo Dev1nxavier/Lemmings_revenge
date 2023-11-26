@@ -2,7 +2,13 @@ package src.main.com.lemmings.Models;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
+
+import src.main.com.lemmings.Models.GameObjects.Elevator;
+import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.Models.GameObjects.Ground;
+import src.main.com.lemmings.Models.GameObjects.GameObject.ENV_TYPE;
+import src.main.com.lemmings.Models.Skills.Skill;
+import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
 
 /**
  * Character.java
@@ -14,29 +20,22 @@ import src.main.com.lemmings.Models.Skill.SKILL_TYPE;
  */
 public abstract class Character {
     private double GRAVITY = 8;
-    protected boolean isMovingRight;
-    private int x_pos;
-    private int y_pos;
+    protected boolean isMovingRight = true;
+    private int x_pos, y_pos;
     private int C_HEIGHT = 20;
     private int C_WIDTH = 10;
-    protected boolean isCollided;
+    protected boolean isCollided = false;
     private boolean isGround = false;
-    private Ground currentGround = null;
-    private Ground lastGround = null;
+    private Ground currentGround, lastGround = null;
     private Skill skill;
-    private SKILL_TYPE type;
-    private boolean canMoveHorizontally; // flag for setting model's ability to move horizontally
-    private int delay = 0; // method execution delay
+    private SKILL_TYPE type = null;
+    private boolean canMoveHorizontally = true; // flag for setting model's ability to move horizontally
     public int speed;
 
     Character() {
-        this.isMovingRight = true;
         this.x_pos = 100;
         this.y_pos = 200;
-        isCollided = false;
         speed = 5;
-        this.type = null;
-        this.canMoveHorizontally = true;
     }
 
     public void updateCharacterModel() {
@@ -122,9 +121,7 @@ public abstract class Character {
     // this method determines if object has collided with an obstacle of type
     // 'ground'. If yes, it sets isGround to true.
     public GameObject isOnGround(ArrayList<GameObject> gameObjects) {
-        // GameObject tempGround = null;
         setIsGround(false);
-
         for (GameObject g : gameObjects) {
             if (g instanceof Ground) {
                 if (isOverlapping(this.getBounds(), g.getBounds())) {
@@ -134,18 +131,24 @@ public abstract class Character {
                         setLastGround(this.currentGround);
                     }
                     setCurrentGround((Ground) g);
+
+                    // Elevator logic
+                    if (g.getType() == ENV_TYPE.ELEVATOR) {
+                        Elevator gE = (Elevator) g; // cast ground object to Elevator instance
+
+                        gE.setIsMoving(true);
+                        if (gE.getIsMoving()) {
+                            setCanMoveHorizontally(false);
+                            gE.moveVertically();
+                            setY_pos(gE.getyPos());
+                        }
+                    }
+
                     return g;
                 }
             }
         }
         return null;
-    }
-
-    private void setLastGround(Ground newGround) {
-        if (this.lastGround != newGround) {
-
-            this.lastGround = newGround;
-        }
     }
 
     private boolean isOverlapping(Rectangle Char, Rectangle g) {
@@ -154,6 +157,13 @@ public abstract class Character {
 
         return (r.y + r.height >= ground.y && r.y + r.height <= ground.y + ground.height
                 && r.x < ground.x + ground.width && r.x + r.width > ground.x);
+    }
+
+    private void setLastGround(Ground newGround) {
+        if (this.lastGround != newGround) {
+
+            this.lastGround = newGround;
+        }
     }
 
     public void detectCollisions(ArrayList<? extends Object> gameObjects) {
@@ -192,6 +202,10 @@ public abstract class Character {
 
     public void setMovingRight(boolean isMovingRight) {
         this.isMovingRight = isMovingRight;
+    }
+
+    public boolean getIsMovingRight() {
+        return this.isMovingRight;
     }
 
     public int getX_pos() {
@@ -282,9 +296,5 @@ public abstract class Character {
 
     public void setCanMoveHorizontally(boolean moveHorizontally) {
         this.canMoveHorizontally = moveHorizontally;
-    }
-
-    public int getDelay() {
-        return this.delay;
     }
 }

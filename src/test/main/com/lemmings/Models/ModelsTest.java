@@ -1,5 +1,6 @@
 package src.test.main.com.lemmings.Models;
 import src.main.com.lemmings.Models.*;
+import src.main.com.lemmings.Models.GameObjects.Ground;
 import src.main.com.lemmings.Views.CharacterView;
 
 import org.junit.jupiter.api.BeforeEach;

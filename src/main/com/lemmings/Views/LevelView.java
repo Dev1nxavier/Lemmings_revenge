@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 import src.main.com.lemmings.Controllers.CharacterController;
 import src.main.com.lemmings.Models.Character;
-import src.main.com.lemmings.Models.GameObject;
+import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.utilities.ImageLoader;
 
 /**

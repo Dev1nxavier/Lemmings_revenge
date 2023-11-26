@@ -1,4 +1,4 @@
-package src.main.com.lemmings.Models;
+package src.main.com.lemmings.Models.GameObjects;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;

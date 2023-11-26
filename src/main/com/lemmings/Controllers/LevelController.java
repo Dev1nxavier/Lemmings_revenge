@@ -5,9 +5,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import src.main.com.lemmings.Models.GameObject;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.LevelModel;
+import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.Models.Character;
 

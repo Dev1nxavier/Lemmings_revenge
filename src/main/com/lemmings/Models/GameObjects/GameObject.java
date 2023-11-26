@@ -1,4 +1,4 @@
-package src.main.com.lemmings.Models;
+package src.main.com.lemmings.Models.GameObjects;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JLabel;
 
+import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
@@ -18,7 +19,7 @@ import src.main.com.lemmings.utilities.ImageLoader;
 
 public abstract class GameObject extends JLabel {
     public static enum ENV_TYPE {
-        GROUND, ROCK, CLIFF, HOLE, WATER
+        GROUND, ROCK, CLIFF, HOLE, WATER, ELEVATOR
     };
 
     private int xPos;
@@ -80,7 +81,6 @@ public abstract class GameObject extends JLabel {
 
     public void setImage(String name) {
         this.image = ImageLoader.GAME_IMAGES.get(name);
-        // this.setIcon(new ImageIcon(image));
     }
 
     public int getWidth() {

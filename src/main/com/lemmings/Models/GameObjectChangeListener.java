@@ -2,6 +2,8 @@ package src.main.com.lemmings.Models;
 
 import java.awt.Point;
 
+import src.main.com.lemmings.Models.GameObjects.GameObject;
+
 /**
  * GameObjectClickListener
  * 

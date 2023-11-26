@@ -1,8 +1,12 @@
-package src.main.com.lemmings.Models;
+package src.main.com.lemmings.Models.Skills;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import src.main.com.lemmings.Models.Character;
+import src.main.com.lemmings.Models.GameObjectChangeListener;
+import src.main.com.lemmings.Models.GameObjects.GameObject;
 
 /**
  * Ordinance.java

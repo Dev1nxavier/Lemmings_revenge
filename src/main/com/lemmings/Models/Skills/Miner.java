@@ -1,6 +1,10 @@
-package src.main.com.lemmings.Models;
+package src.main.com.lemmings.Models.Skills;
 
 import java.awt.Point;
+
+import src.main.com.lemmings.Models.Character;
+import src.main.com.lemmings.Models.GameObjectChangeListener;
+import src.main.com.lemmings.Models.GameObjects.Ground;
 
 /**
  * Miner
