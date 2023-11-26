@@ -32,9 +32,14 @@ public abstract class GameObject extends JLabel {
     private ENV_TYPE type;
     private GameObjectChangeListener mouseClickListener;
 
-    public GameObject(int x, int y, int width, int height, Point rowAndCol) {
+    public GameObject() {
         id++;
         this.uniqueID = this.id;
+    };
+
+    public GameObject(int x, int y, int width, int height, Point rowAndCol) {
+        this();
+        
         this.rowAndCol = rowAndCol;
         this.xPos = x;
         this.yPos = y;
@@ -42,7 +47,6 @@ public abstract class GameObject extends JLabel {
         this.height = height;
         setPreferredsize();
         setObjectBounds();
-        // setMouseClickedListener();
 
     }
 
@@ -53,7 +57,6 @@ public abstract class GameObject extends JLabel {
     private void setPreferredsize() {
         this.setPreferredSize(new Dimension(this.width, this.height));
     }
-
 
     public int getxPos() {
         return xPos;
@@ -146,22 +149,25 @@ public abstract class GameObject extends JLabel {
     }
 
     /**
-     * This method sets the instance variable mouseClickListern to an 
-     * instance of a GameObjectClickListener passed as an argument. 
+     * This method sets the instance variable mouseClickListern to an
+     * instance of a GameObjectClickListener passed as an argument.
+     * 
      * @param clickListener an instance of the GameObjectClickListener interface.
      */
-    public void setGameObjectChangeListener (GameObjectChangeListener clickListener){
+    public void setGameObjectChangeListener(GameObjectChangeListener clickListener) {
         this.mouseClickListener = clickListener;
     }
 
     /**
-     * This method sets a mouseClicked listener to this GameObject instance. On mouseclick,
-     * it calls the gameObjectClicked method of the mouseClickListener and passes this as an argument. 
+     * This method sets a mouseClicked listener to this GameObject instance. On
+     * mouseclick,
+     * it calls the gameObjectClicked method of the mouseClickListener and passes
+     * this as an argument.
      */
-    public void setMouseClickedListener(){
+    public void setMouseClickedListener() {
         this.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent event){
+            public void mouseClicked(MouseEvent event) {
                 mouseClickListener.removeGameObjectSelected(GameObject.this);
             }
         });

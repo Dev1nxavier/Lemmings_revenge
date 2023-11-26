@@ -85,12 +85,12 @@ public class LevelController implements GameObjectChangeListener {
 
         timer.start();
 
-        this.gameView.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent event) {
-                gameView.showMouseLocation(MouseInfo.getPointerInfo().getLocation());
-            }
-        });
+        // this.gameView.addMouseMotionListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseMoved(MouseEvent event) {
+        //         gameView.showMouseLocation(MouseInfo.getPointerInfo().getLocation());
+        //     }
+        // });
 
         // add click listeners to each Ground object
         for (GameObject obj : lvl.getGameObjects()) {

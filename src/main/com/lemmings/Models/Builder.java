@@ -25,30 +25,39 @@ public class Builder implements Skill {
 
     @Override
     public void useSkill(Character c, ArrayList<GameObject> env) {
-        c.setCanMoveHorizontally(false);
+
         try {
             // we need to detect an edge
             if (c.isGround()) {
                 Point currentGround = c.getCurrentGround().getRowAndCol();
-                Point nextGround;
-                if (c.isMovingRight) {
+                Point nextGround = null;
+                boolean isEdge = true; // set flag for edge.
+
+                if (c.isMovingRight && currentGround.y+1 < 8) {
                     nextGround = new Point(currentGround.x, currentGround.y + 1);
-                    System.out.printf("Current Ground: %s\nNext Ground: %s\n", currentGround, nextGround);
+
                 } else {
                     if (currentGround.y - 1 >= 0) {
                         nextGround = new Point(currentGround.x, currentGround.y - 1);
-                    } else {
-                        nextGround = null;
                     }
-
                 }
-
                 if (nextGround != null) {
                     for (GameObject go : env) {
                         if (nextGround.equals(go.getRowAndCol())) {
-                            c.setCanMoveHorizontally(true);
+                            isEdge = false;
+                            break;
                         }
                     }
+
+                    if (isEdge) {
+                        decrementCount();
+
+                        // build the bridge
+                        Ground bridge = new Bridge(c.getXPosition(), c.getYPosition(), nextGround);
+                        listener.modifyGameObject(bridge);
+                        destroyAfterDelay(bridge);
+                    }
+
                 }
 
             }
@@ -56,6 +65,25 @@ public class Builder implements Skill {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void destroyAfterDelay(Ground bridge) {
+        Thread worker = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000); // delay execution 3 seconds
+                    System.out.println("Destroying bridge...");
+                    getListener().removeGameObjectSelected(bridge);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    System.err.println("Thread is interrupted: " + ie.getMessage());
+                }
+            }
+
+        });
+        worker.start();
     }
 
     @Override
