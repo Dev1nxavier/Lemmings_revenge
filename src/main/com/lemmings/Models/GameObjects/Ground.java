@@ -19,8 +19,6 @@ public class Ground extends GameObject {
         setImage("ground_tile_02.png");
         setType(ENV_TYPE.GROUND);
         this.text = "" + this.getRowAndCol().x + ", " + this.getRowAndCol().y;
-        // FIXME: For testing only
-        this.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
     }
 
     public boolean shouldDestroy(double y) {

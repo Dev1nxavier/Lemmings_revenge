@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import src.main.com.lemmings.Models.GameObjects.Elevator;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.GameObjects.Ground;
+import src.main.com.lemmings.Models.GameObjects.WarpPortal;
 import src.main.com.lemmings.Models.GameObjects.GameObject.ENV_TYPE;
 import src.main.com.lemmings.Models.Skills.Skill;
 import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
@@ -30,6 +31,7 @@ public abstract class Character {
     private Skill skill;
     private SKILL_TYPE type = null;
     private boolean canMoveHorizontally = true; // flag for setting model's ability to move horizontally
+    private boolean isOnElevator = false;
     public int speed;
 
     Character() {
@@ -122,6 +124,7 @@ public abstract class Character {
     // 'ground'. If yes, it sets isGround to true.
     public GameObject isOnGround(ArrayList<GameObject> gameObjects) {
         setIsGround(false);
+        setCanMoveHorizontally(true);
         for (GameObject g : gameObjects) {
             if (g instanceof Ground) {
                 if (isOverlapping(this.getBounds(), g.getBounds())) {
@@ -131,24 +134,36 @@ public abstract class Character {
                         setLastGround(this.currentGround);
                     }
                     setCurrentGround((Ground) g);
-
-                    // Elevator logic
-                    if (g.getType() == ENV_TYPE.ELEVATOR) {
-                        Elevator gE = (Elevator) g; // cast ground object to Elevator instance
-
-                        gE.setIsMoving(true);
-                        if (gE.getIsMoving()) {
-                            setCanMoveHorizontally(false);
-                            gE.moveVertically();
-                            setY_pos(gE.getyPos());
-                        }
-                    }
-
+                    elevator(g);
                     return g;
                 }
             }
         }
         return null;
+    }
+
+    private void elevator(GameObject g) {
+        if (g.getType() == ENV_TYPE.ELEVATOR) {
+            Elevator el = (Elevator) g; // cast ground object to Elevator instance
+
+            isOnElevator = true;
+
+            updateElevatorPassengerCount(el);
+
+                el.setIsMoving(true);
+                if (el.getIsMoving()) {
+                    setCanMoveHorizontally(false);
+                    el.moveVertically();
+                    setY_pos(el.getyPos());
+                    setCanMoveHorizontally(true);
+                }
+        }
+    }
+
+    private void updateElevatorPassengerCount(Elevator el){
+        if (!isOnElevator) {
+            el.updatePassengerCount();
+        }
     }
 
     private boolean isOverlapping(Rectangle Char, Rectangle g) {
@@ -169,32 +184,40 @@ public abstract class Character {
     public void detectCollisions(ArrayList<? extends Object> gameObjects) {
 
         for (Object obj : gameObjects) {
-            if (obj instanceof GameObject) {
+            if (obj instanceof GameObject && ((GameObject)obj).getType() != ENV_TYPE.PORTAL) {
                 // set as a GameObjecct
                 GameObject go = (GameObject) obj;
-                if (go.getType() != GameObject.ENV_TYPE.GROUND) {
-                    detectCollision(go.getBounds());
+                if (go.getType() != GameObject.ENV_TYPE.GROUND && go.getType() != GameObject.ENV_TYPE.ELEVATOR) {
+                    if (detectCollision(go)){
+                        this.toggleDirection();
+                    };
                 }
             } else if (obj instanceof Character) {
                 // set as type Character
                 Character ch = (Character) obj;
                 if (ch.getSkillType() == SKILL_TYPE.BLOCKER && this != ch) {
-                    detectCollision(ch.getBounds());
+                    if(detectCollision(ch)){
+                        this.toggleDirection();
+                    };
                 }
             }
 
         }
     }
 
-    public boolean detectCollision(Rectangle objectBounds) {
-        Rectangle ob = objectBounds;
+    public boolean detectPortal(WarpPortal portal){
+        return detectCollision(portal);
+    }
+
+    public boolean detectCollision(Object object) {
+
+        Rectangle ob =((GameObject) object).getBounds();
         Rectangle r = this.getBounds();
         // Check if there is overlap along the X axis and Y axis
         boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
         boolean yOverlap = (r.y < ob.y + ob.height) && (r.y + r.height > ob.y);
 
         if (xOverlap && yOverlap) {
-            this.toggleDirection();
             return true;
         }
         return false;

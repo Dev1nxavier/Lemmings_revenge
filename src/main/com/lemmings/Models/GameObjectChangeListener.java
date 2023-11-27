@@ -2,6 +2,7 @@ package src.main.com.lemmings.Models;
 
 import java.awt.Point;
 
+import src.main.com.lemmings.Controllers.CharacterController;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 
 /**
@@ -16,6 +17,7 @@ public interface GameObjectChangeListener {
 
     public void removeGameObjectSelected(GameObject object);
     public void removeGameObjectSelected(Point point);
-    public void modifyGameObject(GameObject object);
+    public void addGameObject(GameObject object);
     public void updateGameState();
+    public void removeCharacter(CharacterController character);
 }

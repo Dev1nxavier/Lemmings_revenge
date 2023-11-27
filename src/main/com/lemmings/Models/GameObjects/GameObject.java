@@ -19,7 +19,7 @@ import src.main.com.lemmings.utilities.ImageLoader;
 
 public abstract class GameObject extends JLabel {
     public static enum ENV_TYPE {
-        GROUND, ROCK, CLIFF, HOLE, WATER, ELEVATOR
+        GROUND, ROCK, CLIFF, HOLE, WATER, ELEVATOR, PORTAL
     };
 
     private int xPos;

@@ -100,13 +100,24 @@ public class LevelController implements GameObjectChangeListener {
 
     private void updateGameState(ArrayList<GameObject> env, ArrayList<Character> characters) {
         for (CharacterController chController : chControllers) {
-            chController.detectCollision(env); // returns the object that this character collides with
-            chController.detectCollision(characters);
+            chController.updateCharacter(env, characters);
+        }
 
-            chController.detectGround(env); // returns the ground object that this character is
-                                            // standing on
+        checkForWinCondition();
+    }
 
-            chController.updateCharacter(env);
+    private void checkForWinCondition(){
+        ArrayList<CharacterController> remove = new ArrayList<>();
+
+        for (CharacterController chController : chControllers) {
+                        //check for win condition
+            if(chController.checkWinCondition(lvl.getPortal())){
+                remove.add(chController);
+            };
+        }
+
+        for (CharacterController characterController : remove) {
+            removeCharacter(characterController);
         }
     }
 
@@ -139,8 +150,10 @@ public class LevelController implements GameObjectChangeListener {
         }
     }
 
+    
+
     @Override
-    public void modifyGameObject(GameObject go) {
+    public void addGameObject(GameObject go) {
         lvl.getGameObjects().add(go);
         updateGameState();
     }
@@ -152,5 +165,13 @@ public class LevelController implements GameObjectChangeListener {
 
     private ArrayList<CharacterController> getCharacterControllers() {
         return this.chControllers;
+    }
+
+    @Override
+    public void removeCharacter(CharacterController character) {
+        System.out.println("LevelController.removeCharacter");
+        getCharacterControllers().remove(character);
+        // lvl.getCharacters().remove(character.getCharacterModel());
+        updateGameState();
     }
 }

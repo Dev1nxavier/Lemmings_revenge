@@ -12,6 +12,7 @@ import javax.swing.border.Border;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.Models.GameObjects.WarpPortal;
 import src.main.com.lemmings.Models.Skills.Blocker;
 import src.main.com.lemmings.Models.Skills.Builder;
 import src.main.com.lemmings.Models.Skills.Miner;
@@ -53,10 +54,13 @@ public class CharacterController {
         });
     }
 
-    public void updateCharacter(ArrayList<GameObject> env) {
+    public void updateCharacter(ArrayList<GameObject> env, ArrayList<Character> characters) {
         invokeSkill(env);
+        ch.detectCollisions(env);
+        ch.detectCollisions(characters);
         ch.updatePosition();
         ch.detectBounds();
+        detectGround(env);
         onCharacterModelUpdate();
     }
 
@@ -92,6 +96,10 @@ public class CharacterController {
         return this.chView;
     }
 
+    public Character getCharacterModel(){
+        return this.ch;
+    }
+
     /**
      * This method checks for collisions between a character and a game object.
      * it calls Character class's detectCollision method, passing all level
@@ -110,6 +118,10 @@ public class CharacterController {
         // reset isGround
         ch.setIsGround(false);
         return ch.isOnGround(gameObjects);
+    }
+
+    public boolean checkWinCondition(WarpPortal portal){
+        return ch.detectPortal(portal);
     }
 
     /**

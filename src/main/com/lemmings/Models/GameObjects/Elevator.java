@@ -2,10 +2,11 @@ package src.main.com.lemmings.Models.GameObjects;
 
 import java.awt.Color;
 import java.awt.Point;
-
+import java.awt.Rectangle;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
-
 import src.main.com.lemmings.utilities.ImageLoader;
+import src.main.com.lemmings.Models.Character;
 
 /**
  * Elevator
@@ -19,19 +20,23 @@ import src.main.com.lemmings.utilities.ImageLoader;
 public class Elevator extends Ground {
     private boolean isMoving = false;
     private int init_y_pos;
+    private int passengerCount = 0;
+    private final int PASSENGERS = 13;
 
     public Elevator(int x, int y, Point rowAndCol) {
-        super(x, y, 150, 100, rowAndCol);
+        // super(x, y, 150, 100, rowAndCol);
+        super(x, y, 150, 75, rowAndCol);
         this.init_y_pos = y;
         setType(ENV_TYPE.ELEVATOR);
         setImage("elevator_03.png");
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
         setObjectBounds();
     }
 
     @Override
     protected void setObjectBounds() {
         this.setBounds(getxPos(), getyPos() - 25, getWidth(), getHeight());
+
     }
 
     public void setIsMoving(boolean isMoving) {
@@ -42,15 +47,29 @@ public class Elevator extends Ground {
         return this.isMoving;
     }
 
+    public void updatePassengerCount() {
+        passengerCount++;
+    }
+
+    public int getPassengerCount() {
+        return this.passengerCount;
+    }
+
+    public int getPASSENGER() {
+        return this.PASSENGERS;
+    }
+
     // move elevator negative Y direction
     public void moveVertically() {
         if (isMoving) {
             int y_pos = getyPos();
-            if (y_pos > init_y_pos - 125) {
+            if (y_pos > init_y_pos - 100) {
                 y_pos -= 5;
                 setyPos(y_pos);
                 setBounds(getxPos(), y_pos, 150, 100);
             }
         }
     }
+
+    
 }

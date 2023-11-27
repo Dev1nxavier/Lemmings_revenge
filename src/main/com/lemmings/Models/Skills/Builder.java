@@ -57,7 +57,7 @@ public class Builder implements Skill {
                     if (isEdge) {
                         decrementCount();
                         bridge = new Bridge(c.getXPosition() + (c.getIsMovingRight() ? 0 : -150), c.getYPosition(), gap);
-                        listener.modifyGameObject(bridge);
+                        listener.addGameObject(bridge);
                         destroyAfterDelay(bridge);
                     }
 

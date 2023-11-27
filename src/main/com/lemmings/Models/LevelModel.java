@@ -7,6 +7,7 @@ import src.main.com.lemmings.Models.GameObjects.Elevator;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.GameObjects.Ground;
 import src.main.com.lemmings.Models.GameObjects.Rock;
+import src.main.com.lemmings.Models.GameObjects.WarpPortal;
 import src.main.com.lemmings.Views.GameView;
 import src.main.com.lemmings.Views.SkillIcon;
 
@@ -27,7 +28,7 @@ public class LevelModel {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 1, 1, 1, 1, 1, 1, 1, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 1, 1, 0, 0, 1 },
+            { 2, 4, 0, 1, 1, 0, 0, 1 },
             { 1, 1, 1, 1, 1, 3, 1, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1 },
             { 1, 1, 0, 0, 0, 1, 1, 1 }
@@ -37,6 +38,7 @@ public class LevelModel {
     // private ArrayList<CharacterView> characterViews = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private ArrayList<GameView>skillViews = new ArrayList<>();
+    private WarpPortal portal;
     private int score = 0;
     private long timer;
 
@@ -86,11 +88,15 @@ public class LevelModel {
                     px += 75; // advance by width of object
                 } else if (map[row][col] == 2) {
                     gameObjects.add(new Rock(px, py, 50, 75, new Point(row, col)));
-                    px += 150;
+                    px += 75;
                 } else if (map[row][col] == 3) {
                     //create a new elevator object
                     gameObjects.add(new Elevator(px, py, new Point(row, col)));
                     px+=150;
+                }else if (map[row][col] == 4) {
+                    portal = new WarpPortal(px, py, new Point(row, col));
+                    gameObjects.add(portal);
+                    px +=75;
                 } else {
                     // blanks count!
                     px += 75;
@@ -136,6 +142,10 @@ public class LevelModel {
     public void setMap(int[][] map) {
         // make sure map is empty
         this.map = map;
+    }
+
+    public WarpPortal getPortal(){
+        return this.portal;
     }
 
     /**
