@@ -13,9 +13,6 @@ import src.main.com.lemmings.Views.LevelView;
  * @date November 10, 2023
  */
 public class Application {
-    private static String[] pathsToImages = { "src/main/resources/Lemming_pose-two.png",
-            "src/main/resources/Lemming_pose-three.png" };
-    private static BufferedImage[] lemmingAnimationFrames = new BufferedImage[pathsToImages.length];
 
     public static void main(String[] args) {
         
@@ -26,10 +23,11 @@ public class Application {
         LevelController gameController = new LevelController(gameView);
    
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setLocationRelativeTo(null); // open in middle of screen
         mainFrame.add(gameView);
         
-        mainFrame.pack();
-        mainFrame.setVisible(true);
+        mainFrame.pack(); // frame matches size of LevelView
+        mainFrame.setVisible(true); // here we go!
 
     }
 

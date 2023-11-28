@@ -11,7 +11,7 @@ public class Bridge extends Ground {
 
     public Bridge(int x, int y, Point rowAndCol) {
         super(x, y, 150, 40, rowAndCol);
-        setImage("bridge_02.png");
+        setImage("bridge_03.png");
         setType(ENV_TYPE.GROUND);
         this.text = "Bridge";
     }

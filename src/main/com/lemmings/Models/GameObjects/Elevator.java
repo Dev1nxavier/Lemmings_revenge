@@ -1,12 +1,6 @@
 package src.main.com.lemmings.Models.GameObjects;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import src.main.com.lemmings.utilities.ImageLoader;
-import src.main.com.lemmings.Models.Character;
 
 /**
  * Elevator
@@ -71,5 +65,5 @@ public class Elevator extends Ground {
         }
     }
 
-    
+
 }

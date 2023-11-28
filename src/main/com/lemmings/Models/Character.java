@@ -3,6 +3,7 @@ package src.main.com.lemmings.Models;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import src.main.com.lemmings.Models.GameObjects.CollapsibleGround;
 import src.main.com.lemmings.Models.GameObjects.Elevator;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.GameObjects.Ground;
@@ -135,11 +136,21 @@ public abstract class Character {
                     }
                     setCurrentGround((Ground) g);
                     elevator(g);
+                    collapsible(g);
                     return g;
                 }
             }
         }
         return null;
+    }
+
+    private void collapsible(GameObject g) {
+        if (g.getType() == ENV_TYPE.COLLAPSIBLE) {
+            CollapsibleGround cg = (CollapsibleGround) g;
+            if (!cg.getIsActivated()) {
+                cg.setIsActivated();
+            }
+        }
     }
 
     private void elevator(GameObject g) {
@@ -187,7 +198,7 @@ public abstract class Character {
             if (obj instanceof GameObject && ((GameObject)obj).getType() != ENV_TYPE.PORTAL) {
                 // set as a GameObjecct
                 GameObject go = (GameObject) obj;
-                if (go.getType() != GameObject.ENV_TYPE.GROUND && go.getType() != GameObject.ENV_TYPE.ELEVATOR) {
+                if (go.getType() == ENV_TYPE.ROCK) {
                     if (detectCollision(go)){
                         this.toggleDirection();
                     };

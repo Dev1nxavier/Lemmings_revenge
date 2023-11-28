@@ -19,7 +19,7 @@ import src.main.com.lemmings.utilities.ImageLoader;
 
 public abstract class GameObject extends JLabel {
     public static enum ENV_TYPE {
-        GROUND, ROCK, CLIFF, HOLE, WATER, ELEVATOR, PORTAL
+        GROUND, ROCK, CLIFF, HOLE, WATER, ELEVATOR, PORTAL, COLLAPSIBLE
     };
 
     private int xPos;
@@ -31,7 +31,7 @@ public abstract class GameObject extends JLabel {
     private static int id;
     private int uniqueID;
     private ENV_TYPE type;
-    private GameObjectChangeListener mouseClickListener;
+    private GameObjectChangeListener listener;
 
     public GameObject() {
         id++;
@@ -155,9 +155,14 @@ public abstract class GameObject extends JLabel {
      * @param clickListener an instance of the GameObjectClickListener interface.
      */
     public void setGameObjectChangeListener(GameObjectChangeListener clickListener) {
-        this.mouseClickListener = clickListener;
+        this.listener = clickListener;
     }
 
+    public GameObjectChangeListener getGameObjectChangeListener(){
+        return this.listener;
+    }
+
+    //TODO: REMOVE!
     /**
      * This method sets a mouseClicked listener to this GameObject instance. On
      * mouseclick,
@@ -168,7 +173,7 @@ public abstract class GameObject extends JLabel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
-                mouseClickListener.removeGameObjectSelected(GameObject.this);
+                listener.removeGameObjectSelected(GameObject.this);
             }
         });
     }

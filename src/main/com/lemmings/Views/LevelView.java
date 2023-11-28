@@ -15,7 +15,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import src.main.com.lemmings.Controllers.CharacterController;
-import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.utilities.ImageLoader;
 
@@ -23,7 +22,7 @@ import src.main.com.lemmings.utilities.ImageLoader;
  * LevelView
  */
 public class LevelView extends JPanel {
-    private JLayeredPane layeredPane; // for rendering characters
+    private JLayeredPane layeredPane; // for rendering characters and game objects
     private final int HEIGHT = 6000;
     private final int WIDTH = 1000;
     private BufferedImage background;

@@ -3,6 +3,7 @@ package src.main.com.lemmings.Models;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import src.main.com.lemmings.Models.GameObjects.CollapsibleGround;
 import src.main.com.lemmings.Models.GameObjects.Elevator;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.GameObjects.Ground;
@@ -22,25 +23,25 @@ public class LevelModel {
     final int WIDTH = 600;
     final int HEIGHT = 600;
     final int MAX_CHARS = 10;
+    private GameState gameState;
+
     // FIXME: Use generateMap function after testing!
     int[][] map = {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 1, 1, 1, 1, 1, 1, 1, 0 },
+            { 1, 1, 1, 1, 1, 1, 1, 5 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 2, 4, 0, 1, 1, 0, 0, 1 },
-            { 1, 1, 1, 1, 1, 3, 1, 1 },
-            { 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 2, 4, 0, 0, 1, 0, 0, 1 },
+            { 1, 1, 1, 0, 0, 3, 0, 1 },
+            { 1, 1, 1, 3, 0, 1, 1, 1 },
             { 1, 1, 0, 0, 0, 1, 1, 1 }
     };
     // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
     private ArrayList<Character> characters = new ArrayList<>();
     // private ArrayList<CharacterView> characterViews = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
-    private ArrayList<GameView>skillViews = new ArrayList<>();
+    private ArrayList<GameView> skillViews = new ArrayList<>();
     private WarpPortal portal;
-    private int score = 0;
-    private long timer;
 
     public LevelModel() {
         loadLevel();
@@ -49,19 +50,19 @@ public class LevelModel {
     // FIXME: the sizes of the obstacles is incorrect
     // primes the map with obstacles
     private void loadLevel() {
-
+        // initialize game state
         generateCharacters();
     }
 
     public void updateGameState() {
         gameObjects.clear();
     }
-    
-    public Character getCharacter(int i){
+
+    public Character getCharacter(int i) {
         return this.characters.get(i);
     }
 
-    public void addSkillToSkillViews(SkillIcon skill){
+    public void addSkillToSkillViews(SkillIcon skill) {
         this.skillViews.add(skill);
     }
 
@@ -90,13 +91,16 @@ public class LevelModel {
                     gameObjects.add(new Rock(px, py, 50, 75, new Point(row, col)));
                     px += 75;
                 } else if (map[row][col] == 3) {
-                    //create a new elevator object
+                    // create a new elevator object
                     gameObjects.add(new Elevator(px, py, new Point(row, col)));
-                    px+=150;
-                }else if (map[row][col] == 4) {
+                    px += 75;
+                } else if (map[row][col] == 4) {
                     portal = new WarpPortal(px, py, new Point(row, col));
                     gameObjects.add(portal);
-                    px +=75;
+                    px += 75;
+                } else if (map[row][col] == 5) {
+                    gameObjects.add(new CollapsibleGround(px, py, new Point(row, col)));
+                    px += 75;
                 } else {
                     // blanks count!
                     px += 75;
@@ -144,7 +148,7 @@ public class LevelModel {
         this.map = map;
     }
 
-    public WarpPortal getPortal(){
+    public WarpPortal getPortal() {
         return this.portal;
     }
 
@@ -178,21 +182,4 @@ public class LevelModel {
     public void setGameObjects(ArrayList<GameObject> obstacles) {
         this.gameObjects = obstacles;
     }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public long getTimer() {
-        return timer;
-    }
-
-    public void setTimer(long timer) {
-        this.timer = timer;
-    }
-
 }

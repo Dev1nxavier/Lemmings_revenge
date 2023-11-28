@@ -6,8 +6,10 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.GameObjectChangeListener;
+import src.main.com.lemmings.Models.GameState;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.Views.GameStateView;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.Models.Character;
 
@@ -27,20 +29,40 @@ import src.main.com.lemmings.Models.Character;
 public class LevelController implements GameObjectChangeListener {
     private LevelModel lvl;
     private LevelView gameView;
-    // private ArrayList<Character> characters;
+    private GameState playState;
+    private GameStateView scoreView;
+    private GameStateController psController;
     private ArrayList<CharacterController> chControllers;
 
     public LevelController(LevelView gameView) {
-        initializeLevel(gameView);
+        initializeGame(gameView);
         addListeners();
     }
 
-    private void initializeLevel(LevelView gameView) {
+    private void initializeGame(LevelView gameView) {
+
+        // initialize level
         this.lvl = new LevelModel();
         this.gameView = gameView;
+
+        // initialize game state
+        this.scoreView = new GameStateView();
+        this.playState = new GameState();
+
         lvl.createGameObjectsFromMap(); // populate game objects in Model
+
+        // add views to game panel
+        JPanel scorePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // center contents horizontally
+        scorePanel.setOpaque(false);
+        scorePanel.add(scoreView);
+        gameView.add(scorePanel, BorderLayout.NORTH);
+
         addObjectsToGameView(lvl.getGameObjects()); // display game objects in game view
+
+        // create controllers
         this.chControllers = createCharacterControllers();
+        this.psController = new GameStateController(scoreView, playState);
+
         updateGameState();
 
     }
@@ -85,6 +107,7 @@ public class LevelController implements GameObjectChangeListener {
 
         timer.start();
 
+        // // FIXME: Remove after testing
         // this.gameView.addMouseMotionListener(new MouseAdapter() {
         //     @Override
         //     public void mouseMoved(MouseEvent event) {
@@ -103,22 +126,38 @@ public class LevelController implements GameObjectChangeListener {
             chController.updateCharacter(env, characters);
         }
 
-        checkForWinCondition();
+        processWinConditions();
     }
 
-    private void checkForWinCondition(){
-        ArrayList<CharacterController> remove = new ArrayList<>();
+    private void processWinConditions() {
+        ArrayList<CharacterController> remove = findCharactersMeetingWinConditions();
 
-        for (CharacterController chController : chControllers) {
-                        //check for win condition
-            if(chController.checkWinCondition(lvl.getPortal())){
-                remove.add(chController);
-            };
-        }
+        // each character is 5 points
+        int addScore = remove.size() * 5;
+        psController.updateScore(addScore);
 
+        removeCharacters(remove);
+    }
+
+    private void removeCharacters(ArrayList<CharacterController> remove) {
         for (CharacterController characterController : remove) {
             removeCharacter(characterController);
         }
+    }
+
+    // this methods finds CharacterControllers whose coupled Character models meet
+    // the win condition
+    private ArrayList<CharacterController> findCharactersMeetingWinConditions() {
+        ArrayList<CharacterController> remove = new ArrayList<>();
+
+        for (CharacterController chController : chControllers) {
+            // check for win condition
+            if (chController.checkWinCondition(lvl.getPortal())) {
+                remove.add(chController);
+            }
+        }
+
+        return remove;
     }
 
     @Override
@@ -150,8 +189,6 @@ public class LevelController implements GameObjectChangeListener {
         }
     }
 
-    
-
     @Override
     public void addGameObject(GameObject go) {
         lvl.getGameObjects().add(go);
@@ -169,9 +206,7 @@ public class LevelController implements GameObjectChangeListener {
 
     @Override
     public void removeCharacter(CharacterController character) {
-        System.out.println("LevelController.removeCharacter");
         getCharacterControllers().remove(character);
-        // lvl.getCharacters().remove(character.getCharacterModel());
         updateGameState();
     }
 }
