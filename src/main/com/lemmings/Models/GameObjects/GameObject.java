@@ -46,17 +46,16 @@ public abstract class GameObject extends JLabel {
         this.yPos = y;
         this.width = width;
         this.height = height;
-        setPreferredsize();
         setObjectBounds();
-
     }
 
     protected void setObjectBounds() {
         this.setBounds(getxPos(), getyPos(), width, height);
     }
 
-    private void setPreferredsize() {
-        this.setPreferredSize(new Dimension(this.width, this.height));
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(this.width, this.height);
     }
 
     public int getxPos() {

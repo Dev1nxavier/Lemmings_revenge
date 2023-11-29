@@ -13,11 +13,10 @@ import java.util.Map;
  * @author Sean Greene
  * @date November 11, 2023
  * 
- * This class preloads game images and stores them in static variables
+ * This class preloads game images and stores them in a static Map object
  */
 public class ImageLoader {
     
-
     public static Map<String, BufferedImage> GAME_IMAGES = new HashMap<>();
 
     static {
@@ -30,7 +29,7 @@ public class ImageLoader {
             }
             loadImage(resourcesFile);
         } catch (Exception e) {
-            System.err.println("Unable to load file");
+            System.err.println("Unable to load file" + e.getMessage());
             e.printStackTrace();
         }
     }

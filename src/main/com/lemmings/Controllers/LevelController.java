@@ -11,6 +11,7 @@ import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Views.GameStateView;
 import src.main.com.lemmings.Views.LevelView;
+import src.main.com.lemmings.Views.MenuView;
 import src.main.com.lemmings.Models.Character;
 
 /**
@@ -31,6 +32,7 @@ public class LevelController implements GameObjectChangeListener {
     private LevelView gameView;
     private GameState playState;
     private GameStateView scoreView;
+    private MenuView menu;
     private GameStateController psController;
     private ArrayList<CharacterController> chControllers;
 
@@ -48,6 +50,7 @@ public class LevelController implements GameObjectChangeListener {
         // initialize game state
         this.scoreView = new GameStateView();
         this.playState = new GameState();
+        this.menu = new MenuView();
 
         lvl.createGameObjectsFromMap(); // populate game objects in Model
 
@@ -56,7 +59,7 @@ public class LevelController implements GameObjectChangeListener {
         scorePanel.setOpaque(false);
         scorePanel.add(scoreView);
         gameView.add(scorePanel, BorderLayout.NORTH);
-
+        gameView.add(menu, BorderLayout.EAST);
         addObjectsToGameView(lvl.getGameObjects()); // display game objects in game view
 
         // create controllers
@@ -100,7 +103,7 @@ public class LevelController implements GameObjectChangeListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // update character
+                // update characters and game objects
                 updateGameState(env, characters);
             }
         });
@@ -114,7 +117,7 @@ public class LevelController implements GameObjectChangeListener {
         //         gameView.showMouseLocation(MouseInfo.getPointerInfo().getLocation());
         //     }
         // });
-
+  
         // add click listeners to each Ground object
         for (GameObject obj : lvl.getGameObjects()) {
             obj.setGameObjectChangeListener(this);

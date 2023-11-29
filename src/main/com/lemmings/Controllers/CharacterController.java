@@ -33,7 +33,6 @@ import src.main.com.lemmings.Views.CharacterView;
 public class CharacterController {
     private Character ch;
     private CharacterView chView;
-    private boolean isHighlighted = false;
     private GameObjectChangeListener listener;
 
     CharacterController(Character ch, GameObjectChangeListener listener) {
@@ -46,11 +45,25 @@ public class CharacterController {
     private void addListeners() {
         this.chView.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent clickEvent) {
-                super.mouseClicked(clickEvent);
-                chView.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+            public void mousePressed(MouseEvent clickEvent) {
+                super.mousePressed(clickEvent);
+                // add an icon to the view
+                chView.setSkillIcon("miner_icon.png");
                 ch.setSkill(new Builder(listener));
             }
+
+            @Override
+            public void mouseEntered(MouseEvent enterEvent){
+                super.mouseEntered(enterEvent);
+                chView.showArrow();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent exitEvent){
+                super.mouseExited(exitEvent);
+                chView.hideArrow();
+            }
+            
         });
     }
 
@@ -73,7 +86,6 @@ public class CharacterController {
         if (ch.getSkill() == null) {
             return;
         }
-
         ch.useSkill(env);
     }
 
@@ -117,7 +129,7 @@ public class CharacterController {
 
         // reset isGround
         ch.setIsGround(false);
-        return ch.isOnGround(gameObjects);
+        return ch.detectGround(gameObjects);
     }
 
     public boolean checkWinCondition(WarpPortal portal){

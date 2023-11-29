@@ -79,32 +79,23 @@ public class LevelModel {
     public void createGameObjectsFromMap() {
         gameObjects.clear();
         // add obstacles
-        int px = 0; // start at top of screen
-        int py = 0;
+        int px =0, py = 0; // start at top of screen
+
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map.length; col++) {
-                if (map[row][col] == 1) {
-                    // add ground
-                    gameObjects.add(new Ground(px, py, 75, 75, new Point(row, col)));
-                    px += 75; // advance by width of object
-                } else if (map[row][col] == 2) {
-                    gameObjects.add(new Rock(px, py, 50, 75, new Point(row, col)));
-                    px += 75;
-                } else if (map[row][col] == 3) {
-                    // create a new elevator object
-                    gameObjects.add(new Elevator(px, py, new Point(row, col)));
-                    px += 75;
-                } else if (map[row][col] == 4) {
-                    portal = new WarpPortal(px, py, new Point(row, col));
-                    gameObjects.add(portal);
-                    px += 75;
-                } else if (map[row][col] == 5) {
-                    gameObjects.add(new CollapsibleGround(px, py, new Point(row, col)));
-                    px += 75;
-                } else {
-                    // blanks count!
-                    px += 75;
+                int position = map[row][col];
+                switch (position) {
+                    case 1 -> gameObjects.add(new Ground(px, py, 75, 75, new Point(row, col)));
+                    case 2 -> gameObjects.add(new Rock(px, py, 50, 75, new Point(row, col)));
+                    case 3 -> gameObjects.add(new Elevator(px, py, new Point(row, col)));
+                    case 4 -> {
+                        portal = new WarpPortal(px, py, new Point(row, col));
+                        gameObjects.add(portal);
+                        break;
+                    }
+                    case 5 -> gameObjects.add(new CollapsibleGround(px, py, new Point(row, col)));
                 }
+                px += 75;
             }
             px = 0;
             py += 75;

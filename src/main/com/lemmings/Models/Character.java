@@ -48,6 +48,7 @@ public abstract class Character {
     // updates character's position
     public void updatePosition() {
         if (isGround()) {
+            
             if (canMoveHorizontally) {
                 moveHorizontally();
             }
@@ -58,6 +59,7 @@ public abstract class Character {
 
     private void moveHorizontally() {
         x_pos += isMovingRight ? speed : -speed;
+        y_pos = (currentGround.getyPos()-getC_HEIGHT()); // ensure character is standing on ground
     }
 
     private void moveVertically() {
@@ -122,10 +124,10 @@ public abstract class Character {
     }
 
     // this method determines if object has collided with an obstacle of type
-    // 'ground'. If yes, it sets isGround to true.
-    public GameObject isOnGround(ArrayList<GameObject> gameObjects) {
+    // 'ground'. If yes, it sets isGround to true and returns the current Ground object
+    public GameObject detectGround(ArrayList<GameObject> gameObjects) {
         setIsGround(false);
-        setCanMoveHorizontally(true);
+        // setCanMoveHorizontally(true);
         for (GameObject g : gameObjects) {
             if (g instanceof Ground) {
                 if (isOverlapping(this.getBounds(), g.getBounds())) {
@@ -163,10 +165,10 @@ public abstract class Character {
 
                 el.setIsMoving(true);
                 if (el.getIsMoving()) {
-                    setCanMoveHorizontally(false);
+                    // setCanMoveHorizontally(false);
                     el.moveVertically();
                     setY_pos(el.getyPos());
-                    setCanMoveHorizontally(true);
+                    // setCanMoveHorizontally(true);
                 }
         }
     }

@@ -6,18 +6,31 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+
 public class CharacterView extends GameView {
     private ArrayList<BufferedImage> animationFrames;
     private int currentFrame;
-    private SkillIcon icon;
-    private int DELAY;
-    private int countUp = 0;
+    private int imageOffset; // adjust image position in JLabel
+    private BufferedImage skillIcon;
+    private BufferedImage arrowIcon;
+    private boolean isHighlighted = false;
 
     public CharacterView(int x, int y) {
         super(10, 20, x, y);
         currentFrame = 0;
+        imageOffset = 20;
         initializeAnimationFrames();
-        this.DELAY = 0;
+        setArrowIcon();
+    }
+
+    private void setArrowIcon() {
+        try {
+            this.arrowIcon = ImageLoader.GAME_IMAGES.get("arrow_01.png");
+        } catch (Exception e) {
+            System.err.println("unable to load arrow image: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void initializeAnimationFrames() {
@@ -31,7 +44,7 @@ public class CharacterView extends GameView {
         return this.animationFrames;
     }
 
-    public void setAnimationFrames(ArrayList<BufferedImage> animationFrames){
+    public void setAnimationFrames(ArrayList<BufferedImage> animationFrames) {
         this.animationFrames = animationFrames;
     }
 
@@ -51,26 +64,35 @@ public class CharacterView extends GameView {
      * @param yPos the current y-coordinate of this view
      */
     private void setCharacterViewBounds(int xPos, int yPos) {
-        this.setBounds(getPosX(), getPosY(), WIDTH, HEIGHT);
-
-        if (icon != null) {
-            icon.update(xPos, yPos - 40);
-        }
+        this.setBounds(getPosX(), getPosY()-imageOffset, WIDTH, HEIGHT+imageOffset);
     }
 
     public void setCurrentFrame() {
-        if (++countUp >= DELAY) {
-            currentFrame = (currentFrame + 1) % animationFrames.size();
+        currentFrame = (currentFrame + 1) % animationFrames.size();
+    }
+
+    public void showArrow(){
+        this.isHighlighted = true;
+    }
+
+    public void hideArrow(){
+        this.isHighlighted = false;
+    }
+
+    public void setSkillIcon(String name) {
+        BufferedImage icon;
+        try {
+            icon = ImageLoader.GAME_IMAGES.get(name);
+            this.skillIcon = icon;
+        } catch (Exception e) {
+            System.err.println("Unable to load icon: " + e.getMessage());
+            e.printStackTrace();
         }
-
+        
     }
 
-    public void setSkillIcon(SkillIcon icon) {
-        this.icon = icon;
-    }
-
-    public SkillIcon getSkillIcon() {
-        return this.icon;
+    public BufferedImage getSkillIcon() {
+        return this.skillIcon;
     }
 
     @Override
@@ -81,7 +103,19 @@ public class CharacterView extends GameView {
 
         try {
             if (animationFrames.get(currentFrame) != null) {
-                g2d.drawImage(animationFrames.get(currentFrame), 0, 0, WIDTH, HEIGHT, null); // draw it relative to this
+                g2d.drawImage(animationFrames.get(currentFrame), 0, imageOffset, WIDTH, HEIGHT, null); // draw it relative to this
+
+                if (skillIcon !=null) {
+                    g2d.drawImage(skillIcon, 0, 0, WIDTH, imageOffset, null);
+                }else{
+                    System.err.println("No skill icon found for character");
+                }
+
+                if (isHighlighted) {
+                    g2d.drawImage(arrowIcon, 0, 0, WIDTH, imageOffset, null);
+                }else{
+                    System.err.println("Unable to show highlight arrow...");
+                }
 
             } else {
                 System.err.println("Unable to load character images");
@@ -93,9 +127,5 @@ public class CharacterView extends GameView {
 
     public void resetCharacterFrame() {
         this.currentFrame = 0;
-    }
-
-    public void setDelay(int delay){
-        this.DELAY = delay;
     }
 }
