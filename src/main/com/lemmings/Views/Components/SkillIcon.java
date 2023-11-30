@@ -1,7 +1,9 @@
-package src.main.com.lemmings.Views;
+package src.main.com.lemmings.Views.Components;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
+import src.main.com.lemmings.Views.GameView;
 
 /**
  * Icon

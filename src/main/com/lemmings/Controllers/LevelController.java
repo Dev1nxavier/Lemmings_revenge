@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameState;
 import src.main.com.lemmings.Models.LevelModel;
+import src.main.com.lemmings.Models.MenuModel;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Views.GameStateView;
 import src.main.com.lemmings.Views.LevelView;
@@ -32,7 +33,9 @@ public class LevelController implements GameObjectChangeListener {
     private LevelView gameView;
     private GameState playState;
     private GameStateView scoreView;
-    private MenuView menu;
+    private MenuView menuView;
+    private MenuModel menuModel;
+    private MenuController menuController;
     private GameStateController psController;
     private ArrayList<CharacterController> chControllers;
 
@@ -50,7 +53,8 @@ public class LevelController implements GameObjectChangeListener {
         // initialize game state
         this.scoreView = new GameStateView();
         this.playState = new GameState();
-        this.menu = new MenuView();
+        this.menuView = new MenuView();
+        this.menuModel = new MenuModel();
 
         lvl.createGameObjectsFromMap(); // populate game objects in Model
 
@@ -59,12 +63,13 @@ public class LevelController implements GameObjectChangeListener {
         scorePanel.setOpaque(false);
         scorePanel.add(scoreView);
         gameView.add(scorePanel, BorderLayout.NORTH);
-        gameView.add(menu, BorderLayout.EAST);
+        gameView.add(menuView, BorderLayout.EAST);
         addObjectsToGameView(lvl.getGameObjects()); // display game objects in game view
 
         // create controllers
         this.chControllers = createCharacterControllers();
         this.psController = new GameStateController(scoreView, playState);
+        this.menuController = new MenuController(menuView, menuModel);
 
         updateGameState();
 

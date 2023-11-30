@@ -10,7 +10,7 @@ import src.main.com.lemmings.Models.GameObjects.Ground;
 import src.main.com.lemmings.Models.GameObjects.Rock;
 import src.main.com.lemmings.Models.GameObjects.WarpPortal;
 import src.main.com.lemmings.Views.GameView;
-import src.main.com.lemmings.Views.SkillIcon;
+import src.main.com.lemmings.Views.Components.SkillIcon;
 
 /**
  * LevelModel.java

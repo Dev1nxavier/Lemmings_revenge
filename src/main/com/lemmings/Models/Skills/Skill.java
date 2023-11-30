@@ -16,7 +16,7 @@ import src.main.com.lemmings.Models.GameObjects.GameObject;
  * 
  */
 public interface Skill {
-    enum SKILL_TYPE{
+    public static enum SKILL_TYPE{
         BUILDER,
         EXCAVATOR,
         MINER,

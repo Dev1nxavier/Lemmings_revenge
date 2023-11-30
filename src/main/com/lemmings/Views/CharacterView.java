@@ -26,7 +26,7 @@ public class CharacterView extends GameView {
 
     private void setArrowIcon() {
         try {
-            this.arrowIcon = ImageLoader.GAME_IMAGES.get("arrow_01.png");
+            this.arrowIcon = ImageLoader.getImage("arrow_01.png");
         } catch (Exception e) {
             System.err.println("unable to load arrow image: " + e.getMessage());
             e.printStackTrace();
@@ -35,9 +35,9 @@ public class CharacterView extends GameView {
 
     private void initializeAnimationFrames() {
         animationFrames = new ArrayList<>();
-        this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-two.png"));
-        this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-three.png"));
-        this.animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_pose-0.png"));
+        this.animationFrames.add(ImageLoader.getImage("Lemming_pose-two.png"));
+        this.animationFrames.add(ImageLoader.getImage("Lemming_pose-three.png"));
+        this.animationFrames.add(ImageLoader.getImage("Lemming_pose-0.png"));
     }
 
     public ArrayList<BufferedImage> getAnimationFrames() {
@@ -82,7 +82,7 @@ public class CharacterView extends GameView {
     public void setSkillIcon(String name) {
         BufferedImage icon;
         try {
-            icon = ImageLoader.GAME_IMAGES.get(name);
+            icon = ImageLoader.getImage(name);
             this.skillIcon = icon;
         } catch (Exception e) {
             System.err.println("Unable to load icon: " + e.getMessage());

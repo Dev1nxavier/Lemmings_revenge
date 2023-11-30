@@ -72,7 +72,7 @@ public class GameStateView extends JPanel {
 
     public void setImage(String imageName) {
         try {
-            BufferedImage image = ImageLoader.GAME_IMAGES.get(imageName);
+            BufferedImage image = ImageLoader.getImage(imageName);
             this.image = image;
         } catch (Exception e) {
             System.err.println("Unable to load image: " + e.getMessage());

@@ -1,4 +1,4 @@
-package src.main.com.lemmings.Views;
+package src.main.com.lemmings.Views.Components;
 
 import java.awt.Component;
 import java.awt.Graphics;

@@ -37,7 +37,7 @@ public class LevelView extends JPanel {
     private void layoutComponents() {
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        background = ImageLoader.GAME_IMAGES.get("cave_background.png");
+        background = ImageLoader.getImage("cave_background.png");
         this.setLayout(new BorderLayout());
         this.add(layeredPane, BorderLayout.CENTER);
     }

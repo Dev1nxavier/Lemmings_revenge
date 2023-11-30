@@ -27,9 +27,9 @@ public class Blocker implements Skill{
     
     public Blocker(){
         animationFrames = new ArrayList<>();
-        animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_police_1.png"));
-        animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_police_3.png"));
-        animationFrames.add(ImageLoader.GAME_IMAGES.get("Lemming_police_2.png"));
+        animationFrames.add(ImageLoader.getImage("Lemming_police_1.png"));
+        animationFrames.add(ImageLoader.getImage("Lemming_police_3.png"));
+        animationFrames.add(ImageLoader.getImage("Lemming_police_2.png"));
         
     }
 

@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ImageLoader {
     
-    public static Map<String, BufferedImage> GAME_IMAGES = new HashMap<>();
+    private static final Map<String, BufferedImage> GAME_IMAGES = new HashMap<>();
 
     static {
         //retrieve path for each resource
@@ -42,5 +42,14 @@ public class ImageLoader {
         for (File subFile : subFiles) {
             GAME_IMAGES.put( ""+subFile.getName(),Utilities.getGameImages(subFile.getPath()));
         }
+    }
+
+    public static BufferedImage getImage(String imageName){
+        BufferedImage image = GAME_IMAGES.get(imageName);
+        if (image ==null) {
+            System.err.println("Image not found: " + imageName);
+            return null;
+        }
+        return image;
     }
 }

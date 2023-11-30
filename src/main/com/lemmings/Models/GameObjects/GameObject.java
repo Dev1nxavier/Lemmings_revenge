@@ -79,7 +79,7 @@ public abstract class GameObject extends JLabel {
     }
 
     public void setImage(String name) {
-        this.image = ImageLoader.GAME_IMAGES.get(name);
+        this.image = ImageLoader.getImage(name);
     }
 
     public int getWidth() {

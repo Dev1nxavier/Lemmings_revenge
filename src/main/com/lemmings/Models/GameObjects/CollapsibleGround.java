@@ -50,9 +50,9 @@ public class CollapsibleGround extends Ground {
     }
 
     private void initializeAnimationFrames() {
-        this.imageFrames.add(ImageLoader.GAME_IMAGES.get("collapsibleGround_02.png"));
-        this.imageFrames.add(ImageLoader.GAME_IMAGES.get("collapsibleGround_03.png"));
-        this.imageFrames.add(ImageLoader.GAME_IMAGES.get("collapsibleGround_03.png"));
+        this.imageFrames.add(ImageLoader.getImage("collapsibleGround_02.png"));
+        this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
+        this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
     }
 
     public ArrayList<BufferedImage> getImageFrames() {
