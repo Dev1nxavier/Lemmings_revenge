@@ -107,14 +107,10 @@ public class CharacterView extends GameView {
 
                 if (skillIcon !=null) {
                     g2d.drawImage(skillIcon, 0, 0, WIDTH, imageOffset, null);
-                }else{
-                    System.err.println("No skill icon found for character");
                 }
 
                 if (isHighlighted) {
                     g2d.drawImage(arrowIcon, 0, 0, WIDTH, imageOffset, null);
-                }else{
-                    System.err.println("Unable to show highlight arrow...");
                 }
 
             } else {

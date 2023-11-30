@@ -75,6 +75,10 @@ public class GameButton extends JPanel {
         this.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
     }
 
+    public SKILL_TYPE getSelectedSkillType(){
+        return this.type;
+    }
+
     public void unSelect(){
         this.setBorder(null);
     }

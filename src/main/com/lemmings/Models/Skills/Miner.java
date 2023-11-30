@@ -12,6 +12,11 @@ import src.main.com.lemmings.Models.GameObjects.Ground;
 public class Miner extends Excavator {
     private final SKILL_TYPE type = SKILL_TYPE.MINER;
 
+    // zero-arg constructor
+    public Miner(){
+        super();
+    }
+
     public Miner(GameObjectChangeListener listener) {
         super(listener);
         setCount(4);

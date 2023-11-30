@@ -59,7 +59,7 @@ public abstract class Character {
 
     private void moveHorizontally() {
         x_pos += isMovingRight ? speed : -speed;
-        y_pos = (currentGround.getyPos()-getC_HEIGHT()); // ensure character is standing on ground
+        // y_pos = (currentGround.getyPos()-getC_HEIGHT()); // ensure character is standing on ground
     }
 
     private void moveVertically() {

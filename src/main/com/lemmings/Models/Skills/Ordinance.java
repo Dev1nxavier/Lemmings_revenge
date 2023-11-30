@@ -22,12 +22,15 @@ public class Ordinance implements Skill {
     private int count;
     private GameObjectChangeListener listener;
 
-    public Ordinance(GameObjectChangeListener listener) {
-
+    // zero-arg constructor
+    public Ordinance() {
         setCount(1);
+    }
+
+    public Ordinance(GameObjectChangeListener listener) {
+        this();
         setListener(listener);
     };
-
 
     @Override
     public SKILL_TYPE getSkillType() {
@@ -95,22 +98,19 @@ public class Ordinance implements Skill {
         return this.count;
     }
 
-
     @Override
     public void setCount(int count) {
         this.count = count;
     }
 
+    @Override
+    public void setListener(GameObjectChangeListener listener) {
+        this.listener = listener;
+    }
 
-	@Override
-	public void setListener(GameObjectChangeListener listener) {
-		this.listener = listener;
-	}
-
-
-	@Override
-	public GameObjectChangeListener getListener() {
-		return this.listener;
-	}
+    @Override
+    public GameObjectChangeListener getListener() {
+        return this.listener;
+    }
 
 }

@@ -10,6 +10,7 @@ import src.main.com.lemmings.Models.GameState;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.MenuModel;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.Models.Skills.Skill;
 import src.main.com.lemmings.Views.GameStateView;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.Views.MenuView;
@@ -38,6 +39,7 @@ public class LevelController implements GameObjectChangeListener {
     private MenuController menuController;
     private GameStateController psController;
     private ArrayList<CharacterController> chControllers;
+    private Skill selectedSkill;
 
     public LevelController(LevelView gameView) {
         initializeGame(gameView);
@@ -55,6 +57,7 @@ public class LevelController implements GameObjectChangeListener {
         this.playState = new GameState();
         this.menuView = new MenuView();
         this.menuModel = new MenuModel();
+        
 
         lvl.createGameObjectsFromMap(); // populate game objects in Model
 
@@ -127,6 +130,8 @@ public class LevelController implements GameObjectChangeListener {
         for (GameObject obj : lvl.getGameObjects()) {
             obj.setGameObjectChangeListener(this);
         }
+
+        menuController.addGameObjectChangeListener(this);
     }
 
     private void updateGameState(ArrayList<GameObject> env, ArrayList<Character> characters) {
@@ -216,5 +221,21 @@ public class LevelController implements GameObjectChangeListener {
     public void removeCharacter(CharacterController character) {
         getCharacterControllers().remove(character);
         updateGameState();
+    }
+
+    @Override
+    public void updateMenuSelection(Skill skill){
+        System.out.printf("Skill selected: %s.\nSetting skill in level Controller\n",skill.getSkillType());
+        skill.setListener(this);
+        this.selectedSkill = skill;
+    }
+
+    @Override
+    public void updateCharacterModel(CharacterController chController){
+        System.out.printf("Character selected. Setting skill\n");
+        if (selectedSkill !=null) {
+            System.out.printf("Skill: %s in LvlController.updateCharacterModel!",selectedSkill.getSkillType());
+            chController.setSkill(selectedSkill);
+        }
     }
 }

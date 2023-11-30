@@ -24,8 +24,13 @@ public class Builder implements Skill {
     private int count;
     private SKILL_TYPE type = SKILL_TYPE.BUILDER;
 
-    public Builder(GameObjectChangeListener listener) {
+    // zero argumnent constructor
+    public Builder() {
         setCount(2);
+    }
+
+    public Builder(GameObjectChangeListener listener) {
+        this();
         setListener(listener);
     }
 
@@ -56,7 +61,8 @@ public class Builder implements Skill {
 
                     if (isEdge) {
                         decrementCount();
-                        bridge = new Bridge(c.getXPosition() + (c.getIsMovingRight() ? 0 : -150), c.getYPosition(), gap);
+                        bridge = new Bridge(c.getXPosition() + (c.getIsMovingRight() ? 0 : -150), c.getYPosition(),
+                                gap);
                         listener.addGameObject(bridge);
                         destroyAfterDelay(bridge);
                     }

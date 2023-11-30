@@ -49,7 +49,7 @@ public class CharacterController {
                 super.mousePressed(clickEvent);
                 // add an icon to the view
                 chView.setSkillIcon("miner_icon.png");
-                ch.setSkill(new Builder(listener));
+                onCharacterSelected();
             }
 
             @Override
@@ -65,6 +65,10 @@ public class CharacterController {
             }
             
         });
+    }
+
+    protected void onCharacterSelected() {
+        listener.updateCharacterModel(this);
     }
 
     public void updateCharacter(ArrayList<GameObject> env, ArrayList<Character> characters) {
@@ -101,6 +105,7 @@ public class CharacterController {
     }
 
     public void setSkill(Skill skill) {
+        System.out.printf("Setting skill in ChController.setSkill: %s", skill.getSkillType() );
         ch.setSkill(skill);
     }
 
