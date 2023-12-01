@@ -30,4 +30,5 @@ public class Ground extends GameObject {
         g2d.setColor(Color.WHITE);
         g2d.drawString(this.text, 10, 20);
     }
+
 }

@@ -116,7 +116,7 @@ public class CollapsibleGround extends Ground {
         currentFrame = (currentFrame + 1) % imageFrames.size();
         System.out.println("current frame: " + currentFrame);
         setImage(imageFrames.get(currentFrame));
-        this.setBounds(getxPos(), getyPos() - offset, WIDTH, HEIGHT);
+        this.setObjectBounds(getX_pos(), getY_pos() - offset, WIDTH, HEIGHT);
 
         this.repaint();
     }

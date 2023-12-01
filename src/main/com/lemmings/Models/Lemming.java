@@ -1,5 +1,4 @@
 package src.main.com.lemmings.Models;
-
 /**
  * Lemming.java
  */

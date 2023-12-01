@@ -20,24 +20,25 @@ import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
  * 
  *       this class models a character.
  */
-public abstract class Character {
+public abstract class Character implements Collidable{
     private double GRAVITY = 8;
     protected boolean isMovingRight = true;
-    private int x_pos, y_pos;
-    private int C_HEIGHT = 20;
-    private int C_WIDTH = 10;
-    protected boolean isCollided = false;
-    private boolean isGround = false;
+    private int xPos, yPos;
+    private int height = 20;
+    private int width = 10;
+    protected boolean isCollided, isGround;
     private Ground currentGround, lastGround = null;
     private Skill skill;
     private SKILL_TYPE type = null;
     private boolean canMoveHorizontally = true; // flag for setting model's ability to move horizontally
     private boolean isOnElevator = false;
-    public int speed;
+    private int speed;
+    private GameObjectChangeListener listener;
 
     Character() {
-        this.x_pos = 100;
-        this.y_pos = 200;
+        this.xPos = 100;
+        this.yPos = 200;
+        isCollided = isGround = false;
         speed = 5;
     }
 
@@ -58,12 +59,12 @@ public abstract class Character {
     };
 
     private void moveHorizontally() {
-        x_pos += isMovingRight ? speed : -speed;
+        xPos += isMovingRight ? speed : -speed;
         // y_pos = (currentGround.getyPos()-getC_HEIGHT()); // ensure character is standing on ground
     }
 
     private void moveVertically() {
-        y_pos += GRAVITY;
+        yPos += GRAVITY;
     }
 
     public void toggleDirection() {
@@ -72,29 +73,11 @@ public abstract class Character {
 
     // this method detects the right and left bounds of the game panel.
     public void detectBounds() {
-        if (this.getXPosition() >= 595 || this.getXPosition() <= 0) {
+        if (this.getX_pos() >= 595 || this.getX_pos() <= 0) {
             // update direction
             this.toggleDirection();
             return;
         }
-    }
-
-    // returns the characters hitbox
-    public Rectangle getBounds() {
-        return new Rectangle(x_pos, y_pos, C_WIDTH, C_HEIGHT);
-    }
-
-    public void setPosition(int x, int y) {
-        this.x_pos = x;
-        this.y_pos = y;
-    }
-
-    public int getXPosition() {
-        return this.x_pos;
-    }
-
-    public int getYPosition() {
-        return this.y_pos;
     }
 
     /**
@@ -167,8 +150,7 @@ public abstract class Character {
                 if (el.getIsMoving()) {
                     // setCanMoveHorizontally(false);
                     el.moveVertically();
-                    setY_pos(el.getyPos());
-                    // setCanMoveHorizontally(true);
+                    setY_pos(el.getY_pos());
                 }
         }
     }
@@ -194,9 +176,9 @@ public abstract class Character {
         }
     }
 
-    public void detectCollisions(ArrayList<? extends Object> gameObjects) {
+    public void detectCollisions(ArrayList<Collidable> collidables) {
 
-        for (Object obj : gameObjects) {
+        for (Object obj : collidables) {
             if (obj instanceof GameObject && ((GameObject)obj).getType() != ENV_TYPE.PORTAL) {
                 // set as a GameObjecct
                 GameObject go = (GameObject) obj;
@@ -222,9 +204,9 @@ public abstract class Character {
         return detectCollision(portal);
     }
 
-    public boolean detectCollision(Object object) {
+    public boolean detectCollision(Collidable object) {
 
-        Rectangle ob =((GameObject) object).getBounds();
+        Rectangle ob =object.getBounds();
         Rectangle r = this.getBounds();
         // Check if there is overlap along the X axis and Y axis
         boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
@@ -242,30 +224,6 @@ public abstract class Character {
 
     public boolean getIsMovingRight() {
         return this.isMovingRight;
-    }
-
-    public int getX_pos() {
-        return x_pos;
-    }
-
-    public void setX_pos(int x_pos) {
-        this.x_pos = x_pos;
-    }
-
-    public int getY_pos() {
-        return y_pos;
-    }
-
-    public void setY_pos(int y_pos) {
-        this.y_pos = y_pos;
-    }
-
-    public int getC_HEIGHT() {
-        return C_HEIGHT;
-    }
-
-    public int getC_WIDTH() {
-        return C_WIDTH;
     }
 
     public boolean isCollided() {
@@ -332,5 +290,70 @@ public abstract class Character {
 
     public void setCanMoveHorizontally(boolean moveHorizontally) {
         this.canMoveHorizontally = moveHorizontally;
+    }
+
+    @Override
+    public Rectangle getBounds() {
+       return new Rectangle(xPos, yPos, width, height);
+    }
+
+    @Override
+    public GameObjectChangeListener getGameObjectChangeListener() {
+        return this.listener;
+    }
+
+    @Override
+    public int getHeight() {
+       return this.height;
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getX_pos() {
+        return this.xPos;
+    }
+
+    @Override
+    public int getY_pos() {
+        return this.yPos;
+    }
+
+    @Override
+    public void setObjectBounds(int x, int y, int width, int height) {
+        this.setObjectBounds(x, y, width, height);
+    }
+
+    @Override
+    public void setGameObjectChangeListener(GameObjectChangeListener listener) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
+        
+    }
+
+    @Override
+    public void setWidth(int width) {
+        this.width = width;
+        
+    }
+
+    @Override
+    public void setX_pos(int x) {
+        this.xPos = x;
+        
+    }
+
+    @Override
+    public void setY_pos(int y) {
+        this.yPos = y;
+        
     }
 }

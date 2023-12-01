@@ -28,7 +28,7 @@ public class LevelModel {
     // FIXME: Use generateMap function after testing!
     int[][] map = {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 2, 0, 0 },
             { 1, 1, 1, 1, 1, 1, 1, 5 },
             { 1, 1, 1, 1, 1, 1, 1, 1 },
             { 2, 4, 0, 0, 1, 0, 0, 1 },
@@ -70,7 +70,9 @@ public class LevelModel {
         for (int i = 0; i < MAX_CHARS; i++) {
             Character ch = new Lemming();
             // slightly offset each character
-            ch.setPosition((i + 2) * 20, 100);
+            // ch.setPosition((i + 2) * 20, 100);
+            ch.setX_pos((i + 2) * 20);
+            ch.setY_pos(100);
             characters.add(ch);
         }
     }
@@ -79,7 +81,7 @@ public class LevelModel {
     public void createGameObjectsFromMap() {
         gameObjects.clear();
         // add obstacles
-        int px =0, py = 0; // start at top of screen
+        int px = 0, py = 0; // start at top of screen
 
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map.length; col++) {

@@ -18,19 +18,22 @@ public class Elevator extends Ground {
     private final int PASSENGERS = 13;
 
     public Elevator(int x, int y, Point rowAndCol) {
-        // super(x, y, 150, 100, rowAndCol);
         super(x, y, 150, 75, rowAndCol);
         this.init_y_pos = y;
         setType(ENV_TYPE.ELEVATOR);
         setImage("elevator_03.png");
 
-        setObjectBounds();
+        setObjectBounds(x, y, this.getWidth(), this.getHeight());
     }
 
-    @Override
-    protected void setObjectBounds() {
-        this.setBounds(getxPos(), getyPos() - 25, getWidth(), getHeight());
+    // @Override
+    // protected void setObjectBounds() {
+    //     this.setObjectBounds(getX_pos(), getY_pos() - 25, getWidth(), getHeight());
 
+    // }
+    @Override
+    public void setObjectBounds(int x, int y, int width, int height) {
+        super.setObjectBounds(x, y - 25, width, height);
     }
 
     public void setIsMoving(boolean isMoving) {
@@ -56,11 +59,11 @@ public class Elevator extends Ground {
     // move elevator negative Y direction
     public void moveVertically() {
         if (isMoving) {
-            int y_pos = getyPos();
+            int y_pos = getY_pos();
             if (y_pos > init_y_pos - 100) {
                 y_pos -= 5;
-                setyPos(y_pos);
-                setBounds(getxPos(), y_pos, 150, 100);
+                setY_pos(y_pos);
+                setObjectBounds(getX_pos(), y_pos, 150, 100);
             }
         }
     }

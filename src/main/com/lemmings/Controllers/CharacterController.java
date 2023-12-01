@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import src.main.com.lemmings.Models.Character;
+import src.main.com.lemmings.Models.Collidable;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.GameObjects.WarpPortal;
@@ -37,7 +38,7 @@ public class CharacterController {
 
     CharacterController(Character ch, GameObjectChangeListener listener) {
         this.ch = ch;
-        this.chView = new CharacterView(ch.getXPosition(), ch.getYPosition());
+        this.chView = new CharacterView(ch.getX_pos(), ch.getY_pos());
         this.listener = listener;
         addListeners();
     }
@@ -72,9 +73,12 @@ public class CharacterController {
     }
 
     public void updateCharacter(ArrayList<GameObject> env, ArrayList<Character> characters) {
+        ArrayList<Collidable> collidables = new ArrayList<>();
+        collidables.addAll(env);
+        collidables.addAll(characters);
+
         invokeSkill(env);
-        ch.detectCollisions(env);
-        ch.detectCollisions(characters);
+        ch.detectCollisions(collidables);
         ch.updatePosition();
         ch.detectBounds();
         detectGround(env);
@@ -126,7 +130,7 @@ public class CharacterController {
      * @return the gameObject instance that the character has collided with, or
      *         null.
      */
-    public void detectCollision(ArrayList<? extends Object> environment) {
+    public void detectCollision(ArrayList<Collidable> environment) {
         ch.detectCollisions(environment);
     }
 
@@ -149,6 +153,6 @@ public class CharacterController {
      */
 
     public void onCharacterModelUpdate() {
-        chView.update(ch.getXPosition(), ch.getYPosition());
+        chView.update(ch.getX_pos(), ch.getY_pos());
     }
 }

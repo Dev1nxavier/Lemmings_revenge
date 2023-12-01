@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JLabel;
 
+import src.main.com.lemmings.Models.Collidable;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.utilities.ImageLoader;
 
@@ -17,40 +18,35 @@ import src.main.com.lemmings.utilities.ImageLoader;
  * GameObject
  */
 
-public abstract class GameObject extends JLabel {
+public abstract class GameObject extends JLabel implements Collidable {
     public static enum ENV_TYPE {
         GROUND, ROCK, CLIFF, HOLE, WATER, ELEVATOR, PORTAL, COLLAPSIBLE
     };
 
-    private int xPos;
-    private int yPos;
+    private int xPos, yPos;
     private BufferedImage image;
-    private int width;
-    private int height;
+    private int width, height;
     private Point rowAndCol;
-    private static int id;
-    private int uniqueID;
     private ENV_TYPE type;
     private GameObjectChangeListener listener;
 
     public GameObject() {
-        id++;
-        this.uniqueID = this.id;
+ 
     };
 
     public GameObject(int x, int y, int width, int height, Point rowAndCol) {
         this();
-        
         this.rowAndCol = rowAndCol;
         this.xPos = x;
         this.yPos = y;
         this.width = width;
         this.height = height;
-        setObjectBounds();
+        setObjectBounds(x, y, width, height);
     }
 
-    protected void setObjectBounds() {
-        this.setBounds(getxPos(), getyPos(), width, height);
+    @Override
+    public void setObjectBounds(int x, int y, int width, int height) {
+        this.setBounds(x, y, width, height);    
     }
 
     @Override
@@ -58,20 +54,24 @@ public abstract class GameObject extends JLabel {
         return new Dimension(this.width, this.height);
     }
 
-    public int getxPos() {
-        return xPos;
+    @Override
+    public int getX_pos() {
+        return this.xPos;
     }
 
-    public void setxPos(int xPos) {
-        this.xPos = xPos;
+    @Override
+    public void setX_pos(int x) {
+        this.xPos = x;
     }
 
-    public int getyPos() {
-        return yPos;
+    @Override
+    public int getY_pos() {
+        return this.yPos;
     }
 
-    public void setyPos(int yPos) {
-        this.yPos = yPos;
+    @Override
+    public void setY_pos(int y) {
+        this.yPos = y;
     }
 
     public BufferedImage getImage() {
@@ -139,14 +139,6 @@ public abstract class GameObject extends JLabel {
         this.rowAndCol = rowAndCol;
     }
 
-    public int getUniqueId() {
-        return this.uniqueID;
-    }
-
-    public void setUniqueId(int id) {
-        this.uniqueID = id;
-    }
-
     /**
      * This method sets the instance variable mouseClickListern to an
      * instance of a GameObjectClickListener passed as an argument.
@@ -157,11 +149,11 @@ public abstract class GameObject extends JLabel {
         this.listener = clickListener;
     }
 
-    public GameObjectChangeListener getGameObjectChangeListener(){
+    public GameObjectChangeListener getGameObjectChangeListener() {
         return this.listener;
     }
 
-    //TODO: REMOVE!
+    // TODO: REMOVE!
     /**
      * This method sets a mouseClicked listener to this GameObject instance. On
      * mouseclick,
