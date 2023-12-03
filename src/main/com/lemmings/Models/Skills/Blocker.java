@@ -26,6 +26,7 @@ public class Blocker implements Skill{
     private int count;
     
     public Blocker(){
+        setCount(3);
         animationFrames = new ArrayList<>();
         animationFrames.add(ImageLoader.getImage("Lemming_police_1.png"));
         animationFrames.add(ImageLoader.getImage("Lemming_police_3.png"));
@@ -47,6 +48,7 @@ public class Blocker implements Skill{
     @Override
     public void useSkill(Character c) {
         // prevent this Character from updating its position
+        System.out.println("Blocker: setting canMoveHorizontally");
         c.setCanMoveHorizontally(false);
     }
 

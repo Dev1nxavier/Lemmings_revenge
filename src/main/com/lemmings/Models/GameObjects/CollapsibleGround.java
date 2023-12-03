@@ -118,7 +118,7 @@ public class CollapsibleGround extends Ground {
         setImage(imageFrames.get(currentFrame));
         this.setObjectBounds(getX_pos(), getY_pos() - offset, WIDTH, HEIGHT);
 
-        this.repaint();
+        // this.repaint();
     }
 
     private void decrementCount() {

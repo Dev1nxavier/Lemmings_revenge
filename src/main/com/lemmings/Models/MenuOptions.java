@@ -8,11 +8,11 @@ import src.main.com.lemmings.Views.Components.GameButton;
 /**
  * MenuModel
  */
-public class MenuModel {
+public class MenuOptions {
     private SKILL_TYPE selectedType;
     private ArrayList<GameButton> menuButtons;
 
-    public MenuModel() {
+    public MenuOptions() {
 
         this.menuButtons = new ArrayList<>();
 

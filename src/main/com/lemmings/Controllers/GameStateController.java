@@ -2,7 +2,7 @@ package src.main.com.lemmings.Controllers;
 
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameState;
-import src.main.com.lemmings.Views.GameStateView;
+import src.main.com.lemmings.Views.StatsPanelView;
 
 /**
  * GameStateController
@@ -10,10 +10,10 @@ import src.main.com.lemmings.Views.GameStateView;
 public class GameStateController {
 
     private GameState gameState;
-    private GameStateView panel;
+    private StatsPanelView panel;
     private GameObjectChangeListener listener;
 
-    public GameStateController(GameStateView panel, GameState gameState){
+    public GameStateController(StatsPanelView panel, GameState gameState){
         this.panel = panel;
         this.gameState = gameState;
         updateScore(0);

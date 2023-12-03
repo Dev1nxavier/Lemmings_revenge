@@ -6,8 +6,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-
 public class CharacterView extends GameView {
     private ArrayList<BufferedImage> animationFrames;
     private int currentFrame;
@@ -117,7 +115,8 @@ public class CharacterView extends GameView {
                 System.err.println("Unable to load character images");
             }
         } catch (Exception e) {
-            System.out.println("Unable to load characters!");
+            System.out.println("Unable to load characters: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

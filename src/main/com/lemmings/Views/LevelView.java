@@ -1,88 +1,99 @@
 package src.main.com.lemmings.Views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.TextArea;
-import java.awt.image.BufferedImage;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 
 import src.main.com.lemmings.Controllers.CharacterController;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.Views.Components.BackgroundPanel;
 import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
  * LevelView
  */
 public class LevelView extends JPanel {
-    private JLayeredPane layeredPane; // for rendering characters and game objects
-    private final int HEIGHT = 6000;
-    private final int WIDTH = 1000;
-    private BufferedImage background;
-    CharacterView lemming;
-    int[][] map;
+    private JLayeredPane gamePlayPane; // for rendering characters and game objects
+    private JPanel rootPanel; // for layout of gamepane and menus. 
+    private BackgroundPanel backgroundPanel; // renders backgroundImage only
+    private StatsPanelView statsView; // for displaying the current score, level, lives
+    private MenuOptionsView menuView; // for providing the moves available on the level
 
     public LevelView() {
-
+        this.setDoubleBuffered(true); // explicitly enable double buffering
         layoutComponents();
     }
 
     private void layoutComponents() {
-        layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        background = ImageLoader.getImage("cave_background.png");
-        this.setLayout(new BorderLayout());
-        this.add(layeredPane, BorderLayout.CENTER);
-    }
+        this.setLayout(new OverlayLayout(this));
 
-    public void addObjectToView(JLabel go, int layer) {
-        layeredPane.add(go, Integer.valueOf(layer));
-        layeredPane.revalidate();
-        layeredPane.repaint();
-    }
+        gamePlayPane = new JLayeredPane();
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        rootPanel = new JPanel();
+        rootPanel.setOpaque(false); // transparent to show background
+        rootPanel.setLayout(new BorderLayout());
+        
+        JPanel statsPanel = new JPanel();
+        statsPanel.setOpaque(false);
+        statsPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // center statsView in panel
+        statsView = new StatsPanelView();
+        statsPanel.add(statsView);
 
-        // typecast to Graphics2D for finer control
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
+        rootPanel.add(statsPanel, BorderLayout.NORTH);
+        menuView = new MenuOptionsView();
+        rootPanel.add(menuView, BorderLayout.EAST);
+        rootPanel.add(gamePlayPane, BorderLayout.CENTER); //gameplay panel takes up all space remaining after menus
 
-    }
+        this.add(rootPanel);
 
-    public void setMap(int[][] map) {
-        this.map = map;
-    }
-
-    public void showMouseLocation(Point mouseLoc) {
-        TextArea mouseLocation = new TextArea(1, 20);
-        mouseLocation.setForeground(Color.WHITE);
-        mouseLocation.setBackground(Color.BLACK);
-        mouseLocation.setText("" + mouseLoc.x + "," + mouseLoc.y);
-        layeredPane.add(mouseLocation, 1);
-        mouseLocation.setBounds(500, 100, 100, 200);
+        backgroundPanel = new BackgroundPanel(ImageLoader.getImage("cave_background.png"));
+        this.add(backgroundPanel); // bottom of stack
 
     }
 
+    /**
+     * Adds JLabel objects to the JLayeredPane of the main view. 
+     * 
+     * This method adds GameObjects and CharacterViews to the LevelView by placing them directly on the LevelView's
+     * JLayeredPane. A second argument passed to the method specifys the layer of the JLayeredPane to add the object to. 
+     * 
+     * @param objectView the JLabel object to be added to the LevelView's JLayeredPane
+     * @param layer the integer value of the JLayeredPane's layer to add the object to. 
+     * 
+     */
+    public void addObjectToView(JLabel objectView, int layer) {
+        gamePlayPane.add(objectView, Integer.valueOf(layer));
+        gamePlayPane.revalidate();
+
+    }
+
+    public StatsPanelView getStatsPanelView(){
+        return this.statsView;
+    }
+
+    public MenuOptionsView getMenuOptionsView(){
+        return this.menuView;
+    }
+
+    /**
+     * This method removes all components from the LayeredPane container of the
+     * LevelView. It then calls revalidate on the LevelView.
+     */
     public void clearGameObjectsFromView() {
-        this.layeredPane.removeAll();
-        revalidate();
+        this.gamePlayPane.removeAll();
     }
 
-    public void redrawView(ArrayList<GameObject>gameObjects, ArrayList<CharacterController> characters){
+    public void redrawView(ArrayList<GameObject> gameObjects, ArrayList<CharacterController> characters) {
         clearGameObjectsFromView();
         for (GameObject go : gameObjects) {
             addObjectToView(go, JLayeredPane.DEFAULT_LAYER);
         }
-        for (CharacterController ch: characters) {
+        for (CharacterController ch : characters) {
             addObjectToView(ch.getCharacterView(), JLayeredPane.MODAL_LAYER);
         }
     }

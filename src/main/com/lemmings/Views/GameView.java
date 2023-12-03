@@ -56,13 +56,13 @@ public abstract class GameView extends JLabel {
     public void setWIDTH(int width) {
         this.WIDTH = width;
         this.revalidate();
-        this.repaint();
+        // this.repaint();
     }
 
     public void setHEIGHT(int height) {
         this.HEIGHT = height;
         this.revalidate();
-        this.repaint();
+        // this.repaint();
     }
 
     public int getHEIGHT() {

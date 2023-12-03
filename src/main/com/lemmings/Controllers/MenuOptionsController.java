@@ -4,7 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import src.main.com.lemmings.Models.GameObjectChangeListener;
-import src.main.com.lemmings.Models.MenuModel;
+import src.main.com.lemmings.Models.MenuOptions;
 import src.main.com.lemmings.Models.Skills.Blocker;
 import src.main.com.lemmings.Models.Skills.Builder;
 import src.main.com.lemmings.Models.Skills.Excavator;
@@ -12,19 +12,19 @@ import src.main.com.lemmings.Models.Skills.Miner;
 import src.main.com.lemmings.Models.Skills.Ordinance;
 import src.main.com.lemmings.Models.Skills.Skill;
 import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
-import src.main.com.lemmings.Views.MenuView;
+import src.main.com.lemmings.Views.MenuOptionsView;
 import src.main.com.lemmings.Views.Components.GameButton;
 
 /**
  * MenuController
  */
-public class MenuController {
-    private MenuView menuView;
-    private MenuModel menuModel;
+public class MenuOptionsController {
+    private MenuOptionsView menuView;
+    private MenuOptions menuModel;
     private GameButton isSelected;
     private GameObjectChangeListener listener;
 
-    public MenuController(MenuView menuView, MenuModel menuModel) {
+    public MenuOptionsController(MenuOptionsView menuView, MenuOptions menuModel) {
         this.menuView = menuView;
         this.menuModel = menuModel;
         // add components;
@@ -69,19 +69,19 @@ public class MenuController {
         this.isSelected = button;
     }
 
-    public MenuView getMenuView() {
+    public MenuOptionsView getMenuView() {
         return menuView;
     }
 
-    public void setMenuView(MenuView menuView) {
+    public void setMenuView(MenuOptionsView menuView) {
         this.menuView = menuView;
     }
 
-    public MenuModel getMenuModel() {
+    public MenuOptions getMenuModel() {
         return menuModel;
     }
 
-    public void setMenuModel(MenuModel menuModel) {
+    public void setMenuModel(MenuOptions menuModel) {
         this.menuModel = menuModel;
     }
 

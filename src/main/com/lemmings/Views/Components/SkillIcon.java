@@ -20,7 +20,7 @@ public class SkillIcon extends GameView{
         super.setPosX(posX);
         super.setPosY(posY);
         this.setBounds(getPosX(), getPosY(), this.WIDTH, this.HEIGHT);
-        this.repaint();
+        // this.repaint();
     }
 
     @Override
