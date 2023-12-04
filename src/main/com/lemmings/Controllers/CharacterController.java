@@ -1,5 +1,6 @@
 package src.main.com.lemmings.Controllers;
 
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -24,37 +25,35 @@ import src.main.com.lemmings.Views.CharacterView;
  *       Character model
  */
 public class CharacterController {
-    private Character ch;
-    private CharacterView chView;
+    private Character character;
+    private CharacterView characterView;
     private GameObjectChangeListener listener;
 
-    CharacterController(Character ch, GameObjectChangeListener listener) {
-        this.ch = ch;
-        this.chView = new CharacterView(ch.getX_pos(), ch.getY_pos());
+    public CharacterController(Character character, CharacterView characterView, GameObjectChangeListener listener) {
+        this.character = character;
+        this.characterView = characterView;
         this.listener = listener;
         addListeners();
     }
 
     private void addListeners() {
-        this.chView.addMouseListener(new MouseAdapter() {
+        this.characterView.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent clickEvent) {
                 super.mousePressed(clickEvent);
-                // add an icon to the view
-                // chView.setSkillIcon("miner_icon.png");
                 onCharacterSelected();
             }
 
             @Override
             public void mouseEntered(MouseEvent enterEvent) {
                 super.mouseEntered(enterEvent);
-                chView.showArrow();
+                characterView.showArrow();
             }
 
             @Override
             public void mouseExited(MouseEvent exitEvent) {
                 super.mouseExited(exitEvent);
-                chView.hideArrow();
+                characterView.hideArrow();
             }
 
         });
@@ -64,17 +63,24 @@ public class CharacterController {
         listener.updateCharacterModel(this);
     }
 
-    public void updateCharacter(ArrayList<GameObject> env, ArrayList<Character> characters) {
+    public void updateCharacter(ArrayList<GameObject> env, ArrayList<Character> characters, Rectangle gameBounds) {
         ArrayList<Collidable> collidables = new ArrayList<>();
         collidables.addAll(env);
         collidables.addAll(characters);
 
         invokeSkill(env);
-        ch.detectCollisions(collidables);
-        ch.updatePosition();
-        ch.detectBounds();
+        character.detectCollisions(collidables);
+        character.updatePosition();
+        character.detectHorizontalBounds(gameBounds);
+        character.detectVerticalBounds(gameBounds);
+
         detectGround(env);
         onCharacterModelUpdate();
+
+    }
+
+    public boolean getIsDead(){
+        return character.getIsDead();
     }
 
     /**
@@ -83,10 +89,10 @@ public class CharacterController {
      * used.
      */
     public void invokeSkill(ArrayList<GameObject> env) {
-        if (ch.getSkill() == null) {
+        if (character.getSkill() == null) {
             return;
         }
-        ch.useSkill(env);
+        character.useSkill(env);
     }
 
     /**
@@ -97,20 +103,20 @@ public class CharacterController {
      *         of this Character.
      */
     public SKILL_TYPE getSkillType() {
-        return ch.getSkillType();
+        return character.getSkillType();
     }
 
     public void setSkill(Skill skill) {
-        ch.setSkill(skill);
-        chView.setSkillIcon(skill.getImage());
+        character.setSkill(skill);
+        characterView.setSkillIcon(skill.getImage());
     }
 
     public CharacterView getCharacterView() {
-        return this.chView;
+        return this.characterView;
     }
 
     public Character getCharacterModel() {
-        return this.ch;
+        return this.character;
     }
 
     /**
@@ -123,18 +129,18 @@ public class CharacterController {
      *         null.
      */
     public void detectCollision(ArrayList<Collidable> environment) {
-        ch.detectCollisions(environment);
+        character.detectCollisions(environment);
     }
 
     public GameObject detectGround(ArrayList<GameObject> gameObjects) {
 
         // reset isGround
-        ch.setIsGround(false);
-        return ch.detectGround(gameObjects);
+        character.setIsGround(false);
+        return character.detectGround(gameObjects);
     }
 
     public boolean checkWinCondition(WarpPortal portal) {
-        return ch.detectPortal(portal);
+        return character.detectPortal(portal);
     }
 
     /**
@@ -145,6 +151,6 @@ public class CharacterController {
      */
 
     public void onCharacterModelUpdate() {
-        chView.update(ch.getX_pos(), ch.getY_pos());
+        characterView.update(character.getX_pos(), character.getY_pos());
     }
 }

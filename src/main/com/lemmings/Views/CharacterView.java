@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import src.main.com.lemmings.Models.Character;
+
 public class CharacterView extends GameView {
     private ArrayList<BufferedImage> animationFrames;
     private int currentFrame;
@@ -13,13 +15,21 @@ public class CharacterView extends GameView {
     private BufferedImage skillIcon;
     private BufferedImage arrowIcon;
     private boolean isHighlighted = false;
+    private Character character; // a reference to the Character model this view responds to
 
-    public CharacterView(int x, int y) {
-        super(10, 20, x, y);
+    public CharacterView() {
+        super(10, 20, 100, 200); // initial Character position (100,200)
         currentFrame = 0;
         imageOffset = 20;
         initializeAnimationFrames();
         setArrowIcon();
+    }
+
+    public CharacterView(Character character){
+        this();
+        this.character = character;
+        this.setPosX(this.character.getX_pos());
+        this.setPosY(this.character.getY_pos());
     }
 
     private void setArrowIcon() {

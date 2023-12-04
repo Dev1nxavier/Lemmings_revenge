@@ -17,7 +17,7 @@ public class GameStateController {
         this.panel = panel;
         this.gameState = gameState;
         updateScore(0);
-        updateCharacterCount();
+        updateCharacterCount(0);
     }
 
     public void setGameObjectChangeListener(GameObjectChangeListener listener){
@@ -29,8 +29,16 @@ public class GameStateController {
         panel.updateScoreDisplay(gameState.getScore());
     }
 
-    public void updateCharacterCount(){
-        gameState.updateCharacterCount();
+    public void updateCharacterCount(int i){
+        gameState.updateCharacterCount(i);
         panel.updateCharacterCountDisplay(gameState.getChCount());
+    }
+
+    public int getCharacterCount() {
+        return gameState.getChCount();
+    }
+
+    public int getScore() {
+        return gameState.getScore();
     }
 }

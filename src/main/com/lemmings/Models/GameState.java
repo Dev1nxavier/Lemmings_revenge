@@ -18,7 +18,7 @@ public class GameState {
         this.score = 0;
         this.lives = 5;
         this.level = 1;
-        this.chCount = 11; // start with +1 extra. 
+        this.chCount = 10; // start with +1 extra. 
     }
 
     public int getScore() {
@@ -49,8 +49,8 @@ public class GameState {
         return chCount;
     }
 
-    public int updateCharacterCount() {
-        return this.chCount--;
+    public int updateCharacterCount(int i) {
+        return this.chCount -=i;
     }
 
     

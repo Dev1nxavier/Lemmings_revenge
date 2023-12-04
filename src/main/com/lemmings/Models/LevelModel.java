@@ -117,7 +117,7 @@ public class LevelModel {
         return this.map;
     }
 
-    public ArrayList<Character> getCharactersArray() {
+    public ArrayList<Character> getCharacters() {
         return this.characters;
     }
 
@@ -155,10 +155,6 @@ public class LevelModel {
         this.getMap()[xy.x][xy.y] = 0;
 
         return getMap();
-    }
-
-    public ArrayList<Character> getCharacters() {
-        return characters;
     }
 
     public void setCharacters(ArrayList<Character> characters) {

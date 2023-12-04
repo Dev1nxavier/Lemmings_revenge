@@ -20,13 +20,13 @@ import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
  * 
  *       this class models a character.
  */
-public abstract class Character implements Collidable{
+public abstract class Character implements Collidable {
     private double GRAVITY = 8;
     protected boolean isMovingRight = true;
     private int xPos, yPos;
     private int height = 20;
     private int width = 10;
-    protected boolean isCollided, isGround;
+    protected boolean isCollided, isGround, isDead;
     private Ground currentGround, lastGround = null;
     private Skill skill;
     private SKILL_TYPE type = null;
@@ -35,10 +35,10 @@ public abstract class Character implements Collidable{
     private int speed;
     private GameObjectChangeListener listener;
 
-    Character() {
+    public Character() {
         this.xPos = 100;
         this.yPos = 200;
-        isCollided = isGround = false;
+        isCollided = isGround = isDead = false;
         speed = 5;
     }
 
@@ -49,18 +49,20 @@ public abstract class Character implements Collidable{
     // updates character's position
     public void updatePosition() {
         if (isGround()) {
-            
+
             if (canMoveHorizontally) {
                 moveHorizontally();
             }
         } else {
-            moveVertically();
+            if (!isDead)
+                moveVertically();
         }
     };
 
     private void moveHorizontally() {
         xPos += isMovingRight ? speed : -speed;
-        // y_pos = (currentGround.getyPos()-getC_HEIGHT()); // ensure character is standing on ground
+        // y_pos = (currentGround.getyPos()-getC_HEIGHT()); // ensure character is
+        // standing on ground
     }
 
     private void moveVertically() {
@@ -72,14 +74,24 @@ public abstract class Character implements Collidable{
     }
 
     // this method detects the right and left bounds of the game panel.
-    public void detectBounds() {
-        if (this.getX_pos() >= 595 || this.getX_pos() <= 0) {
+    public void detectHorizontalBounds(Rectangle bounds) {
+        int rightBounds = bounds.x + bounds.width - 5;
+        if (this.getX_pos() >= rightBounds || this.getX_pos() <= 0) {
             // update direction
             this.toggleDirection();
             return;
         }
     }
 
+    // this method detects the bottom edge of the game panel. If a Character's y-position is
+    // greater than the bottom-most vertical bound, the character's isDead flag is set to true. 
+    public void detectVerticalBounds(Rectangle bounds) {
+        int floor = bounds.y + bounds.height - 10;
+        if (this.getY_pos() >= floor) {
+            this.isDead = true;
+        }
+    }
+    
     /**
      * This method calls the Skill class's useSkill method for the instance of
      * this Skill class assigned to this Character model.
@@ -107,7 +119,8 @@ public abstract class Character implements Collidable{
     }
 
     // this method determines if object has collided with an obstacle of type
-    // 'ground'. If yes, it sets isGround to true and returns the current Ground object
+    // 'ground'. If yes, it sets isGround to true and returns the current Ground
+    // object
     public GameObject detectGround(ArrayList<GameObject> gameObjects) {
         setIsGround(false);
         // setCanMoveHorizontally(true);
@@ -146,16 +159,16 @@ public abstract class Character implements Collidable{
 
             updateElevatorPassengerCount(el);
 
-                el.setIsMoving(true);
-                if (el.getIsMoving()) {
-                    // setCanMoveHorizontally(false);
-                    el.moveVertically();
-                    setY_pos(el.getY_pos());
-                }
+            el.setIsMoving(true);
+            if (el.getIsMoving()) {
+                // setCanMoveHorizontally(false);
+                el.moveVertically();
+                setY_pos(el.getY_pos());
+            }
         }
     }
 
-    private void updateElevatorPassengerCount(Elevator el){
+    private void updateElevatorPassengerCount(Elevator el) {
         if (!isOnElevator) {
             el.updatePassengerCount();
         }
@@ -179,34 +192,36 @@ public abstract class Character implements Collidable{
     public void detectCollisions(ArrayList<Collidable> collidables) {
 
         for (Object obj : collidables) {
-            if (obj instanceof GameObject && ((GameObject)obj).getType() != ENV_TYPE.PORTAL) {
+            if (obj instanceof GameObject && ((GameObject) obj).getType() != ENV_TYPE.PORTAL) {
                 // set as a GameObjecct
                 GameObject go = (GameObject) obj;
                 if (go.getType() == ENV_TYPE.ROCK) {
-                    if (detectCollision(go)){
+                    if (detectCollision(go)) {
                         this.toggleDirection();
-                    };
+                    }
+                    ;
                 }
             } else if (obj instanceof Character) {
                 // set as type Character
                 Character ch = (Character) obj;
                 if (ch.getSkillType() == SKILL_TYPE.BLOCKER && this != ch) {
-                    if(detectCollision(ch)){
+                    if (detectCollision(ch)) {
                         this.toggleDirection();
-                    };
+                    }
+                    ;
                 }
             }
 
         }
     }
 
-    public boolean detectPortal(WarpPortal portal){
+    public boolean detectPortal(WarpPortal portal) {
         return detectCollision(portal);
     }
 
     public boolean detectCollision(Collidable object) {
 
-        Rectangle ob =object.getBounds();
+        Rectangle ob = object.getBounds();
         Rectangle r = this.getBounds();
         // Check if there is overlap along the X axis and Y axis
         boolean xOverlap = (r.x < ob.x + ob.width) && (r.x + r.width > ob.x);
@@ -275,6 +290,10 @@ public abstract class Character implements Collidable{
         return this.type;
     }
 
+    public boolean getIsDead() {
+        return this.isDead;
+    }
+
     public boolean removeSkill() {
         this.type = null;
         setSkill(null);
@@ -294,7 +313,7 @@ public abstract class Character implements Collidable{
 
     @Override
     public Rectangle getBounds() {
-       return new Rectangle(xPos, yPos, width, height);
+        return new Rectangle(xPos, yPos, width, height);
     }
 
     @Override
@@ -304,7 +323,7 @@ public abstract class Character implements Collidable{
 
     @Override
     public int getHeight() {
-       return this.height;
+        return this.height;
     }
 
     @Override
@@ -330,30 +349,30 @@ public abstract class Character implements Collidable{
     @Override
     public void setGameObjectChangeListener(GameObjectChangeListener listener) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setHeight(int height) {
         this.height = height;
-        
+
     }
 
     @Override
     public void setWidth(int width) {
         this.width = width;
-        
+
     }
 
     @Override
     public void setX_pos(int x) {
         this.xPos = x;
-        
+
     }
 
     @Override
     public void setY_pos(int y) {
         this.yPos = y;
-        
+
     }
 }

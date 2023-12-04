@@ -28,7 +28,9 @@ import src.main.com.lemmings.Models.Character;
  * 
  */
 public class LevelController implements GameObjectChangeListener {
-    private LevelModel level;
+    private final int WIN_CONDITION = 9;
+    private final int POINTS_PER_CHARACTER = 5;
+    private LevelModel levelModel;
     private LevelView levelView;
     private GameState playState;
     private MenuOptions menuModel;
@@ -37,49 +39,30 @@ public class LevelController implements GameObjectChangeListener {
     private ArrayList<CharacterController> characterControllers;
     private Skill currentSkillSelected;
 
-    public LevelController(LevelView levelView) {
-        initializeGame(levelView);
+    public LevelController(LevelView levelView, LevelModel levelModel, GameState gameState, MenuOptions menuOptions) {
+        this.levelView = levelView;
+        this.levelModel = levelModel;
+        this.playState = gameState;
+        this.menuModel = menuOptions;
+        this.characterControllers = levelView.initializeCharacterViews(levelModel.getCharacters(), this);
+        initializeGame();
         addListeners();
     }
 
-    private void initializeGame(LevelView levelView) {
+    private void initializeGame() {
 
-        // initialize level
-        this.level = new LevelModel();
-        this.levelView = levelView;
+        // add GameObjects and Characters to LevelView
+        this.levelView.initializeWithLevelModel(this.levelModel);
 
         // initialize game state and menu
         this.playState = new GameState();
         this.menuModel = new MenuOptions();
 
-        addObjectsToGameView(level.getGameObjects()); // display game objects in game view
-
         // create controllers
-        this.characterControllers = createCharacterControllers();
         this.gameStateController = new GameStateController(levelView.getStatsPanelView(), playState);
         this.menuController = new MenuOptionsController(levelView.getMenuOptionsView(), menuModel);
 
         updateGameState();
-
-    }
-
-    /**
-     * This method calls a method to clear all elements from LevelView before
-     * itterating over an ArrayList of gameObjects and adding
-     * each gameObject to the LevelView's JLayeredPane default layer.
-     * 
-     * @param gameObjects
-     */
-    private void addObjectsToGameView(ArrayList<GameObject> gameObjects) {
-
-        levelView.clearGameObjectsFromView();
-        if (gameObjects.size() != 0) {
-            for (GameObject go : gameObjects) {
-                levelView.addObjectToView(go, JLayeredPane.DEFAULT_LAYER);
-            }
-        } else {
-            System.err.println("Unable to load Game Objects");
-        }
     }
 
     /**
@@ -94,14 +77,14 @@ public class LevelController implements GameObjectChangeListener {
      * @return An ArrayList of initialized CharacterControllers for this LevelModel
      *         instance.
      */
-    private ArrayList<CharacterController> createCharacterControllers() {
-        ArrayList<CharacterController> characterControllers = new ArrayList<>();
-        for (int i = 0; i < level.getCharacters().size(); i++) {
-            CharacterController ctrlr = new CharacterController(level.getCharacter(i), this);
-            characterControllers.add(ctrlr);
-        }
-        return characterControllers;
-    }
+    // private ArrayList<CharacterController> createCharacterControllers() {
+    //     ArrayList<CharacterController> characterControllers = new ArrayList<>();
+    //     for (int i = 0; i < levelModel.getCharacters().size(); i++) {
+    //         CharacterController ctrlr = new CharacterController(levelModel.getCharacter(i), this);
+    //         characterControllers.add(ctrlr);
+    //     }
+    //     return characterControllers;
+    // }
 
     private void addListeners() {
 
@@ -118,7 +101,7 @@ public class LevelController implements GameObjectChangeListener {
 
     private void setupClickListeners() {
         // add click listeners to each Ground object
-        for (GameObject obj : level.getGameObjects()) {
+        for (GameObject obj : levelModel.getGameObjects()) {
             obj.setGameObjectChangeListener(this);
         }
     }
@@ -128,8 +111,8 @@ public class LevelController implements GameObjectChangeListener {
         Timer timer = new Timer(100, new ActionListener() {
 
             // check for collisions
-            ArrayList<GameObject> env = level.getGameObjects();
-            ArrayList<Character> characters = level.getCharacters();
+            ArrayList<GameObject> env = levelModel.getGameObjects();
+            ArrayList<Character> characters = levelModel.getCharacters();
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,36 +125,60 @@ public class LevelController implements GameObjectChangeListener {
     }
 
     private void updateGameState(ArrayList<GameObject> env, ArrayList<Character> characters) {
+        Rectangle gameBounds = levelView.getGamePanelBounds();
         for (CharacterController chController : characterControllers) {
-            chController.updateCharacter(env, characters);
+            chController.updateCharacter(env, characters, gameBounds);
         }
-        processWinConditions();
+        processWinOrDeadConditions();
     }
 
-    private void processWinConditions() {
-        ArrayList<CharacterController> remove = findCharactersMeetingWinConditions();
+    private void processWinOrDeadConditions() {
+        ArrayList<CharacterController> remove = findCharactersMeetingConditions();
 
         // each character is 5 points
-        int addScore = remove.size() * 5;
+        int addScore = 0;
+        int lostCharacterCount = 0;
+        for (CharacterController ch : remove) {
+            if (!ch.getIsDead()) {
+                addScore += 5; // each character is 5 points.
+            }else{
+                lostCharacterCount++;
+            }
+        }
         gameStateController.updateScore(addScore);
-
+        gameStateController.updateCharacterCount(lostCharacterCount);
         removeCharacters(remove);
-    }
 
-    private void removeCharacters(ArrayList<CharacterController> remove) {
-        for (CharacterController characterController : remove) {
-            removeCharacter(characterController);
+        // if no more characters and we have met level threshold, show win screen
+        if (gameStateController.getCharacterCount() <= WIN_CONDITION) {
+            if (gameStateController.getScore() >= (WIN_CONDITION * POINTS_PER_CHARACTER)) {
+                // show win layer
+                levelView.getWinScreen().setIsVisible(true);
+            }else{
+                // show lose layer
+                levelView.getLoseScreen().setIsVisible(true);
+            }
+
+            // For now, restart game
+            new Timer(5000, new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+                
+            });
         }
     }
 
     // this methods finds CharacterControllers whose coupled Character models meet
     // the win condition
-    private ArrayList<CharacterController> findCharactersMeetingWinConditions() {
+    private ArrayList<CharacterController> findCharactersMeetingConditions() {
         ArrayList<CharacterController> remove = new ArrayList<>();
 
         for (CharacterController chController : characterControllers) {
             // check for win condition
-            if (chController.checkWinCondition(level.getPortal())) {
+            if (chController.checkWinCondition(levelModel.getPortal()) || chController.getIsDead()) {
                 remove.add(chController);
             }
         }
@@ -179,28 +186,43 @@ public class LevelController implements GameObjectChangeListener {
         return remove;
     }
 
-    @Override
-    public void removeGameObjectSelected(GameObject clickedObject) {
-        System.out.println("inside listener.removeGameObjectSelected");
-        // retrieve the map coordinates of the clicked object
-        Point xy = clickedObject.getRowAndCol();
-
-        // update gameObjects array
-        level.getGameObjects().remove(clickedObject);
-
-        // update map
-        // level.setMap(level.removePointFromMap(xy));
-        updateGameState();
+    /**
+     * Removes characters passed as argument.
+     * This method iterates through a list of character controllers and calls
+     * removeCharacter on each.
+     * 
+     * @param remove
+     */
+    private void removeCharacters(ArrayList<CharacterController> remove) {
+        for (CharacterController characterController : remove) {
+            removeCharacter(characterController);
+        }
     }
 
     @Override
+    public void removeGameObjectSelected(GameObject clickedObject) {
+
+        // update gameObjects array
+        levelModel.getGameObjects().remove(clickedObject);
+        updateGameState();
+    }
+
+    /**
+     * Removes a {@code GameObject} from the Game Level.
+     * This method iterats over the array of GameObjects and checks if the RowAndCol
+     * field matches the RowAndCol field of the GameObject Point
+     * passed as an argument and adds the matching GameObject to a remove array. It
+     * then calls the method removeGameObjectSelected on each GameObject in the
+     * remove array.
+     */
+    @Override
     public void removeGameObjectSelected(Point clickedObject) {
         ArrayList<GameObject> itemsToRemove = new ArrayList<>();
-        System.err.println("Inside listener.removeGameObjectSelected");
+
         // find the GameObject by its xy coordinates
-        for (GameObject obj : level.getGameObjects()) {
+        for (GameObject obj : levelModel.getGameObjects()) {
             if (obj.getRowAndCol().equals(clickedObject)) {
-                System.out.println("Found object to remove");
+
                 itemsToRemove.add(obj);
             }
         }
@@ -215,20 +237,25 @@ public class LevelController implements GameObjectChangeListener {
     // rerender the LevelView.
     @Override
     public void addGameObject(GameObject go) {
-        level.getGameObjects().add(go);
+        levelModel.getGameObjects().add(go);
         updateGameState();
     }
 
     @Override
     public void updateGameState() {
-        System.out.println("Inside LvlController.updateGameState");
-        levelView.redrawView(level.getGameObjects(), getCharacterControllers());
+        levelView.initializeWithLevelModel(levelModel);
     }
 
     private ArrayList<CharacterController> getCharacterControllers() {
         return this.characterControllers;
     }
 
+    /**
+     * This method removes the {@code CharacterController} from the
+     * CharacterController Array. It calls updateGameState to render
+     * the Gameview with remaining CharacterControllers in the CharacterController
+     * Array.
+     */
     @Override
     public void removeCharacter(CharacterController character) {
         getCharacterControllers().remove(character);
