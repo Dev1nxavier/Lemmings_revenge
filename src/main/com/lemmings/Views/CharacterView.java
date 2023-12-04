@@ -77,16 +77,9 @@ public class CharacterView extends GameView {
         this.isHighlighted = false;
     }
 
-    public void setSkillIcon(String name) {
-        BufferedImage icon;
-        try {
-            icon = ImageLoader.getImage(name);
-            this.skillIcon = icon;
-        } catch (Exception e) {
-            System.err.println("Unable to load icon: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
+    public void setSkillIcon(BufferedImage icon) {
+        System.out.println("Setting skill icon... " + icon);
+       this.skillIcon = icon;  
     }
 
     public BufferedImage getSkillIcon() {

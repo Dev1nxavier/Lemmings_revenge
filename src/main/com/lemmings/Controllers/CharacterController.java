@@ -1,23 +1,15 @@
 package src.main.com.lemmings.Controllers;
 
-import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.border.Border;
+import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.Collidable;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.GameObjects.WarpPortal;
-import src.main.com.lemmings.Models.Skills.Blocker;
-import src.main.com.lemmings.Models.Skills.Builder;
-import src.main.com.lemmings.Models.Skills.Miner;
-import src.main.com.lemmings.Models.Skills.Ordinance;
 import src.main.com.lemmings.Models.Skills.Skill;
 import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
 import src.main.com.lemmings.Views.CharacterView;
@@ -49,22 +41,22 @@ public class CharacterController {
             public void mousePressed(MouseEvent clickEvent) {
                 super.mousePressed(clickEvent);
                 // add an icon to the view
-                chView.setSkillIcon("miner_icon.png");
+                // chView.setSkillIcon("miner_icon.png");
                 onCharacterSelected();
             }
 
             @Override
-            public void mouseEntered(MouseEvent enterEvent){
+            public void mouseEntered(MouseEvent enterEvent) {
                 super.mouseEntered(enterEvent);
                 chView.showArrow();
             }
 
             @Override
-            public void mouseExited(MouseEvent exitEvent){
+            public void mouseExited(MouseEvent exitEvent) {
                 super.mouseExited(exitEvent);
                 chView.hideArrow();
             }
-            
+
         });
     }
 
@@ -110,13 +102,14 @@ public class CharacterController {
 
     public void setSkill(Skill skill) {
         ch.setSkill(skill);
+        chView.setSkillIcon(skill.getImage());
     }
 
     public CharacterView getCharacterView() {
         return this.chView;
     }
 
-    public Character getCharacterModel(){
+    public Character getCharacterModel() {
         return this.ch;
     }
 
@@ -140,7 +133,7 @@ public class CharacterController {
         return ch.detectGround(gameObjects);
     }
 
-    public boolean checkWinCondition(WarpPortal portal){
+    public boolean checkWinCondition(WarpPortal portal) {
         return ch.detectPortal(portal);
     }
 

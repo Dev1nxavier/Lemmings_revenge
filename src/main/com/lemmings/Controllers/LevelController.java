@@ -11,9 +11,7 @@ import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.MenuOptions;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.Skills.Skill;
-import src.main.com.lemmings.Views.StatsPanelView;
 import src.main.com.lemmings.Views.LevelView;
-import src.main.com.lemmings.Views.MenuOptionsView;
 import src.main.com.lemmings.Models.Character;
 
 /**
@@ -53,7 +51,7 @@ public class LevelController implements GameObjectChangeListener {
         // initialize game state and menu
         this.playState = new GameState();
         this.menuModel = new MenuOptions();
-        
+
         addObjectsToGameView(level.getGameObjects()); // display game objects in game view
 
         // create controllers
@@ -66,8 +64,10 @@ public class LevelController implements GameObjectChangeListener {
     }
 
     /**
-     * This method calls a method to clear all elements from LevelView before itterating over an ArrayList of gameObjects and adding
-     * each gameObject to the LevelView's JLayeredPane default layer. 
+     * This method calls a method to clear all elements from LevelView before
+     * itterating over an ArrayList of gameObjects and adding
+     * each gameObject to the LevelView's JLayeredPane default layer.
+     * 
      * @param gameObjects
      */
     private void addObjectsToGameView(ArrayList<GameObject> gameObjects) {
@@ -82,14 +82,17 @@ public class LevelController implements GameObjectChangeListener {
         }
     }
 
-
     /**
-     * Creates and initializes a list of {@code CharacterController} objects. 
-     * This method iterates over an ArrayList of {@code Character} objects in the {@code LevelModel} and creates
-     * a new {@code CharacterController} instance for each Character object. The {@code CharacterController} instance is initialized
-     * with a reference to the respective {@code Character} object and passed a reference to the current GameObjectChangeListener instance.
-     *  
-     * @return An ArrayList of initialized CharacterControllers for this LevelModel instance. 
+     * Creates and initializes a list of {@code CharacterController} objects.
+     * This method iterates over an ArrayList of {@code Character} objects in the
+     * {@code LevelModel} and creates
+     * a new {@code CharacterController} instance for each Character object. The
+     * {@code CharacterController} instance is initialized
+     * with a reference to the respective {@code Character} object and passed a
+     * reference to the current GameObjectChangeListener instance.
+     * 
+     * @return An ArrayList of initialized CharacterControllers for this LevelModel
+     *         instance.
      */
     private ArrayList<CharacterController> createCharacterControllers() {
         ArrayList<CharacterController> characterControllers = new ArrayList<>();
@@ -103,7 +106,7 @@ public class LevelController implements GameObjectChangeListener {
     private void addListeners() {
 
         setupTimer();
-  
+
         setupClickListeners();
 
         setupMenuControllerListener();
@@ -207,8 +210,9 @@ public class LevelController implements GameObjectChangeListener {
         }
     }
 
-    // When a new GameObject is created, this method is called to add the object to the array of GameObjects and
-    // rerender the LevelView. 
+    // When a new GameObject is created, this method is called to add the object to
+    // the array of GameObjects and
+    // rerender the LevelView.
     @Override
     public void addGameObject(GameObject go) {
         level.getGameObjects().add(go);
@@ -232,15 +236,13 @@ public class LevelController implements GameObjectChangeListener {
     }
 
     @Override
-    public void updateMenuSelection(Skill skill){
+    public void updateMenuSelection(Skill skill) {
         skill.setListener(this);
         this.currentSkillSelected = skill;
     }
 
     @Override
-    public void updateCharacterModel(CharacterController chController){
-        if (currentSkillSelected !=null) {
-            chController.setSkill(currentSkillSelected);
-        }
+    public void updateCharacterModel(CharacterController chController) {
+        chController.setSkill(currentSkillSelected);
     }
 }

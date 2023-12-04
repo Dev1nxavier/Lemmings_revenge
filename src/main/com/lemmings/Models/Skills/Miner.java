@@ -50,9 +50,10 @@ public class Miner extends Excavator {
                         decrementCount();
                     }
                     getListener().removeGameObjectSelected(currentGround);
-
                 }
 
+            }else if (getCount()<=0) {
+                c.removeSkill();
             }
         } catch (Exception e) {
             System.err.println("unable to invoke useSkill method");

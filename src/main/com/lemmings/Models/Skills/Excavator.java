@@ -20,6 +20,7 @@ public class Excavator implements Skill {
 
     public Excavator(){
         setCount(2);
+        setImage();
     }
 
     public Excavator(GameObjectChangeListener listener){
@@ -42,6 +43,8 @@ public class Excavator implements Skill {
         if (getCount() > 0 && c.isGround()) {
             getListener().removeGameObjectSelected(c.getCurrentGround());
             decrementCount();
+        }else if (getCount()<=0) {
+            c.removeSkill();
         }
     }
 

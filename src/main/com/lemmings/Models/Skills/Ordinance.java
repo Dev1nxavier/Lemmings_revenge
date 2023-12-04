@@ -27,6 +27,7 @@ public class Ordinance implements Skill {
     // zero-arg constructor
     public Ordinance() {
         setCount(1);
+        setImage();
     }
 
     public Ordinance(GameObjectChangeListener listener) {
