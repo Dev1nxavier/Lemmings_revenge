@@ -9,6 +9,7 @@ import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.Bridge;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.GameObjects.Ground;
+import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
  * Builder.java
@@ -23,10 +24,12 @@ public class Builder implements Skill {
     private GameObjectChangeListener listener;
     private int count;
     private SKILL_TYPE type = SKILL_TYPE.BUILDER;
+    private BufferedImage image;
 
     // zero argumnent constructor
     public Builder() {
         setCount(2);
+        setImage();
     }
 
     public Builder(GameObjectChangeListener listener) {
@@ -83,7 +86,6 @@ public class Builder implements Skill {
             public void run() {
                 try {
                     Thread.sleep(3000); // delay execution 3 seconds
-                    System.out.println("Destroying bridge...");
                     getListener().removeGameObjectSelected(bridge);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
@@ -99,12 +101,6 @@ public class Builder implements Skill {
     public void useSkill(Character c) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'useSkill'");
-    }
-
-    @Override
-    public ArrayList<BufferedImage> getAnimationFrames() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAnimationFrames'");
     }
 
     @Override
@@ -135,5 +131,19 @@ public class Builder implements Skill {
     @Override
     public GameObjectChangeListener getListener() {
         return this.listener;
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        return this.image;
+    }
+
+    @Override
+    public void setImage() {
+        try {
+            this.image = ImageLoader.getImage("bridge_icon.png");
+        } catch (Exception e) {
+            System.err.println("Unable to load image: " + e.getMessage());
+        }
     }
 }

@@ -1,9 +1,11 @@
 package src.main.com.lemmings.Models;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
 import src.main.com.lemmings.Views.Components.GameButton;
+import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
  * MenuModel
@@ -22,7 +24,17 @@ public class MenuOptions {
     private void initializeMenu() {
         // load skills
         for (SKILL_TYPE type : SKILL_TYPE.values()) {
-            GameButton gb = new GameButton(type.name(), "miner_icon.png", type);
+            String image;
+            switch (type) {
+                case BLOCKER -> image = "blocker_icon.png";
+                case BUILDER -> image = "bridge_icon.png";
+                case EXCAVATOR -> image = "miner_icon.png";
+                case MINER -> image = "miner_icon.png";
+                case BOMBER -> image = "dynamite_icon.png";
+                default-> image = "dynamite_icon.png";
+            }
+
+            GameButton gb = new GameButton(type.name(),image, type);
             menuButtons.add(gb);
         }
 

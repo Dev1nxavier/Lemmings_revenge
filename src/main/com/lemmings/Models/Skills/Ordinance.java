@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
+import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
  * Ordinance.java
@@ -21,6 +22,7 @@ public class Ordinance implements Skill {
     private final SKILL_TYPE type = SKILL_TYPE.BOMBER;
     private int count;
     private GameObjectChangeListener listener;
+    private BufferedImage image;
 
     // zero-arg constructor
     public Ordinance() {
@@ -83,12 +85,6 @@ public class Ordinance implements Skill {
     }
 
     @Override
-    public ArrayList<BufferedImage> getAnimationFrames() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAnimationFrames'");
-    }
-
-    @Override
     public int decrementCount() {
         return this.count--;
     }
@@ -111,6 +107,20 @@ public class Ordinance implements Skill {
     @Override
     public GameObjectChangeListener getListener() {
         return this.listener;
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        return this.image;
+    }
+
+    @Override
+    public void setImage() {
+        try {
+            this.image = ImageLoader.getImage("dynamite_icon.png");
+        } catch (Exception e) {
+            System.err.println("Unable to load image: " + e.getMessage());
+        }
     }
 
 }

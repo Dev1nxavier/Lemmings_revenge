@@ -109,7 +109,6 @@ public class CharacterController {
     }
 
     public void setSkill(Skill skill) {
-        System.out.printf("Setting skill in ChController.setSkill: %s", skill.getSkillType() );
         ch.setSkill(skill);
     }
 

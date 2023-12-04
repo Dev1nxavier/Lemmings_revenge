@@ -33,8 +33,6 @@ public class LevelController implements GameObjectChangeListener {
     private LevelModel level;
     private LevelView levelView;
     private GameState playState;
-    private StatsPanelView scoreView;
-    private MenuOptionsView menuView;
     private MenuOptions menuModel;
     private MenuOptionsController menuController;
     private GameStateController gameStateController;
@@ -52,15 +50,10 @@ public class LevelController implements GameObjectChangeListener {
         this.level = new LevelModel();
         this.levelView = levelView;
 
-        // initialize game state
-        // this.scoreView = new StatsPanelView();
+        // initialize game state and menu
         this.playState = new GameState();
-        // this.menuView = new MenuOptionsView();
         this.menuModel = new MenuOptions();
         
-
-        level.createGameObjectsFromMap(); // populate game objects in Model
-
         addObjectsToGameView(level.getGameObjects()); // display game objects in game view
 
         // create controllers
@@ -87,7 +80,6 @@ public class LevelController implements GameObjectChangeListener {
         } else {
             System.err.println("Unable to load Game Objects");
         }
-        // gameView.repaint();
     }
 
 
@@ -186,6 +178,7 @@ public class LevelController implements GameObjectChangeListener {
 
     @Override
     public void removeGameObjectSelected(GameObject clickedObject) {
+        System.out.println("inside listener.removeGameObjectSelected");
         // retrieve the map coordinates of the clicked object
         Point xy = clickedObject.getRowAndCol();
 
@@ -193,17 +186,18 @@ public class LevelController implements GameObjectChangeListener {
         level.getGameObjects().remove(clickedObject);
 
         // update map
-        level.setMap(level.removePointFromMap(xy));
+        // level.setMap(level.removePointFromMap(xy));
         updateGameState();
     }
 
     @Override
     public void removeGameObjectSelected(Point clickedObject) {
         ArrayList<GameObject> itemsToRemove = new ArrayList<>();
-
+        System.err.println("Inside listener.removeGameObjectSelected");
         // find the GameObject by its xy coordinates
         for (GameObject obj : level.getGameObjects()) {
             if (obj.getRowAndCol().equals(clickedObject)) {
+                System.out.println("Found object to remove");
                 itemsToRemove.add(obj);
             }
         }
@@ -223,6 +217,7 @@ public class LevelController implements GameObjectChangeListener {
 
     @Override
     public void updateGameState() {
+        System.out.println("Inside LvlController.updateGameState");
         levelView.redrawView(level.getGameObjects(), getCharacterControllers());
     }
 
@@ -238,16 +233,13 @@ public class LevelController implements GameObjectChangeListener {
 
     @Override
     public void updateMenuSelection(Skill skill){
-        System.out.printf("Skill selected: %s.\nSetting skill in level Controller\n",skill.getSkillType());
         skill.setListener(this);
         this.currentSkillSelected = skill;
     }
 
     @Override
     public void updateCharacterModel(CharacterController chController){
-        System.out.printf("Character selected. Setting skill\n");
         if (currentSkillSelected !=null) {
-            System.out.printf("Skill: %s in LvlController.updateCharacterModel!",currentSkillSelected.getSkillType());
             chController.setSkill(currentSkillSelected);
         }
     }

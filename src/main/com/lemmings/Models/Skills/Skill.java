@@ -20,14 +20,14 @@ public interface Skill {
         EXCAVATOR,
         MINER,
         BLOCKER,
-        BOMBER,
-        CLIMBER
+        BOMBER
     }
-    
+
     public void useSkill(Character c, ArrayList<GameObject> env);
     public void useSkill(Character c);
-    public ArrayList<BufferedImage> getAnimationFrames();
     public SKILL_TYPE getSkillType();
+    public BufferedImage getImage();
+    public void setImage();
 
         /**
      * Decrements count and returns remaining count. 

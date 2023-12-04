@@ -23,7 +23,6 @@ public class LevelModel {
     final int WIDTH = 600;
     final int HEIGHT = 600;
     final int MAX_CHARS = 10;
-    private GameState gameState;
 
     // FIXME: Use generateMap function after testing!
     int[][] map = {
@@ -36,9 +35,8 @@ public class LevelModel {
             { 1, 1, 1, 3, 0, 1, 1, 1 },
             { 1, 1, 0, 0, 0, 1, 1, 1 }
     };
-    // private int[][] map = new int[8][8]; // Ground: 1, Air: 0, Obstacle: 2
+ 
     private ArrayList<Character> characters = new ArrayList<>();
-    // private ArrayList<CharacterView> characterViews = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private ArrayList<GameView> skillViews = new ArrayList<>();
     private WarpPortal portal;
@@ -47,10 +45,10 @@ public class LevelModel {
         loadLevel();
     }
 
-    // FIXME: the sizes of the obstacles is incorrect
     // primes the map with obstacles
     private void loadLevel() {
         // initialize game state
+        createGameObjectsFromMap();
         generateCharacters();
     }
 
@@ -70,7 +68,6 @@ public class LevelModel {
         for (int i = 0; i < MAX_CHARS; i++) {
             Character ch = new Lemming();
             // slightly offset each character
-            // ch.setPosition((i + 2) * 20, 100);
             ch.setX_pos((i + 2) * 20);
             ch.setY_pos(100);
             characters.add(ch);

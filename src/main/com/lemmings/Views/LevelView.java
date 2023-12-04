@@ -1,6 +1,7 @@
 package src.main.com.lemmings.Views;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 
@@ -32,9 +33,14 @@ public class LevelView extends JPanel {
     private void layoutComponents() {
         this.setLayout(new OverlayLayout(this));
 
-        gamePlayPane = new JLayeredPane();
+        gamePlayPane = new JLayeredPane(){
+            @Override
+            public Dimension getPreferredSize(){
+                return new Dimension(600, 600);
+            }
+        };
 
-        rootPanel = new JPanel();
+        rootPanel = new JPanel(); //JPanel holds Game window, Stats Window, Options Menu
         rootPanel.setOpaque(false); // transparent to show background
         rootPanel.setLayout(new BorderLayout());
         
@@ -47,7 +53,7 @@ public class LevelView extends JPanel {
         rootPanel.add(statsPanel, BorderLayout.NORTH);
         menuView = new MenuOptionsView();
         rootPanel.add(menuView, BorderLayout.EAST);
-        rootPanel.add(gamePlayPane, BorderLayout.CENTER); //gameplay panel takes up all space remaining after menus
+        rootPanel.add(gamePlayPane, BorderLayout.CENTER); //Game window takes up all space remaining after menus
 
         this.add(rootPanel);
 
@@ -69,7 +75,7 @@ public class LevelView extends JPanel {
     public void addObjectToView(JLabel objectView, int layer) {
         gamePlayPane.add(objectView, Integer.valueOf(layer));
         gamePlayPane.revalidate();
-
+        gamePlayPane.repaint();
     }
 
     public StatsPanelView getStatsPanelView(){

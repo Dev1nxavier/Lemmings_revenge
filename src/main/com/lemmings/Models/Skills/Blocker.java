@@ -21,17 +21,13 @@ import src.main.com.lemmings.utilities.ImageLoader;
  * 
  */
 public class Blocker implements Skill{
-    private ArrayList<BufferedImage> animationFrames;
     private GameObjectChangeListener listener;
     private int count;
+    private BufferedImage image;
     
     public Blocker(){
-        setCount(3);
-        animationFrames = new ArrayList<>();
-        animationFrames.add(ImageLoader.getImage("Lemming_police_1.png"));
-        animationFrames.add(ImageLoader.getImage("Lemming_police_3.png"));
-        animationFrames.add(ImageLoader.getImage("Lemming_police_2.png"));
-        
+        setCount(3);  
+        setImage();
     }
 
     public Blocker(GameObjectChangeListener listener){
@@ -39,16 +35,12 @@ public class Blocker implements Skill{
         setListener(listener);
     }
 
-    public ArrayList<BufferedImage> getAnimationFrames(){
-        return this.animationFrames;
-    }
     /**
      * This method creates a new GameObject in the same location as the Character object. 
      */
     @Override
     public void useSkill(Character c) {
         // prevent this Character from updating its position
-        System.out.println("Blocker: setting canMoveHorizontally");
         c.setCanMoveHorizontally(false);
     }
 
@@ -86,6 +78,20 @@ public class Blocker implements Skill{
     @Override
     public GameObjectChangeListener getListener() {
        return this.listener;
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        return this.image;
+    }
+
+    @Override
+    public void setImage() {
+        try {
+            this.image = ImageLoader.getImage("blocker_icon.png");
+        } catch (Exception e) {
+            System.err.println("Unable to load image: " + e.getMessage());
+        }
     }
     
 }
