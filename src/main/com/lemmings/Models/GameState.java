@@ -13,6 +13,8 @@ public class GameState {
     private int lives;
     private int level;
     private int chCount;
+    private int charactersThroughPortal = 0;
+    private int charactersDead = 0;
 
     public GameState(){
         this.score = 0;
@@ -53,6 +55,20 @@ public class GameState {
         return this.chCount -=i;
     }
 
+    public void updateCharactersThroughPortal(int count){
+        this.charactersThroughPortal +=count;
+    }
+
+    public int getCharactersThroughPortal(){
+        return this.charactersThroughPortal;
+    }
+
+    public void updateCharactersDead(int count){
+        this.charactersDead+=count;
+    }
     
+    public int getCharactersDead(){
+        return this.charactersDead;
+    }
     
 }

@@ -1,14 +1,9 @@
 package src.main.com.lemmings;
 
 import java.awt.BorderLayout;
-import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.OverlayLayout;
 
 import src.main.com.lemmings.Controllers.LevelController;
-import src.main.com.lemmings.Controllers.MenuOptionsController;
 import src.main.com.lemmings.Models.GameState;
 import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.MenuOptions;

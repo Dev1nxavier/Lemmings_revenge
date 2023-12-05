@@ -1,6 +1,5 @@
 package src.main.com.lemmings.Controllers;
 
-import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameState;
 import src.main.com.lemmings.Views.StatsPanelView;
 
@@ -35,5 +34,15 @@ public class GameStateController {
 
     public int getScore() {
         return gameState.getScore();
+    }
+
+    public void updateCharactersDead(int count){
+        gameState.updateCharactersDead(count);
+        updateCharacterCount(count);
+    }
+
+    public void updateCharactersThroughPortal(int count){
+        gameState.updateCharactersThroughPortal(count);
+        updateCharacterCount(count);
     }
 }

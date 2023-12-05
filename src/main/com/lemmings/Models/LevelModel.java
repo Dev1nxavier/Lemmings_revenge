@@ -20,9 +20,11 @@ import src.main.com.lemmings.Views.Components.SkillIcon;
  */
 public class LevelModel {
 
-    final int WIDTH = 600;
-    final int HEIGHT = 600;
-    final int MAX_CHARS = 10;
+    private final int WIDTH = 600;
+    private final int HEIGHT = 600;
+    private final int MAX_CHARS = 10;
+    private final int WIN_CONDITION = 7;
+    private final int POINTS_PER_CHARACTER = 5;
 
     // FIXME: Use generateMap function after testing!
     int[][] map = {
@@ -167,5 +169,17 @@ public class LevelModel {
 
     public void setGameObjects(ArrayList<GameObject> obstacles) {
         this.gameObjects = obstacles;
+    }
+
+    public int getWIN_CONDITION() {
+        return WIN_CONDITION;
+    }
+
+    public int getPOINTS_PER_CHARACTER() {
+        return POINTS_PER_CHARACTER;
+    }
+
+    public ArrayList<GameView> getSkillViews() {
+        return skillViews;
     }
 }

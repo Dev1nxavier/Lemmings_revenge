@@ -28,9 +28,6 @@ import src.main.com.lemmings.Models.Character;
  * 
  */
 public class LevelController implements GameObjectChangeListener {
-    private final int WIN_CONDITION = 7;
-    private final int POINTS_PER_CHARACTER = 5;
-    private int charactersThroughPortal = 0;
     private LevelModel levelModel;
     private LevelView levelView;
     private GameState playState;
@@ -114,36 +111,52 @@ public class LevelController implements GameObjectChangeListener {
 
     private void processWinOrDeadConditions() {
         ArrayList<CharacterController> remove = findCharactersMeetingConditions();
+        updateCounts(remove);
+        gameStateController.updateScore(calculateScore());
+        // gameStateController.updateCharacterCount(playState.getCharactersDead() + playState.getCharactersThroughPortal()); // update remaining
+                                                                                            // characters
 
-        // each character is 5 points
-        int addScore = 0;
-        int totalChars = 10;
-        int charactersDead = remove.size() - charactersThroughPortal;
+        if (hasWon()) {
+            // Player wins!
+            handleWin();
+        } else if (hasLost()) {
+            // insufficient Characters to meet win threshold
+            handleLoss();
+        }
+    }
 
-        for (CharacterController ch : remove) {
+    private void handleLoss() {
+
+        levelView.getLoseScreen().setVisible(true);
+        exitGame();
+    }
+
+    private boolean hasLost() {
+        return levelModel.getMAX_CHARS() - (playState.getCharactersThroughPortal() + playState.getCharactersDead()) < levelModel.getWIN_CONDITION() - playState.getCharactersThroughPortal();
+    }
+
+    private void handleWin() {
+        levelView.getWinScreen().setVisible(true);
+        exitGame();
+    }
+
+    private boolean hasWon() {
+        return playState.getCharactersThroughPortal() >= levelModel.getWIN_CONDITION();
+    }
+
+    private int calculateScore() {
+        return playState.getCharactersThroughPortal() * levelModel.getPOINTS_PER_CHARACTER();
+    }
+
+    private void updateCounts(ArrayList<CharacterController> characterControllers) {
+        for (CharacterController ch : characterControllers) {
             if (!ch.getIsDead()) {
-                addScore += POINTS_PER_CHARACTER; // each character is 5 points.
-                charactersThroughPortal++;
-            }else{
-                charactersDead++;
+                gameStateController.updateCharactersThroughPortal(1);
+            } else {
+                gameStateController.updateCharactersDead(1);
             }
         }
-
-        removeCharacters(remove);
-        gameStateController.updateScore(addScore);
-        gameStateController.updateCharacterCount(charactersDead+charactersThroughPortal); // update remaining characters
-        System.out.printf("Portal: %d\nDEAD: %d\n\n",charactersThroughPortal, charactersDead);
-        if (charactersThroughPortal >= WIN_CONDITION) {
-            System.out.println("Player WINS!");
-            // Player wins!
-            levelView.getWinScreen().setVisible(true);
-            exitGame();
-        } else if (totalChars - (charactersThroughPortal + charactersDead) < WIN_CONDITION - charactersThroughPortal) {
-            // insufficient Characters to meet win threshold
-            System.out.println("PLAYER LOSES!!!!!!");
-            levelView.getLoseScreen().setVisible(true);
-            exitGame();
-        }
+        removeCharacters(characterControllers);
     }
 
     private void exitGame() {
@@ -244,7 +257,6 @@ public class LevelController implements GameObjectChangeListener {
      */
     @Override
     public void removeCharacter(CharacterController character) {
-        System.out.println("Removing Character: " + character);
         levelView.removeObjectFromView(character.getCharacterView(), JLayeredPane.MODAL_LAYER);
     }
 
