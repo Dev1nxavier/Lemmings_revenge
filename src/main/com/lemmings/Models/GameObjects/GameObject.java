@@ -8,6 +8,9 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.sound.sampled.*;
 import javax.swing.JLabel;
 
 import src.main.com.lemmings.Models.Collidable;
@@ -29,9 +32,10 @@ public abstract class GameObject extends JLabel implements Collidable {
     private Point rowAndCol;
     private ENV_TYPE type;
     private GameObjectChangeListener listener;
+    private boolean isPlayingSound = false;
 
     public GameObject() {
- 
+
     };
 
     public GameObject(int x, int y, int width, int height, Point rowAndCol) {
@@ -46,7 +50,7 @@ public abstract class GameObject extends JLabel implements Collidable {
 
     @Override
     public void setObjectBounds(int x, int y, int width, int height) {
-        this.setBounds(x, y, width, height);    
+        this.setBounds(x, y, width, height);
     }
 
     @Override
@@ -167,5 +171,51 @@ public abstract class GameObject extends JLabel implements Collidable {
                 listener.removeGameObjectSelected(GameObject.this);
             }
         });
+    }
+
+    /**
+     * Plays sound clip from the specified file path passed as an argument. 
+     * 
+     * This method includes checks for exiting if the audio clip is already playing. It includes a LineListener for listening for 
+     * when the clip completes and sets a flag for isPlaying to false. 
+     * @note: This method only plays audio files of type 'wav'
+     * 
+     * @param filePath the absolute path to the audio file. 
+     */
+    public void playSound(String filePath) {
+        // if clip already playing exit
+        if (isPlayingSound) {
+            return;
+        }
+
+        File soundfx = null;
+
+        try {
+            soundfx = new File(filePath);
+            Clip clip = AudioSystem.getClip();
+            // create a new audio player
+            AudioInputStream audio = AudioSystem.getAudioInputStream(soundfx);
+            if (clip == null || !clip.isRunning()) {
+                clip.open(audio);
+                clip.start();
+                isPlayingSound = true;
+
+                clip.addLineListener(new LineListener() {
+
+                    @Override
+                    public void update(LineEvent event) {
+                        if (event.getType() == LineEvent.Type.STOP) {
+                            isPlayingSound = false;
+                            clip.close();
+                        }
+                    }
+
+                });
+            }
+
+        } catch (Exception fnf) {
+            System.err.println("Unable to load file: " + filePath);
+            fnf.printStackTrace();
+        }
     }
 }

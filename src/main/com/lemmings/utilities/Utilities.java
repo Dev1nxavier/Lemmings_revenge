@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 
 /**
  * helpers.java
@@ -23,4 +24,5 @@ public class Utilities {
             return null;
         }
     }
+
 }

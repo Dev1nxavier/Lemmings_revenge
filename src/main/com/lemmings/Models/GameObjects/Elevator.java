@@ -2,6 +2,8 @@ package src.main.com.lemmings.Models.GameObjects;
 
 import java.awt.Point;
 
+import javax.sound.sampled.*;
+
 /**
  * Elevator
  * 
@@ -12,6 +14,7 @@ import java.awt.Point;
  *       moving Character objects in the positive y-direction.
  */
 public class Elevator extends Ground {
+    private Clip clip; // audio clip for elevator soundfx
     private boolean isMoving = false;
     private int init_y_pos;
     private int passengerCount = 0;
@@ -26,17 +29,15 @@ public class Elevator extends Ground {
         setObjectBounds(x, y, this.getWidth(), this.getHeight());
     }
 
-    // @Override
-    // protected void setObjectBounds() {
-    //     this.setObjectBounds(getX_pos(), getY_pos() - 25, getWidth(), getHeight());
-
-    // }
     @Override
     public void setObjectBounds(int x, int y, int width, int height) {
         super.setObjectBounds(x, y - 25, width, height);
     }
 
     public void setIsMoving(boolean isMoving) {
+        if (isMoving && !this.isMoving) {
+            playSound("src/main/resources/elevator_short.wav");
+        }
         this.isMoving = isMoving;
     }
 
@@ -67,6 +68,5 @@ public class Elevator extends Ground {
             }
         }
     }
-
 
 }

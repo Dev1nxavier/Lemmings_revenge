@@ -24,6 +24,8 @@ public class WarpPortal extends GameObject {
         setType(ENV_TYPE.PORTAL);
     }
 
+    
+
     public void setGameObjectChangeListener(GameObjectChangeListener listener){
         this.listener = listener;
     }

@@ -36,6 +36,8 @@ public class LevelController implements GameObjectChangeListener {
     private GameStateController gameStateController;
     private ArrayList<CharacterController> characterControllers;
     private Skill currentSkillSelected;
+    private boolean isPaused = false;
+    private Timer timer;
 
     public LevelController(LevelView levelView, LevelModel levelModel, GameState gameState, MenuOptions menuOptions) {
         this.levelView = levelView;
@@ -85,7 +87,7 @@ public class LevelController implements GameObjectChangeListener {
 
     private void setupTimer() {
         // refresh at frame rate
-        Timer timer = new Timer(100, new ActionListener() {
+        this.timer = new Timer(100, new ActionListener() {
 
             // check for collisions
             ArrayList<GameObject> env = levelModel.getGameObjects();
@@ -97,8 +99,16 @@ public class LevelController implements GameObjectChangeListener {
                 updateGameState(env, characters);
             }
         });
-
+        
         timer.start();
+    }
+
+    public void pauseGame(){
+        this.timer.stop();
+    }
+
+    public void unpauseGame(){
+        this.timer.start();
     }
 
     private void updateGameState(ArrayList<GameObject> env, ArrayList<Character> characters) {

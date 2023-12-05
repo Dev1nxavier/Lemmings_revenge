@@ -221,7 +221,11 @@ public abstract class Character implements Collidable {
     }
 
     public boolean detectPortal(WarpPortal portal) {
-        return detectCollision(portal);
+         if(detectCollision(portal)){
+            portal.playSound("src/main/resources/warp.wav");
+            return true;
+         }
+         return false;
     }
 
     public boolean detectCollision(Collidable object) {
