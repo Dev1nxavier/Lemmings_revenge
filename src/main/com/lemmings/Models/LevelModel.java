@@ -28,11 +28,11 @@ public class LevelModel {
     int[][] map = {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 2, 0, 0 },
-            { 1, 1, 1, 1, 1, 1, 1, 5 },
-            { 1, 1, 1, 1, 1, 1, 1, 1 },
-            { 2, 4, 0, 0, 1, 0, 0, 1 },
+            { 1, 1, 0, 1, 1, 1, 1, 5 },
+            { 1, 1, 0, 1, 1, 1, 1, 1 },
+            { 2, 4, 0, 2, 1, 0, 0, 1 },
             { 1, 1, 1, 0, 0, 3, 0, 1 },
-            { 1, 1, 1, 3, 0, 1, 1, 1 },
+            { 1, 1, 0, 3, 0, 1, 1, 1 },
             { 1, 1, 0, 0, 0, 1, 1, 1 }
     };
  
@@ -79,12 +79,12 @@ public class LevelModel {
         gameObjects.clear();
         // add obstacles
         int px = 0, py = 0; // start at top of screen
-
+        int groundObjectWidth = getWIDTH()/map[0].length; // screen width evenly divided by objects per row
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map.length; col++) {
                 int position = map[row][col];
                 switch (position) {
-                    case 1 -> gameObjects.add(new Ground(px, py, 75, 75, new Point(row, col)));
+                    case 1 -> gameObjects.add(new Ground(px, py, groundObjectWidth, 50, new Point(row, col)));
                     case 2 -> gameObjects.add(new Rock(px, py, 50, 75, new Point(row, col)));
                     case 3 -> gameObjects.add(new Elevator(px, py, new Point(row, col)));
                     case 4 -> {

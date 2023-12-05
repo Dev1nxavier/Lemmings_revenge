@@ -1,7 +1,5 @@
 package src.main.com.lemmings.Models;
 
-import java.awt.image.BufferedImage;
-
 import java.awt.Rectangle;
 
 /**
@@ -11,7 +9,7 @@ import java.awt.Rectangle;
  * @date November 30, 2023
  * 
  * This interface defines methods for collidable objects that have Rectangular bounds.
- * It contains methods for detecting collisions, the objects x and y position. 
+ * It contains methods for detecting collisions, setting the object's X and Y positions, and setting a listener.  
  */
 
 public interface Collidable {

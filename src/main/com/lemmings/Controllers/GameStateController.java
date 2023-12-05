@@ -11,17 +11,12 @@ public class GameStateController {
 
     private GameState gameState;
     private StatsPanelView panel;
-    private GameObjectChangeListener listener;
 
     public GameStateController(StatsPanelView panel, GameState gameState){
         this.panel = panel;
         this.gameState = gameState;
         updateScore(0);
         updateCharacterCount(0);
-    }
-
-    public void setGameObjectChangeListener(GameObjectChangeListener listener){
-        this.listener = listener;
     }
 
     public void updateScore(int points){

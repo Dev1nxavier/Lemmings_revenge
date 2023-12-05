@@ -28,8 +28,9 @@ import src.main.com.lemmings.Models.Character;
  * 
  */
 public class LevelController implements GameObjectChangeListener {
-    private final int WIN_CONDITION = 9;
+    private final int WIN_CONDITION = 7;
     private final int POINTS_PER_CHARACTER = 5;
+    private int charactersThroughPortal = 0;
     private LevelModel levelModel;
     private LevelView levelView;
     private GameState playState;
@@ -64,27 +65,6 @@ public class LevelController implements GameObjectChangeListener {
 
         updateGameState();
     }
-
-    /**
-     * Creates and initializes a list of {@code CharacterController} objects.
-     * This method iterates over an ArrayList of {@code Character} objects in the
-     * {@code LevelModel} and creates
-     * a new {@code CharacterController} instance for each Character object. The
-     * {@code CharacterController} instance is initialized
-     * with a reference to the respective {@code Character} object and passed a
-     * reference to the current GameObjectChangeListener instance.
-     * 
-     * @return An ArrayList of initialized CharacterControllers for this LevelModel
-     *         instance.
-     */
-    // private ArrayList<CharacterController> createCharacterControllers() {
-    //     ArrayList<CharacterController> characterControllers = new ArrayList<>();
-    //     for (int i = 0; i < levelModel.getCharacters().size(); i++) {
-    //         CharacterController ctrlr = new CharacterController(levelModel.getCharacter(i), this);
-    //         characterControllers.add(ctrlr);
-    //     }
-    //     return characterControllers;
-    // }
 
     private void addListeners() {
 
@@ -137,38 +117,45 @@ public class LevelController implements GameObjectChangeListener {
 
         // each character is 5 points
         int addScore = 0;
-        int lostCharacterCount = 0;
+        int totalChars = 10;
+        int charactersDead = remove.size() - charactersThroughPortal;
+
         for (CharacterController ch : remove) {
             if (!ch.getIsDead()) {
-                addScore += 5; // each character is 5 points.
+                addScore += POINTS_PER_CHARACTER; // each character is 5 points.
+                charactersThroughPortal++;
             }else{
-                lostCharacterCount++;
+                charactersDead++;
             }
         }
-        gameStateController.updateScore(addScore);
-        gameStateController.updateCharacterCount(lostCharacterCount);
+
         removeCharacters(remove);
+        gameStateController.updateScore(addScore);
+        gameStateController.updateCharacterCount(charactersDead+charactersThroughPortal); // update remaining characters
+        System.out.printf("Portal: %d\nDEAD: %d\n\n",charactersThroughPortal, charactersDead);
+        if (charactersThroughPortal >= WIN_CONDITION) {
+            System.out.println("Player WINS!");
+            // Player wins!
+            levelView.getWinScreen().setVisible(true);
+            exitGame();
+        } else if (totalChars - (charactersThroughPortal + charactersDead) < WIN_CONDITION - charactersThroughPortal) {
+            // insufficient Characters to meet win threshold
+            System.out.println("PLAYER LOSES!!!!!!");
+            levelView.getLoseScreen().setVisible(true);
+            exitGame();
+        }
+    }
 
-        // if no more characters and we have met level threshold, show win screen
-        if (gameStateController.getCharacterCount() <= WIN_CONDITION) {
-            if (gameStateController.getScore() >= (WIN_CONDITION * POINTS_PER_CHARACTER)) {
-                // show win layer
-                levelView.getWinScreen().setIsVisible(true);
-            }else{
-                // show lose layer
-                levelView.getLoseScreen().setIsVisible(true);
+    private void exitGame() {
+        // For now, restart game
+        new Timer(5000, new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
             }
 
-            // For now, restart game
-            new Timer(5000, new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.exit(0);
-                }
-                
-            });
-        }
+        }).start();
     }
 
     // this methods finds CharacterControllers whose coupled Character models meet
@@ -182,7 +169,6 @@ public class LevelController implements GameObjectChangeListener {
                 remove.add(chController);
             }
         }
-
         return remove;
     }
 
@@ -258,8 +244,8 @@ public class LevelController implements GameObjectChangeListener {
      */
     @Override
     public void removeCharacter(CharacterController character) {
-        getCharacterControllers().remove(character);
-        updateGameState();
+        System.out.println("Removing Character: " + character);
+        levelView.removeObjectFromView(character.getCharacterView(), JLayeredPane.MODAL_LAYER);
     }
 
     @Override

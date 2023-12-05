@@ -1,6 +1,7 @@
 package src.main.com.lemmings.Views;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -25,8 +26,6 @@ import src.main.com.lemmings.utilities.ImageLoader;
  * LevelView
  */
 public class LevelView extends JPanel {
-    private final int WINLAYER = 100; // z-index of component on gamePlayPane
-    private final int LOSELAYER = 200; // z-index of component on gamePlayPane
     private WinLoseScreen winScreen;
     private WinLoseScreen loseScreen;
     private JLayeredPane gamePlayPane; // for rendering characters and game objects
@@ -107,7 +106,7 @@ public class LevelView extends JPanel {
 
         winScreen = new WinLoseScreen(true);
         loseScreen = new WinLoseScreen(false);
-        this.add(winScreen); //added to top of stack
+        this.add(winScreen); // added to top of stack
         this.add(loseScreen); // added to top of stack
         this.add(rootPanel);
 
@@ -136,6 +135,18 @@ public class LevelView extends JPanel {
         gamePlayPane.repaint();
     }
 
+    public void removeObjectFromView(JLabel ObjectView, int zIndex) {
+        this.characterViews.remove(ObjectView); // remove from list
+        // get components in gamePlayPane
+        Component[] components = gamePlayPane.getComponents();
+        for (Component component : components) {
+            if (component.equals(ObjectView)) {
+                gamePlayPane.remove(component);
+                gamePlayPane.repaint();
+            }
+        }
+    }
+
     public StatsPanelView getStatsPanelView() {
         return this.statsView;
     }
@@ -144,11 +155,11 @@ public class LevelView extends JPanel {
         return this.menuView;
     }
 
-    public WinLoseScreen getWinScreen(){
+    public WinLoseScreen getWinScreen() {
         return this.winScreen;
     }
 
-    public WinLoseScreen getLoseScreen(){
+    public WinLoseScreen getLoseScreen() {
         return this.loseScreen;
     }
 
@@ -196,7 +207,7 @@ public class LevelView extends JPanel {
             this.setVisible(false);
         }
 
-        public void setIsVisible(boolean isVisible){
+        public void setIsVisible(boolean isVisible) {
             this.setVisible(isVisible);
         }
 

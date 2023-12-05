@@ -126,7 +126,12 @@ public abstract class Character implements Collidable {
         // setCanMoveHorizontally(true);
         for (GameObject g : gameObjects) {
             if (g instanceof Ground) {
-                if (isOverlapping(this.getBounds(), g.getBounds())) {
+                Rectangle charBounds = this.getBounds();
+                Rectangle groundBounds = g.getBounds();
+
+                // check if Character is within margin above ground
+                if (isOverlapping(charBounds, groundBounds)) {
+                    
                     setIsGround(true);
 
                     if (this.currentGround != null && this.currentGround != g) {
@@ -373,6 +378,5 @@ public abstract class Character implements Collidable {
     @Override
     public void setY_pos(int y) {
         this.yPos = y;
-
     }
 }
