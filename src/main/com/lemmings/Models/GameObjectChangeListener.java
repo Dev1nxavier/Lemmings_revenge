@@ -23,4 +23,5 @@ public interface GameObjectChangeListener {
     public void removeCharacter(CharacterController character);
     public void updateMenuSelection(Skill skill);
     public void updateCharacterModel(CharacterController chController);
+    public void pauseGame();
 }

@@ -23,6 +23,7 @@ public class MenuOptionsView extends JPanel {
     }
 
     public void setButtonOnMenu(JPanel button) {
+        System.out.println("Setting button on menu: " + button.getName());
         this.add(button);
     }
 

@@ -23,7 +23,7 @@ public class LevelModel {
     private final int WIDTH = 600;
     private final int HEIGHT = 600;
     private final int MAX_CHARS = 10;
-    private final int WIN_CONDITION = 7;
+    private final int WIN_CONDITION = 10;
     private final int POINTS_PER_CHARACTER = 5;
 
     // FIXME: Use generateMap function after testing!

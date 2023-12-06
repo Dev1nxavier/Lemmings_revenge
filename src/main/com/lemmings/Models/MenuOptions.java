@@ -1,18 +1,18 @@
 package src.main.com.lemmings.Models;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
 import src.main.com.lemmings.Views.Components.GameButton;
-import src.main.com.lemmings.utilities.ImageLoader;
+import src.main.com.lemmings.Views.Components.MenuButton;
 
 /**
  * MenuModel
  */
 public class MenuOptions {
     private SKILL_TYPE selectedType;
-    private ArrayList<GameButton> menuButtons;
+    private ArrayList<MenuButton> menuButtons;
+    private GameButton pauseButton;
 
     public MenuOptions() {
 
@@ -31,12 +31,16 @@ public class MenuOptions {
                 case EXCAVATOR -> image = "miner_icon.png";
                 case MINER -> image = "miner_icon.png";
                 case BOMBER -> image = "dynamite_icon.png";
-                default-> image = "dynamite_icon.png";
+                default-> image = "pauseButton.png";
             }
 
-            GameButton gb = new GameButton(type.name(),image, type);
+            MenuButton gb = new MenuButton(type.name(),image, type);
             menuButtons.add(gb);
         }
+
+        // add pause button
+        pauseButton = new GameButton("pause", "pauseButton.png", 50, 50);
+         
 
     }
 
@@ -48,12 +52,16 @@ public class MenuOptions {
         this.selectedType = selectedType;
     }
 
-    public ArrayList<GameButton> getMenuButtons() {
+    public ArrayList<MenuButton> getMenuButtons() {
         return this.menuButtons;
     }
 
-    public void setMenuButtons(ArrayList<GameButton> menuButtons) {
+    public void setMenuButtons(ArrayList<MenuButton> menuButtons) {
         this.menuButtons = menuButtons;
+    }
+
+    public GameButton getPauseButton(){
+        return this.pauseButton;
     }
 
 }

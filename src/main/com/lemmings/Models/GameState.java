@@ -20,7 +20,7 @@ public class GameState {
         this.score = 0;
         this.lives = 5;
         this.level = 1;
-        this.chCount = 10; // start with +1 extra. 
+        this.chCount = 10;
     }
 
     public int getScore() {
@@ -28,7 +28,7 @@ public class GameState {
     }
 
     public void updateScore(int points) {
-        this.score += points;
+        this.score = points;
     }
 
     public int getLives() {

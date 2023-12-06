@@ -1,94 +1,81 @@
 package src.main.com.lemmings.Views.Components;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
+import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
  * GameButton.java
  * 
  * @author Sean Greene
- * @date November 29, 2023
+ * @date December 05, 2023
  * 
- *       This class defines a game button. It lays out the visual components of
- *       the button
+ *       This class defines a custom game button. It includes methods for
+ *       setting the images, tooltips and onClick methods.
  */
 public class GameButton extends JPanel {
     private String name;
     private BufferedImage image;
-    private SKILL_TYPE type;
     private int width, height;
-    private boolean isSelected = false;
+    private GameObjectChangeListener listener;
 
-    public GameButton() {
-        this("New Skill", null, SKILL_TYPE.BLOCKER);
-    }
-
-    public GameButton(String name, String imageName, SKILL_TYPE type) {
+    public GameButton(String name, String imagePath, int width, int height) {
         this.name = name;
-        this.width = 300;
-        this.height = 40;
-        this.type = type;
-        setImage(imageName);
-        layoutComponent();
+        this.width = width;
+        this.height = height;
+        setImage(imagePath);
+        layoutComponents();
     }
 
-    private void layoutComponent() {
-        this.image = getImage();
+    public GameButton(String imagePath) {
+        this(null, imagePath, 50, 50); // default values
+    }
+
+    private void layoutComponents() {
         this.setOpaque(false);
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(width, height);
-    }
-
-    private void setImage(String name) {
+    private void setImage(String imagePath) {
         BufferedImage image = null;
         try {
-            image = ImageLoader.getImage(name);
+            image = ImageLoader.getImage(imagePath);
         } catch (Exception e) {
-            System.err.println("unable to retrieve image: " + e.getMessage());
+            System.err.println("unable to retrieve image: " + imagePath);
             e.printStackTrace();
         }
         this.image = image;
     }
 
-    private BufferedImage getImage() {
+    public BufferedImage getImage() {
         return this.image;
     }
 
-    public void select() {
-        this.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
+    public String getName(){
+        return this.name;
     }
 
-    public SKILL_TYPE getSelectedSkillType(){
-        return this.type;
+    public void setGameObjectChangeListener(GameObjectChangeListener listener) {
+        this.listener = listener;
     }
 
-    public void unSelect(){
-        this.setBorder(null);
+    public GameObjectChangeListener getListener() {
+        return this.listener;
     }
 
-    @Override protected void paintComponent(Graphics g) {
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(this.width, this.height);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.image, 0, 0, null);
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Monospace", Font.BOLD, 18));
-        g2d.drawString(this.name, 100, 40);
     }
 }

@@ -1,7 +1,6 @@
 package src.main.com.lemmings.Models.GameObjects;
 
 import java.awt.Point;
-import java.awt.Rectangle;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 
 /**
@@ -23,8 +22,6 @@ public class WarpPortal extends GameObject {
         setGameObjectChangeListener(listener);
         setType(ENV_TYPE.PORTAL);
     }
-
-    
 
     public void setGameObjectChangeListener(GameObjectChangeListener listener){
         this.listener = listener;

@@ -64,7 +64,6 @@ public class CollapsibleGround extends Ground {
     }
 
     private void updateGroundModel() {
-        System.out.println("UpdatingGroundModel");
         decrementCount();
         setCurrentFrame();
         removeObject();
@@ -114,7 +113,6 @@ public class CollapsibleGround extends Ground {
 
     private void setCurrentFrame() {
         currentFrame = (currentFrame + 1) % imageFrames.size();
-        System.out.println("current frame: " + currentFrame);
         setImage(imageFrames.get(currentFrame));
         this.setObjectBounds(getX_pos(), getY_pos() - offset, WIDTH, HEIGHT);
 

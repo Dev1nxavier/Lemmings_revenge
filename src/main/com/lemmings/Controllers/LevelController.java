@@ -99,18 +99,20 @@ public class LevelController implements GameObjectChangeListener {
                 updateGameState(env, characters);
             }
         });
-        
+
         timer.start();
     }
 
-    public void pauseGame(){
-        this.timer.stop();
-    }
-
-    public void unpauseGame(){
-        this.timer.start();
-    }
-
+    /**
+     * Updates character states on each frame, then checks for win or death
+     * conditions.
+     * 
+     * @param env        the level's GameObjects which are checked against a
+     *                   Characters position to determine colision or state change.
+     * @param characters the CharacterControllers. Each CharacterController's
+     *                   associated Character is checked against the GameObjects for
+     *                   state changes.
+     */
     private void updateGameState(ArrayList<GameObject> env, ArrayList<Character> characters) {
         Rectangle gameBounds = levelView.getGamePanelBounds();
         for (CharacterController chController : characterControllers) {
@@ -122,9 +124,8 @@ public class LevelController implements GameObjectChangeListener {
     private void processWinOrDeadConditions() {
         ArrayList<CharacterController> remove = findCharactersMeetingConditions();
         updateCounts(remove);
+
         gameStateController.updateScore(calculateScore());
-        // gameStateController.updateCharacterCount(playState.getCharactersDead() + playState.getCharactersThroughPortal()); // update remaining
-                                                                                            // characters
 
         if (hasWon()) {
             // Player wins!
@@ -142,7 +143,9 @@ public class LevelController implements GameObjectChangeListener {
     }
 
     private boolean hasLost() {
-        return levelModel.getMAX_CHARS() - (playState.getCharactersThroughPortal() + playState.getCharactersDead()) < levelModel.getWIN_CONDITION() - playState.getCharactersThroughPortal();
+        return levelModel.getMAX_CHARS()
+                - (playState.getCharactersThroughPortal() + playState.getCharactersDead()) < levelModel
+                        .getWIN_CONDITION() - playState.getCharactersThroughPortal();
     }
 
     private void handleWin() {
@@ -187,7 +190,8 @@ public class LevelController implements GameObjectChangeListener {
         ArrayList<CharacterController> remove = new ArrayList<>();
 
         for (CharacterController chController : characterControllers) {
-            // check for win condition
+            // check if character collided with portal or y-position is beyond the screen
+            // y-bounds
             if (chController.checkWinCondition(levelModel.getPortal()) || chController.getIsDead()) {
                 remove.add(chController);
             }
@@ -261,13 +265,13 @@ public class LevelController implements GameObjectChangeListener {
 
     /**
      * This method removes the {@code CharacterController} from the
-     * CharacterController Array. It calls updateGameState to render
-     * the Gameview with remaining CharacterControllers in the CharacterController
-     * Array.
+     * CharacterController Array. It first calls updateGameState to remove the corresponding CharacterView from the
+     * Gameview. 
      */
     @Override
     public void removeCharacter(CharacterController character) {
         levelView.removeObjectFromView(character.getCharacterView(), JLayeredPane.MODAL_LAYER);
+        characterControllers.remove(character);
     }
 
     @Override
@@ -279,5 +283,16 @@ public class LevelController implements GameObjectChangeListener {
     @Override
     public void updateCharacterModel(CharacterController chController) {
         chController.setSkill(currentSkillSelected);
+    }
+
+    @Override 
+    public void pauseGame(){
+        this.isPaused = !isPaused;
+        
+        if (isPaused) {
+            this.timer.stop();
+        }else{
+            this.timer.restart();
+        }
     }
 }

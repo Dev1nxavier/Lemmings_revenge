@@ -13,7 +13,7 @@ import src.main.com.lemmings.Models.Skills.Ordinance;
 import src.main.com.lemmings.Models.Skills.Skill;
 import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
 import src.main.com.lemmings.Views.MenuOptionsView;
-import src.main.com.lemmings.Views.Components.GameButton;
+import src.main.com.lemmings.Views.Components.MenuButton;
 
 /**
  * MenuController
@@ -21,7 +21,7 @@ import src.main.com.lemmings.Views.Components.GameButton;
 public class MenuOptionsController {
     private MenuOptionsView menuView;
     private MenuOptions menuModel;
-    private GameButton isSelected;
+    private MenuButton isSelected;
     private GameObjectChangeListener listener;
 
     public MenuOptionsController(MenuOptionsView menuView, MenuOptions menuModel) {
@@ -33,14 +33,15 @@ public class MenuOptionsController {
     }
 
     private void layoutComponents() {
-        for (GameButton button : menuModel.getMenuButtons()) {
+        for (MenuButton button : menuModel.getMenuButtons()) {
             menuView.setButtonOnMenu(button);
         }
+        menuView.setButtonOnMenu(menuModel.getPauseButton());
     }
 
     private void addListeners() {
 
-        for (GameButton button : menuModel.getMenuButtons()) {
+        for (MenuButton button : menuModel.getMenuButtons()) {
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent pressEvent){
@@ -54,18 +55,25 @@ public class MenuOptionsController {
 
                         button.select();
                         isSelected = button;
-                        onMenuSelection(button.getSelectedSkillType());
+                        handleMenuSelection(button.getSelectedSkillType());
                     }
                 }
             });
         }
+
+        menuModel.getPauseButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent pressEvent){
+                handleButtonPress();
+            }
+        });
     }
 
     public void addGameObjectChangeListener(GameObjectChangeListener listener){
         this.listener = listener;
     }
 
-    public void setIsSelected(GameButton button){
+    public void setIsSelected(MenuButton button){
         this.isSelected = button;
     }
 
@@ -85,7 +93,11 @@ public class MenuOptionsController {
         this.menuModel = menuModel;
     }
 
-    private void onMenuSelection(SKILL_TYPE type){
+    public void handleButtonPress(){
+        listener.pauseGame();
+    }
+
+    private void handleMenuSelection(SKILL_TYPE type){
         
         Skill newSkill = null;
         // create new skill by type and pass back to LevelController

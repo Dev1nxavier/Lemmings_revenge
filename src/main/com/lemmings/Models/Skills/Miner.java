@@ -40,8 +40,6 @@ public class Miner extends Excavator {
                 if (lastRemoved == null && currentGround !=null) {
                     lastRemoved = currentGround;
                 }
-                System.out.printf("Current Ground: (%d,%d)\nLast Ground: (%d,%d)\n", currentGround.getRowAndCol().x,
-                        currentGround.getRowAndCol().y, lastGround.getRowAndCol().x, lastGround.getRowAndCol().y);
                 // only remove ground if its one row lower and one block over than last
                 if (Math.abs(currentGround.getRowAndCol().x - lastGround.getRowAndCol().x) >= 0
                         && Math.abs(currentGround.getRowAndCol().y - lastGround.getRowAndCol().y) > 0) {
