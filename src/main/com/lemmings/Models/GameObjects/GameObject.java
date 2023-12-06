@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import src.main.com.lemmings.Models.Collidable;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.utilities.ImageLoader;
+import src.main.com.lemmings.utilities.Utilities;
 
 /**
  * GameObject
@@ -183,39 +184,6 @@ public abstract class GameObject extends JLabel implements Collidable {
      * @param filePath the absolute path to the audio file. 
      */
     public void playSound(String filePath) {
-        // if clip already playing exit
-        if (isPlayingSound) {
-            return;
-        }
-
-        File soundfx = null;
-
-        try {
-            soundfx = new File(filePath);
-            Clip clip = AudioSystem.getClip();
-            // create a new audio player
-            AudioInputStream audio = AudioSystem.getAudioInputStream(soundfx);
-            if (clip == null || !clip.isRunning()) {
-                clip.open(audio);
-                clip.start();
-                isPlayingSound = true;
-
-                clip.addLineListener(new LineListener() {
-
-                    @Override
-                    public void update(LineEvent event) {
-                        if (event.getType() == LineEvent.Type.STOP) {
-                            isPlayingSound = false;
-                            clip.close();
-                        }
-                    }
-
-                });
-            }
-
-        } catch (Exception fnf) {
-            System.err.println("Unable to load file: " + filePath);
-            fnf.printStackTrace();
-        }
+        Utilities.playClip(filePath);
     }
 }

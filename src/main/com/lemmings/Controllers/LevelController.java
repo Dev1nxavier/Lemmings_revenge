@@ -12,6 +12,7 @@ import src.main.com.lemmings.Models.MenuOptions;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.Models.Skills.Skill;
 import src.main.com.lemmings.Views.LevelView;
+import src.main.com.lemmings.utilities.Utilities;
 import src.main.com.lemmings.Models.Character;
 
 /**
@@ -37,6 +38,7 @@ public class LevelController implements GameObjectChangeListener {
     private ArrayList<CharacterController> characterControllers;
     private Skill currentSkillSelected;
     private boolean isPaused = false;
+    private boolean winLossHandled = false; // flag to ensure handleWin is called one time
     private Timer timer;
 
     public LevelController(LevelView levelView, LevelModel levelModel, GameState gameState, MenuOptions menuOptions) {
@@ -127,17 +129,18 @@ public class LevelController implements GameObjectChangeListener {
 
         gameStateController.updateScore(calculateScore());
 
-        if (hasWon()) {
+        if (hasWon() && !winLossHandled) {
             // Player wins!
             handleWin();
-        } else if (hasLost()) {
+        } else if (hasLost() && !winLossHandled) {
             // insufficient Characters to meet win threshold
             handleLoss();
         }
     }
 
     private void handleLoss() {
-
+        winLossHandled = true;
+        playSound("src/main/resources/lose_sound.wav");
         levelView.getLoseScreen().setVisible(true);
         exitGame();
     }
@@ -149,8 +152,15 @@ public class LevelController implements GameObjectChangeListener {
     }
 
     private void handleWin() {
+        System.out.println("Handling win");
+        winLossHandled = true;
+        playSound("src/main/resources/win_sound.wav");
         levelView.getWinScreen().setVisible(true);
         exitGame();
+    }
+
+    private void playSound(String pathToClip) {
+        Utilities.playClip(pathToClip);
     }
 
     private boolean hasWon() {
@@ -265,8 +275,9 @@ public class LevelController implements GameObjectChangeListener {
 
     /**
      * This method removes the {@code CharacterController} from the
-     * CharacterController Array. It first calls updateGameState to remove the corresponding CharacterView from the
-     * Gameview. 
+     * CharacterController Array. It first calls updateGameState to remove the
+     * corresponding CharacterView from the
+     * Gameview.
      */
     @Override
     public void removeCharacter(CharacterController character) {
@@ -285,13 +296,13 @@ public class LevelController implements GameObjectChangeListener {
         chController.setSkill(currentSkillSelected);
     }
 
-    @Override 
-    public void pauseGame(){
+    @Override
+    public void pauseGame() {
         this.isPaused = !isPaused;
-        
+
         if (isPaused) {
             this.timer.stop();
-        }else{
+        } else {
             this.timer.restart();
         }
     }
