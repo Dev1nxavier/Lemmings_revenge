@@ -24,7 +24,7 @@ import src.main.com.lemmings.utilities.Utilities;
 public class Blocker implements Skill{
     private GameObjectChangeListener listener;
     private int count;
-    private BufferedImage image;
+    private transient BufferedImage image;
     private boolean isPlayingSound = false;
     
     public Blocker(){

@@ -29,7 +29,9 @@ import src.main.com.lemmings.Models.Character;
  * 
  */
 public class LevelController implements GameObjectChangeListener {
-    private LevelModel levelModel;
+    private int level = 1;
+    private LevelModel[] levels;
+    private LevelModel currentLevelModel;
     private LevelView levelView;
     private GameState playState;
     private MenuOptions menuModel;
@@ -41,21 +43,11 @@ public class LevelController implements GameObjectChangeListener {
     private boolean winLossHandled = false; // flag to ensure handleWin is called one time
     private Timer timer;
 
-    public LevelController(LevelView levelView, LevelModel levelModel, GameState gameState, MenuOptions menuOptions) {
+    public LevelController(LevelView levelView, GameState gameState, MenuOptions menuOptions) {
         this.levelView = levelView;
-        this.levelModel = levelModel;
+        this.currentLevelModel = loadLevel(level);
         this.playState = gameState;
         this.menuModel = menuOptions;
-        this.characterControllers = levelView.initializeCharacterViews(levelModel.getCharacters(), this);
-        initializeGame();
-        addListeners();
-    }
-
-    private void initializeGame() {
-
-        // add GameObjects and Characters to LevelView
-        this.levelView.initializeWithLevelModel(this.levelModel);
-
         // initialize game state and menu
         this.playState = new GameState();
         this.menuModel = new MenuOptions();
@@ -63,15 +55,32 @@ public class LevelController implements GameObjectChangeListener {
         // create controllers
         this.gameStateController = new GameStateController(levelView.getStatsPanelView(), playState);
         this.menuController = new MenuOptionsController(levelView.getMenuOptionsView(), menuModel);
+        
+        initializeGame();
+        addListeners();
+    }
 
-        updateGameState();
+    private LevelModel loadLevel(int level) {
+        //load the LevelModels from file
+        this.levels = Utilities.loadLevels("src/main/levels.dat");
+        if (this.levels.length == 0 && this.levels ==null) {
+            System.out.println("ERROR! UNABLE TO LOAD LEVELS!!");
+        }
+        // pass the current levelModel
+        return levels[level];
+    }
+
+    public void initializeGame() {
+        this.characterControllers = levelView.initializeCharacterViews(currentLevelModel.getCharacters(), this);
+        // add GameObjects and Characters to LevelView
+        this.levelView.initializeWithLevelModel(this.currentLevelModel);
     }
 
     private void addListeners() {
 
         setupTimer();
 
-        setupClickListeners();
+        // setupClickListeners();
 
         setupMenuControllerListener();
     }
@@ -82,7 +91,7 @@ public class LevelController implements GameObjectChangeListener {
 
     private void setupClickListeners() {
         // add click listeners to each Ground object
-        for (GameObject obj : levelModel.getGameObjects()) {
+        for (GameObject obj : currentLevelModel.getGameObjects()) {
             obj.setGameObjectChangeListener(this);
         }
     }
@@ -92,8 +101,8 @@ public class LevelController implements GameObjectChangeListener {
         this.timer = new Timer(100, new ActionListener() {
 
             // check for collisions
-            ArrayList<GameObject> env = levelModel.getGameObjects();
-            ArrayList<Character> characters = levelModel.getCharacters();
+            ArrayList<GameObject> env = currentLevelModel.getGameObjects();
+            ArrayList<Character> characters = currentLevelModel.getCharacters();
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,12 +151,12 @@ public class LevelController implements GameObjectChangeListener {
         winLossHandled = true;
         playSound("src/main/resources/lose_sound.wav");
         levelView.getLoseScreen().setVisible(true);
-        exitGame();
+        advanceOrRestart();
     }
 
     private boolean hasLost() {
-        return levelModel.getMAX_CHARS()
-                - (playState.getCharactersThroughPortal() + playState.getCharactersDead()) < levelModel
+        return currentLevelModel.getMAX_CHARS()
+                - (playState.getCharactersThroughPortal() + playState.getCharactersDead()) < currentLevelModel
                         .getWIN_CONDITION() - playState.getCharactersThroughPortal();
     }
 
@@ -155,7 +164,8 @@ public class LevelController implements GameObjectChangeListener {
         winLossHandled = true;
         playSound("src/main/resources/win_sound.wav");
         levelView.getWinScreen().setVisible(true);
-        exitGame();
+        this.level++; // advance to next level
+        advanceOrRestart();
     }
 
     private void playSound(String pathToClip) {
@@ -163,11 +173,11 @@ public class LevelController implements GameObjectChangeListener {
     }
 
     private boolean hasWon() {
-        return playState.getCharactersThroughPortal() >= levelModel.getWIN_CONDITION();
+        return playState.getCharactersThroughPortal() >= currentLevelModel.getWIN_CONDITION();
     }
 
     private int calculateScore() {
-        return playState.getCharactersThroughPortal() * levelModel.getPOINTS_PER_CHARACTER();
+        return playState.getCharactersThroughPortal() * currentLevelModel.getPOINTS_PER_CHARACTER();
     }
 
     private void updateCounts(ArrayList<CharacterController> characterControllers) {
@@ -181,16 +191,25 @@ public class LevelController implements GameObjectChangeListener {
         removeCharacters(characterControllers);
     }
 
-    private void exitGame() {
-        // For now, restart game
-        new Timer(5000, new ActionListener() {
+    private void advanceOrRestart() {
 
+        System.out.println("advanceOrRestart called");
+        Timer timer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                levelView.getWinScreen().setVisible(false);
+                ((Timer) e.getSource()).stop(); // ensure timer fires only one time
             }
 
-        }).start();
+        });
+        timer.setRepeats(false);
+        timer.start();
+
+        // set LevelModel to next level
+        loadLevel(level);
+        // reinitialize
+        initializeGame();
+        updateGameState();
     }
 
     // this methods finds CharacterControllers whose coupled Character models meet
@@ -201,7 +220,7 @@ public class LevelController implements GameObjectChangeListener {
         for (CharacterController chController : characterControllers) {
             // check if character collided with portal or y-position is beyond the screen
             // y-bounds
-            if (chController.checkWinCondition(levelModel.getPortal()) || chController.getIsDead()) {
+            if (chController.checkWinCondition(currentLevelModel.getPortal()) || chController.getIsDead()) {
                 remove.add(chController);
             }
         }
@@ -223,10 +242,9 @@ public class LevelController implements GameObjectChangeListener {
 
     @Override
     public void removeGameObjectSelected(GameObject clickedObject) {
-
+        System.out.println("LvlCtrl.removeGameObjectsSelected");
         // update gameObjects array
-        levelModel.getGameObjects().remove(clickedObject);
-        updateGameState();
+        currentLevelModel.getGameObjects().remove(clickedObject);
     }
 
     /**
@@ -242,16 +260,18 @@ public class LevelController implements GameObjectChangeListener {
         ArrayList<GameObject> itemsToRemove = new ArrayList<>();
 
         // find the GameObject by its xy coordinates
-        for (GameObject obj : levelModel.getGameObjects()) {
+        for (GameObject obj : currentLevelModel.getGameObjects()) {
             if (obj.getRowAndCol().equals(clickedObject)) {
 
                 itemsToRemove.add(obj);
             }
+            // levelView.initializeWithLevelModel(levelModel);
         }
 
         for (GameObject item : itemsToRemove) {
             removeGameObjectSelected(item);
         }
+        updateGameState();
     }
 
     // When a new GameObject is created, this method is called to add the object to
@@ -259,13 +279,15 @@ public class LevelController implements GameObjectChangeListener {
     // rerender the LevelView.
     @Override
     public void addGameObject(GameObject go) {
-        levelModel.getGameObjects().add(go);
+        currentLevelModel.getGameObjects().add(go);
+        System.out.println("LvlCtrl.addGameObject");
         updateGameState();
     }
 
     @Override
     public void updateGameState() {
-        levelView.initializeWithLevelModel(levelModel);
+        System.out.println("LvlCtrl.updateGameState");
+        levelView.initializeWithLevelModel(currentLevelModel);
     }
 
     private ArrayList<CharacterController> getCharacterControllers() {

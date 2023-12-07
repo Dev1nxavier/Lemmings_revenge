@@ -27,7 +27,7 @@ import src.main.com.lemmings.utilities.ImageLoader;
  *       count
  */
 public class StatsPanelView extends JPanel {
-    private BufferedImage image;
+    private transient BufferedImage image;
     private final int WIDTH, HEIGHT;
     private ScoreTextPane score, level, chCount;
 

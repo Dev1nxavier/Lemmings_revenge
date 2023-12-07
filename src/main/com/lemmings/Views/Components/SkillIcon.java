@@ -8,8 +8,8 @@ import src.main.com.lemmings.Views.GameView;
 /**
  * Icon
  */
-public class SkillIcon extends GameView{
-    private BufferedImage image;
+public class SkillIcon extends GameView {
+    private transient BufferedImage image;
 
     public SkillIcon(BufferedImage image, int posX, int posY){
        super(40,40, posX, posY);

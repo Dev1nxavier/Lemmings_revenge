@@ -25,8 +25,13 @@ import src.main.com.lemmings.utilities.ImageLoader;
  *       game object after a set number of Characters have collided with it.
  */
 public class CollapsibleGround extends Ground {
-    private ArrayList<BufferedImage> imageFrames = new ArrayList<>();
-    private String text;
+    // private transient ArrayList<BufferedImage> imageFrames = new ArrayList<>();
+    private String[] imageFrames = new String[] {
+        "collapsibleGround_02.png",
+        "collapsibleGround_03.png",
+        "collapsibleGround_03.png"
+    };
+
     private int currentFrame;
     private int count; // number of stages remaining until object is removed from board
     private boolean isActivated = false;
@@ -41,7 +46,7 @@ public class CollapsibleGround extends Ground {
         this.text = "" + this.getRowAndCol().x + ", " + this.getRowAndCol().y;
         this.currentFrame = 0;
         setCount(repeats);
-        initializeAnimationFrames();
+        // initializeAnimationFrames();
         setImage("collapsibleGround_01.png");
     }
 
@@ -49,19 +54,19 @@ public class CollapsibleGround extends Ground {
         this.count = count;
     }
 
-    private void initializeAnimationFrames() {
-        this.imageFrames.add(ImageLoader.getImage("collapsibleGround_02.png"));
-        this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
-        this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
-    }
+    // private void initializeAnimationFrames() {
+    //     this.imageFrames.add(ImageLoader.getImage("collapsibleGround_02.png"));
+    //     this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
+    //     this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
+    // }
 
-    public ArrayList<BufferedImage> getImageFrames() {
-        return this.imageFrames;
-    }
+    // public ArrayList<BufferedImage> getImageFrames() {
+    //     return this.imageFrames;
+    // }
 
-    public void setImageFrames(ArrayList<BufferedImage> imageFrames) {
-        this.imageFrames = imageFrames;
-    }
+    // public void setImageFrames(ArrayList<BufferedImage> imageFrames) {
+    //     this.imageFrames = imageFrames;
+    // }
 
     private void updateGroundModel() {
         decrementCount();
@@ -111,8 +116,10 @@ public class CollapsibleGround extends Ground {
     }
 
     private void setCurrentFrame() {
-        currentFrame = (currentFrame + 1) % imageFrames.size();
-        setImage(imageFrames.get(currentFrame));
+        // currentFrame = (currentFrame + 1) % imageFrames.size();
+        currentFrame = (currentFrame + 1) % imageFrames.length;
+        setImage(imageFrames[currentFrame]);
+        // setImage(imageFrames.get(currentFrame));
         this.setObjectBounds(getX_pos(), getY_pos() - offset, WIDTH, HEIGHT);
 
         // this.repaint();

@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import src.main.com.lemmings.Models.Character;
 
 public class CharacterView extends GameView {
-    private ArrayList<BufferedImage> animationFrames;
+    private transient ArrayList<BufferedImage> animationFrames;
     private int currentFrame;
     private int imageOffset; // adjust image position in JLabel
     private int characterHeight, characterWidth; // the height of the character image which differs from the viewbounds
-    private BufferedImage skillIcon;
-    private BufferedImage arrowIcon;
+    private transient BufferedImage skillIcon;
+    private transient BufferedImage arrowIcon;
     private boolean isHighlighted = false;
     private Character character; // a reference to the Character model this view responds to
 

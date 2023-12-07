@@ -14,7 +14,6 @@ import javax.sound.sampled.*;
  *       moving Character objects in the positive y-direction.
  */
 public class Elevator extends Ground {
-    private Clip clip; // audio clip for elevator soundfx
     private boolean isMoving = false;
     private int init_y_pos;
     private int passengerCount = 0;

@@ -1,6 +1,7 @@
 package src.main.com.lemmings.Views;
 
 import java.awt.Dimension;
+
 import javax.swing.JLabel;
 
 /**

@@ -17,19 +17,20 @@ import src.main.com.lemmings.utilities.Utilities;
  * @date November 10, 2023
  */
 public class Application {
-    LevelModel[] levels = new LevelModel[5];
     // Create shared components
-    LevelView levelView = new LevelView();
-    LevelModel levelModel = new LevelModel();
-    GameState gameState = new GameState();
-    MenuOptions menuOptions = new MenuOptions();
+    private LevelView levelView = new LevelView();
+    private GameState gameState = new GameState();
+    private MenuOptions menuOptions = new MenuOptions();
+
+    public static void main(String[] args) {
+        Utilities.createLevels();
+        new Application();
+    }
 
     public Application() {
-        // save levels one time!
-        //TODO: Create a LevelModel constructor and pass in different win conditions and maps[][]
 
         // Create controller
-        new LevelController(levelView, levelModel, gameState, menuOptions);
+        new LevelController(levelView, gameState, menuOptions);
 
         JFrame mainFrame = new JFrame("Lemmings REVENGE!");
 
@@ -41,9 +42,4 @@ public class Application {
         mainFrame.setVisible(true); // here we go!
 
     }
-
-    public static void main(String[] args) {
-        new Application();
-    }
-
 }

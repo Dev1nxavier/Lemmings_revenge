@@ -8,14 +8,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 
 import src.main.com.lemmings.Models.LevelModel;
-
 /**
  * helpers.java
  * 
@@ -86,7 +84,7 @@ public class Utilities {
         ;
     }
 
-    public static void saveLevelModels(LevelModel[] levels, String filename){
+    public static void saveLevel(LevelModel[] levels, String filename){
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(filename));
             objectOutputStream.writeObject(levels);
@@ -106,5 +104,67 @@ public class Utilities {
             return null;
         }
     }
+
+    public static void createLevels() {
+        // save level instances
+        LevelModel[] levels = new LevelModel[5];
+
+        levels[0] = new LevelModel(new int[][] {
+                { 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 2, 0, 0 },
+                { 1, 1, 1, 1, 1, 1, 1, 5 },
+                { 1, 1, 1, 1, 1, 0, 0, 1 },
+                { 2, 4, 0, 0, 0, 0, 1, 1 },
+                { 1, 1, 1, 0, 0, 3, 0, 1 },
+                { 1, 1, 0, 3, 0, 1, 1, 1 },
+                { 1, 1, 0, 0, 0, 1, 1, 1 }
+        }, 1);
+
+        levels[1] = new LevelModel(new int[][] {
+                { 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 2, 0, 0 },
+                { 1, 1, 0, 0, 0, 1, 1, 5 },
+                { 1, 1, 1, 1, 2, 0, 0, 1 },
+                { 1, 4, 0, 0, 0, 0, 1, 0 },
+                { 1, 1, 1, 0, 1, 3, 0, 0 },
+                { 1, 1, 0, 3, 0, 4, 0, 0 },
+                { 1, 1, 0, 0, 0, 1, 1, 1 }
+        }, 2);
+
+        levels[2] = new LevelModel(new int[][] {
+                { 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 2, 0, 0 },
+                { 1, 1, 1, 1, 1, 1, 1, 5 },
+                { 1, 1, 1, 1, 1, 0, 0, 1 },
+                { 2, 4, 0, 0, 1, 0, 1, 1 },
+                { 1, 1, 1, 0, 0, 3, 0, 1 },
+                { 1, 1, 0, 3, 0, 1, 1, 1 },
+                { 1, 1, 0, 0, 0, 1, 1, 1 }
+        }, 3);
+
+        levels[3] = new LevelModel(new int[][] {
+                { 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 2, 0, 0 },
+                { 1, 1, 1, 1, 1, 1, 1, 5 },
+                { 1, 1, 1, 0, 1, 0, 0, 0 },
+                { 2, 0, 0, 0, 0, 0, 0, 1 },
+                { 1, 1, 1, 0, 0, 3, 0, 0 },
+                { 1, 1, 0, 3, 0, 4, 0, 0 },
+                { 1, 1, 0, 0, 0, 1, 1, 1 }
+        }, 4);
+
+        levels[4] = new LevelModel(new int[][] {
+                { 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 2, 0, 0 },
+                { 1, 1, 1, 1, 1, 1, 1, 5 },
+                { 1, 1, 1, 1, 1, 0, 0, 1 },
+                { 2, 4, 0, 0, 1, 0, 1, 1 },
+                { 1, 1, 1, 0, 0, 3, 0, 1 },
+                { 1, 1, 0, 3, 0, 1, 1, 1 },
+                { 1, 1, 0, 0, 0, 1, 1, 1 }
+        }, 5);
+
+        Utilities.saveLevel(levels, "src/main/levels.dat");
+    };
 
 }

@@ -20,7 +20,7 @@ import src.main.com.lemmings.utilities.ImageLoader;
  */
 public class GameButton extends JPanel {
     private String name;
-    private BufferedImage image;
+    private transient BufferedImage image;
     private int width, height;
     private GameObjectChangeListener listener;
 

@@ -12,7 +12,7 @@ import javax.swing.JPanel;
  * the LevelView class.
  */
 public class BackgroundPanel extends JPanel {
-    private BufferedImage image;
+    private transient BufferedImage image;
 
     public BackgroundPanel() {
         setOpaque(false);

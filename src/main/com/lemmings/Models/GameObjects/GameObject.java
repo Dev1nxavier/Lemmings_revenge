@@ -8,9 +8,10 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 
-import javax.sound.sampled.*;
 import javax.swing.JLabel;
 
 import src.main.com.lemmings.Models.Collidable;
@@ -28,12 +29,12 @@ public abstract class GameObject extends JLabel implements Collidable {
     };
 
     private int xPos, yPos;
-    private BufferedImage image;
+    private transient BufferedImage image;
+    private String imagePath;
     private int width, height;
     private Point rowAndCol;
     private ENV_TYPE type;
     private GameObjectChangeListener listener;
-    private boolean isPlayingSound = false;
 
     public GameObject() {
 
@@ -84,7 +85,23 @@ public abstract class GameObject extends JLabel implements Collidable {
     }
 
     public void setImage(String name) {
+        this.imagePath = name;
         this.image = ImageLoader.getImage(name);
+    }
+
+    private void readObject(ObjectInputStream objectStream){
+        try {
+            objectStream.defaultReadObject();
+            if (this.imagePath != null && !this.imagePath.isEmpty()) {
+                this.image = ImageLoader.getImage(this.imagePath);
+            }
+        } catch (ClassNotFoundException e) {
+            System.err.println("Unable to find class: " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Unable to load image: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public int getWidth() {
@@ -130,10 +147,6 @@ public abstract class GameObject extends JLabel implements Collidable {
         } catch (Exception e) {
             System.out.println("Unable to load image");
         }
-    }
-
-    public void setImage(BufferedImage image) {
-        this.image = image;
     }
 
     public Point getRowAndCol() {

@@ -3,6 +3,7 @@ package src.main.com.lemmings.Models;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import src.main.com.lemmings.Models.GameObjects.CollapsibleGround;
 import src.main.com.lemmings.Models.GameObjects.Elevator;
@@ -19,41 +20,41 @@ import src.main.com.lemmings.Views.Components.SkillIcon;
  * @author Sean Greene
  * @date November 10, 2023
  */
-public class LevelModel implements Serializable{
+public class LevelModel implements Serializable {
 
     private final int WIDTH = 600;
     private final int HEIGHT = 600;
     private final int MAX_CHARS = 10;
-    private final int WIN_CONDITION = 10;
     private final int POINTS_PER_CHARACTER = 5;
+    private int WIN_CONDITION = 8;
+    private final int LEVEL;
+    private int[][] map;
+    private final String id;
 
-    // FIXME: Use generateMap function after testing!
-    int[][] map = {
-            { 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 2, 0, 0 },
-            { 1, 1, 1, 1, 1, 1, 1, 5 },
-            { 1, 1, 1, 1, 1, 0, 0, 1 },
-            { 2, 4, 0, 0, 1, 0, 1, 1 },
-            { 1, 1, 1, 0, 0, 3, 0, 1 },
-            { 1, 1, 0, 3, 0, 1, 1, 1 },
-            { 1, 1, 0, 0, 0, 1, 1, 1 }
-    };
- 
     private ArrayList<Character> characters = new ArrayList<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private ArrayList<GameView> skillViews = new ArrayList<>();
     private WarpPortal portal;
 
-    public LevelModel() {
+    /**
+     * 
+     * @param map
+     * @param level
+     */
+    public LevelModel(int[][] map, int level) {
+        setMap(map);
         loadLevel();
+        this.LEVEL = level;
+        this.id = UUID.randomUUID().toString(); // per Oracle docs:
+                                                // https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html
     }
 
-    public LevelModel(int[][]map, int win){
-        
+    public String getId(){
+        return this.id;
     }
 
     // primes the map with obstacles
-    private void loadLevel() {
+    public void loadLevel() {
         // initialize game state
         createGameObjectsFromMap();
         generateCharacters();
@@ -73,7 +74,7 @@ public class LevelModel implements Serializable{
 
     public void generateCharacters() {
         for (int i = 0; i < MAX_CHARS; i++) {
-            Character ch = new Lemming();
+            Character ch = new Character();
             // slightly offset each character
             ch.setX_pos((i + 2) * 20);
             ch.setY_pos(100);
@@ -85,7 +86,7 @@ public class LevelModel implements Serializable{
         gameObjects.clear();
         // add obstacles
         int px = 0, py = 0; // start at top of screen
-        int groundObjectWidth = getWIDTH()/map[0].length; // screen width evenly divided by objects per row
+        int groundObjectWidth = getWIDTH() / map[0].length; // screen width evenly divided by objects per row
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map.length; col++) {
                 int position = map[row][col];
@@ -139,7 +140,6 @@ public class LevelModel implements Serializable{
     }
 
     public void setMap(int[][] map) {
-        // make sure map is empty
         this.map = map;
     }
 
@@ -184,5 +184,9 @@ public class LevelModel implements Serializable{
 
     public ArrayList<GameView> getSkillViews() {
         return skillViews;
+    }
+
+    public int getLEVEL(){
+        return this.LEVEL;
     }
 }

@@ -1,6 +1,7 @@
 package src.main.com.lemmings.Models;
 
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.GameObjects.CollapsibleGround;
@@ -20,7 +21,7 @@ import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
  * 
  *       this class models a character.
  */
-public class Character implements Collidable {
+public class Character implements Collidable, Serializable{
     private double GRAVITY = 8;
     protected boolean isMovingRight = true;
     private int xPos, yPos;

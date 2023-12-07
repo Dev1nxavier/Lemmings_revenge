@@ -48,6 +48,7 @@ public class LevelView extends JPanel {
      * @param gameObjects
      */
     public void initializeWithLevelModel(LevelModel levelModel) {
+        System.out.println("LevelView.initializeWithLevelModel");
         clearGameObjectsFromView();
         for (GameObject go : levelModel.getGameObjects()) {
             addObjectToView(go, JLayeredPane.DEFAULT_LAYER);
@@ -80,6 +81,7 @@ public class LevelView extends JPanel {
     }
 
     private void layoutComponents() {
+        System.out.println();
         this.setLayout(new OverlayLayout(this));
 
         gamePlayPane = new JLayeredPane() {
@@ -183,8 +185,8 @@ public class LevelView extends JPanel {
      * Level's win conditions are met.
      */
     public class WinLoseScreen extends JPanel {
-        BufferedImage image;
-        boolean isWinScreen;
+        private transient BufferedImage image;
+        private boolean isWinScreen;
 
         WinLoseScreen(boolean isWinScreen) {
             this.isWinScreen = isWinScreen;
