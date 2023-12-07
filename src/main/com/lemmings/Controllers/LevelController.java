@@ -152,7 +152,6 @@ public class LevelController implements GameObjectChangeListener {
     }
 
     private void handleWin() {
-        System.out.println("Handling win");
         winLossHandled = true;
         playSound("src/main/resources/win_sound.wav");
         levelView.getWinScreen().setVisible(true);

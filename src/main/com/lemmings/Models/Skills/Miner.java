@@ -1,10 +1,9 @@
 package src.main.com.lemmings.Models.Skills;
 
-import java.awt.Point;
-
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.Ground;
+import src.main.com.lemmings.utilities.Utilities;
 
 /**
  * Miner
@@ -12,6 +11,7 @@ import src.main.com.lemmings.Models.GameObjects.Ground;
 public class Miner extends Excavator {
     private final SKILL_TYPE type = SKILL_TYPE.MINER;
     private Ground lastRemoved;
+    private boolean hasInvokedSkill = false;
 
     // zero-arg constructor
     public Miner() {
@@ -32,9 +32,15 @@ public class Miner extends Excavator {
 
     @Override
     public void useSkill(Character c) {
-        System.err.println("Miner.useSkill. Count: " + getCount());
+        if (hasInvokedSkill) {
+            return;
+        }
+
+        Utilities.playClip("src/main/resources/jackhammer_sound.wav");
+
         try {
             if (getCount() > 0) {
+                hasInvokedSkill = true;
                 Ground currentGround = c.getCurrentGround();
                 Ground lastGround = c.getLastGround();
                 if (lastRemoved == null && currentGround !=null) {
@@ -49,6 +55,7 @@ public class Miner extends Excavator {
                     }
                     getListener().removeGameObjectSelected(currentGround);
                 }
+                hasInvokedSkill = false;
 
             }else if (getCount()<=0) {
                 c.removeSkill();

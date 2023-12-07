@@ -7,6 +7,7 @@ import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.utilities.ImageLoader;
+import src.main.com.lemmings.utilities.Utilities;
 
 
 /**
@@ -24,6 +25,7 @@ public class Blocker implements Skill{
     private GameObjectChangeListener listener;
     private int count;
     private BufferedImage image;
+    private boolean isPlayingSound = false;
     
     public Blocker(){
         setCount(3);  
@@ -40,8 +42,14 @@ public class Blocker implements Skill{
      */
     @Override
     public void useSkill(Character c) {
+        // only play the sound one time!
+        if (!isPlayingSound) {
+          Utilities.playClip("src/main/resources/police_whistle_sound.wav"); 
+          isPlayingSound = true; 
+        }
         // prevent this Character from updating its position
         c.setCanMoveHorizontally(false);
+        
     }
 
     @Override

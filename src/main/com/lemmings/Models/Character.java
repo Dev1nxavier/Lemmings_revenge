@@ -20,7 +20,7 @@ import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
  * 
  *       this class models a character.
  */
-public abstract class Character implements Collidable {
+public class Character implements Collidable {
     private double GRAVITY = 8;
     protected boolean isMovingRight = true;
     private int xPos, yPos;

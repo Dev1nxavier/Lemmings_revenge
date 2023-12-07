@@ -12,15 +12,18 @@ public class CharacterView extends GameView {
     private ArrayList<BufferedImage> animationFrames;
     private int currentFrame;
     private int imageOffset; // adjust image position in JLabel
+    private int characterHeight, characterWidth; // the height of the character image which differs from the viewbounds
     private BufferedImage skillIcon;
     private BufferedImage arrowIcon;
     private boolean isHighlighted = false;
     private Character character; // a reference to the Character model this view responds to
 
     public CharacterView() {
-        super(10, 20, 100, 200); // initial Character position (100,200)
+        super(20, 40, 100, 200); // initial Character position (100,200)
         currentFrame = 0;
         imageOffset = 20;
+        this.characterHeight = 20;
+        this.characterWidth = 10;
         initializeAnimationFrames();
         setArrowIcon();
     }
@@ -72,7 +75,7 @@ public class CharacterView extends GameView {
      * @param yPos the current y-coordinate of this view
      */
     private void setCharacterViewBounds(int xPos, int yPos) {
-        this.setBounds(getPosX(), getPosY()-imageOffset, WIDTH, HEIGHT+imageOffset);
+        this.setBounds(getPosX(), getPosY()-imageOffset, this.getWidth(), this.getHeight()+imageOffset);
     }
 
     public void setCurrentFrame() {
@@ -88,7 +91,7 @@ public class CharacterView extends GameView {
     }
 
     public void setSkillIcon(BufferedImage icon) {
-        System.out.println("Setting skill icon... " + icon);
+
        this.skillIcon = icon;  
     }
 
@@ -104,14 +107,14 @@ public class CharacterView extends GameView {
 
         try {
             if (animationFrames.get(currentFrame) != null) {
-                g2d.drawImage(animationFrames.get(currentFrame), 0, imageOffset, WIDTH, HEIGHT, null); // draw it relative to this
+                g2d.drawImage(animationFrames.get(currentFrame), 5, imageOffset, this.characterWidth, this.characterHeight, null); // draw it relative to this
 
                 if (skillIcon !=null) {
-                    g2d.drawImage(skillIcon, 0, 0, WIDTH, imageOffset, null);
+                    g2d.drawImage(skillIcon, 0, 0, this.getWidth(), imageOffset, null);
                 }
 
                 if (isHighlighted) {
-                    g2d.drawImage(arrowIcon, 0, 0, WIDTH, imageOffset, null);
+                    g2d.drawImage(arrowIcon, 0, 0, this.getWidth(), imageOffset, null);
                 }
 
             } else {

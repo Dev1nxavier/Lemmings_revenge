@@ -81,7 +81,6 @@ public class CollapsibleGround extends Ground {
     public void setIsActivated() {
         isActivated = true;
         countdownTimer();
-        System.out.println("Counting down...");
     }
 
     /**

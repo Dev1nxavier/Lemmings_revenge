@@ -1,7 +1,6 @@
 package src.main.com.lemmings.Views;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
 import javax.swing.JLabel;
 
 /**
@@ -13,13 +12,13 @@ import javax.swing.JLabel;
  *       This abstract class defines a basic GameView.
  */
 public abstract class GameView extends JLabel {
-    protected int posX, posY;
-    protected int WIDTH;
-    protected int HEIGHT;
+    private int posX, posY;
+    private int width;
+    private int height;
 
     public GameView(int width, int height, int x, int y) {
-        this.WIDTH = width;
-        this.HEIGHT = height;
+        this.width = width;
+        this.height = height;
         this.posX = x;
         this.posY = y;
         setOpaque(false); // for a displaying an image on clear background
@@ -30,7 +29,7 @@ public abstract class GameView extends JLabel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(WIDTH, HEIGHT);
+        return new Dimension(width, height);
     }
 
     public void setPosX(int posX) {
@@ -49,27 +48,21 @@ public abstract class GameView extends JLabel {
         return this.posY;
     }
 
-    public int getWIDTH() {
-        return this.WIDTH;
+    public int getWidth() {
+        return this.width;
     }
 
-    public void setWIDTH(int width) {
-        this.WIDTH = width;
+    public void setWidth(int width) {
+        this.width = width;
         this.revalidate();
-        // this.repaint();
     }
 
-    public void setHEIGHT(int height) {
-        this.HEIGHT = height;
+    public void setHeight(int height) {
+        this.height = height;
         this.revalidate();
-        // this.repaint();
     }
 
-    public int getHEIGHT() {
-        return this.HEIGHT;
+    public int getHeight() {
+        return this.height;
     }
-
-    @Override
-    protected abstract void paintComponent(Graphics g);
-
 }

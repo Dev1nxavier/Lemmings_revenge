@@ -1,6 +1,7 @@
 package src.main.com.lemmings.Models;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import src.main.com.lemmings.Models.GameObjects.CollapsibleGround;
@@ -18,7 +19,7 @@ import src.main.com.lemmings.Views.Components.SkillIcon;
  * @author Sean Greene
  * @date November 10, 2023
  */
-public class LevelModel {
+public class LevelModel implements Serializable{
 
     private final int WIDTH = 600;
     private final int HEIGHT = 600;
@@ -30,7 +31,7 @@ public class LevelModel {
     int[][] map = {
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 2, 0, 0 },
-            { 1, 1, 0, 1, 1, 1, 1, 5 },
+            { 1, 1, 1, 1, 1, 1, 1, 5 },
             { 1, 1, 1, 1, 1, 0, 0, 1 },
             { 2, 4, 0, 0, 1, 0, 1, 1 },
             { 1, 1, 1, 0, 0, 3, 0, 1 },
@@ -45,6 +46,10 @@ public class LevelModel {
 
     public LevelModel() {
         loadLevel();
+    }
+
+    public LevelModel(int[][]map, int win){
+        
     }
 
     // primes the map with obstacles
@@ -76,7 +81,6 @@ public class LevelModel {
         }
     }
 
-    // FIXME: dont hardcode! Calculate!
     public void createGameObjectsFromMap() {
         gameObjects.clear();
         // add obstacles
@@ -92,7 +96,6 @@ public class LevelModel {
                     case 4 -> {
                         portal = new WarpPortal(px, py, new Point(row, col));
                         gameObjects.add(portal);
-                        break;
                     }
                     case 5 -> gameObjects.add(new CollapsibleGround(px, py, new Point(row, col)));
                 }

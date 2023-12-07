@@ -8,6 +8,7 @@ import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.GameObject;
 import src.main.com.lemmings.utilities.ImageLoader;
+import src.main.com.lemmings.utilities.Utilities;
 
 /**
  * Ordinance.java
@@ -23,6 +24,7 @@ public class Ordinance implements Skill {
     private int count;
     private GameObjectChangeListener listener;
     private BufferedImage image;
+    private boolean hasInvokedSkill = false;
 
     // zero-arg constructor
     public Ordinance() {
@@ -43,6 +45,12 @@ public class Ordinance implements Skill {
     // removes all gameObjects within 1 unit length of the character
     @Override
     public void useSkill(Character c) {
+        if (hasInvokedSkill) {
+            return;
+        }
+        hasInvokedSkill = true;
+        // start the countdown!
+        Utilities.playClip("src/main/resources/countdown_sound.wav");
 
         try {
             Thread worker = new Thread(new Runnable() {
@@ -55,6 +63,7 @@ public class Ordinance implements Skill {
 
                             if (c.isGround()) {
                                 decrementCount();
+                                Utilities.playClip("src/main/resources/explosion_sound.wav");
                                 Point currentGround = c.getCurrentGround().getRowAndCol();
                                 Point left = new Point(currentGround.x, currentGround.y - 1);
                                 Point right = new Point(currentGround.x, currentGround.y + 1);
@@ -64,6 +73,8 @@ public class Ordinance implements Skill {
                                 getListener().removeGameObjectSelected(right);
                                 getListener().removeGameObjectSelected(left);
                                 getListener().removeGameObjectSelected(currentGround);
+                                
+                                hasInvokedSkill = false;
                             }
                         }
                     } catch (InterruptedException ie) {
