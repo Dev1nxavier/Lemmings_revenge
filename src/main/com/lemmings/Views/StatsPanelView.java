@@ -93,6 +93,10 @@ public class StatsPanelView extends JPanel {
         score.update("" + points);
     }
 
+    public void updateLevelDisplay(int level){
+        this.level.update("" + level);
+    }
+
     public void updateCharacterCountDisplay(int count) {
         chCount.update("" + count);
     }

@@ -171,6 +171,7 @@ public class LevelView extends JPanel {
      */
     public void clearGameObjectsFromView() {
         this.gamePlayPane.removeAll();
+
     }
 
     public Rectangle getGamePanelBounds() {

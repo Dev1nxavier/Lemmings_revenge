@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 
 import javax.swing.JLabel;
 
@@ -89,9 +88,28 @@ public abstract class GameObject extends JLabel implements Collidable {
         this.image = ImageLoader.getImage(name);
     }
 
-    private void readObject(ObjectInputStream objectStream){
+    /**
+     * This method is automatically called by Java after deserialization of an object. 
+     * 
+     * The readObject method is responsible for reading from the stream and
+     * restoring the classes fields. It may call in.defaultReadObject to invoke the
+     * default mechanism for restoring the object's non-static and non-transient
+     * fields. The defaultReadObject method uses information in the stream to assign
+     * the fields of the object saved in the stream with the correspondingly named
+     * fields in the current object. This handles the case when the class has
+     * evolved to add new fields. The method does not need to concern itself with
+     * the state belonging to its superclasses or subclasses. State is saved by
+     * writing the individual fields to the ObjectOutputStream using the writeObject
+     * method or by using the methods for primitive data types supported by
+     * DataOutput.
+     * 
+     * @param objectStream
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(ObjectInputStream objectStream) throws IOException, ClassNotFoundException {
         try {
-            objectStream.defaultReadObject();
+            objectStream.defaultReadObject(); // reads all nontransient fields. 
             if (this.imagePath != null && !this.imagePath.isEmpty()) {
                 this.image = ImageLoader.getImage(this.imagePath);
             }
@@ -188,13 +206,15 @@ public abstract class GameObject extends JLabel implements Collidable {
     }
 
     /**
-     * Plays sound clip from the specified file path passed as an argument. 
+     * Plays sound clip from the specified file path passed as an argument.
      * 
-     * This method includes checks for exiting if the audio clip is already playing. It includes a LineListener for listening for 
-     * when the clip completes and sets a flag for isPlaying to false. 
+     * This method includes checks for exiting if the audio clip is already playing.
+     * It includes a LineListener for listening for
+     * when the clip completes and sets a flag for isPlaying to false.
+     * 
      * @note: This method only plays audio files of type 'wav'
      * 
-     * @param filePath the absolute path to the audio file. 
+     * @param filePath the absolute path to the audio file.
      */
     public void playSound(String filePath) {
         Utilities.playClip(filePath);

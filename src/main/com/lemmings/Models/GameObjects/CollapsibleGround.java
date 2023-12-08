@@ -54,20 +54,6 @@ public class CollapsibleGround extends Ground {
         this.count = count;
     }
 
-    // private void initializeAnimationFrames() {
-    //     this.imageFrames.add(ImageLoader.getImage("collapsibleGround_02.png"));
-    //     this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
-    //     this.imageFrames.add(ImageLoader.getImage("collapsibleGround_03.png"));
-    // }
-
-    // public ArrayList<BufferedImage> getImageFrames() {
-    //     return this.imageFrames;
-    // }
-
-    // public void setImageFrames(ArrayList<BufferedImage> imageFrames) {
-    //     this.imageFrames = imageFrames;
-    // }
-
     private void updateGroundModel() {
         decrementCount();
         setCurrentFrame();
@@ -102,6 +88,7 @@ public class CollapsibleGround extends Ground {
 
                     @Override
                     public void run() {
+                        playSound("src/main/resources/collapse_sound.wav");
                         updateGroundModel();
                     }
 
@@ -121,8 +108,6 @@ public class CollapsibleGround extends Ground {
         setImage(imageFrames[currentFrame]);
         // setImage(imageFrames.get(currentFrame));
         this.setObjectBounds(getX_pos(), getY_pos() - offset, WIDTH, HEIGHT);
-
-        // this.repaint();
     }
 
     private void decrementCount() {

@@ -57,6 +57,7 @@ public class GameState {
 
     public void updateCharactersThroughPortal(int count){
         this.charactersThroughPortal +=count;
+        System.out.println("GameState characters through portal: " + getCharactersThroughPortal());
     }
 
     public int getCharactersThroughPortal(){
@@ -69,6 +70,10 @@ public class GameState {
     
     public int getCharactersDead(){
         return this.charactersDead;
+    }
+
+    public void updateLevel(int i) {
+        this.level = i;
     }
     
 }

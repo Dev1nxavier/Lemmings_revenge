@@ -16,6 +16,12 @@ public class GameStateController {
         this.gameState = gameState;
         updateScore(0);
         updateCharacterCount(0);
+        updateLevel(1);
+    }
+
+    private void updateLevel(int i) {
+        gameState.updateLevel(i);
+        panel.updateLevelDisplay(gameState.getLevel());
     }
 
     public void updateScore(int points){
@@ -42,6 +48,7 @@ public class GameStateController {
     }
 
     public void updateCharactersThroughPortal(int count){
+        System.out.println("GameStateCtrl.updateCharacterPortal" + count);
         gameState.updateCharactersThroughPortal(count);
         updateCharacterCount(count);
     }
