@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 
 import src.main.com.lemmings.Controllers.LevelController;
 import src.main.com.lemmings.Models.GameState;
-import src.main.com.lemmings.Models.LevelModel;
 import src.main.com.lemmings.Models.MenuOptions;
 import src.main.com.lemmings.Views.LevelView;
 import src.main.com.lemmings.utilities.Utilities;

@@ -176,7 +176,6 @@ public class LevelController implements GameObjectChangeListener {
 
     private int calculateScore() {
         int score = gameState.getCharactersThroughPortal() * currentLevelModel.getPOINTS_PER_CHARACTER();
-        System.out.println("LlvCtrl.calculateScore: " + gameState.getCharactersThroughPortal());
         return score;
     }
 
