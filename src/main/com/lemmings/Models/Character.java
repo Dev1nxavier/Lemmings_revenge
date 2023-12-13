@@ -124,7 +124,7 @@ public class Character implements Collidable, Serializable{
     // object
     public GameObject detectGround(ArrayList<GameObject> gameObjects) {
         setIsGround(false);
-        // setCanMoveHorizontally(true);
+
         for (GameObject g : gameObjects) {
             if (g instanceof Ground) {
                 Rectangle charBounds = this.getBounds();
@@ -166,7 +166,6 @@ public class Character implements Collidable, Serializable{
             updateElevatorPassengerCount(el);
             el.setIsMoving(true);
             if (el.getIsMoving()) {
-                setCanMoveHorizontally(false);
                 el.moveVertically();
                 setY_pos(el.getY_pos());
             }
@@ -195,7 +194,7 @@ public class Character implements Collidable, Serializable{
     }
 
     public void detectCollisions(ArrayList<Collidable> collidables) {
-        setCanMoveHorizontally(true);
+ 
         for (Object obj : collidables) {
             if (obj instanceof GameObject && ((GameObject) obj).getType() != ENV_TYPE.PORTAL) {
                 // set as a GameObjecct

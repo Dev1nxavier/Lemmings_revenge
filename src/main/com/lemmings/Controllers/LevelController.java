@@ -188,7 +188,7 @@ public class LevelController implements GameObjectChangeListener {
 
        if (hasWon() || hasLost()) {
          winLossHandled = true;
-         String sound = hasWon() ? "win_sound.wav" : "lose_sounce.wav";
+         String sound = hasWon() ? "win_sound.wav" : "lose_sound.wav";
          playSound("src/main/resources/" + sound);
          levelView.getWinScreen().setIsVisible(hasWon());
          levelView.getLoseScreen().setIsVisible(hasLost());
