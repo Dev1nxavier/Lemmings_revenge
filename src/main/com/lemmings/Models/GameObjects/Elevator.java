@@ -1,9 +1,6 @@
 package src.main.com.lemmings.Models.GameObjects;
 
 import java.awt.Point;
-
-import javax.sound.sampled.*;
-
 /**
  * Elevator
  * 
@@ -64,6 +61,8 @@ public class Elevator extends Ground {
                 y_pos -= 5;
                 setY_pos(y_pos);
                 setObjectBounds(getX_pos(), y_pos, 150, 100);
+            } else{
+                setIsMoving(false);
             }
         }
     }

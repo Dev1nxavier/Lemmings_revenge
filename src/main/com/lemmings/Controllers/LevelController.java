@@ -56,6 +56,13 @@ public class LevelController implements GameObjectChangeListener {
         
     }
 
+    private void initializeLevel(int level){
+        this.currentLevelModel = loadLevel(level);
+        levelView.clearGameObjectsFromView();
+        // this.characterControllers = levelView.initializeCharacterViews(currentLevelModel.getCharacters(), this);
+        this.levelView.initializeWithLevelModel(this.currentLevelModel);
+    }
+
     private void initializeControllers(LevelView levelView, GameState gameState) {
         // create controllers
         this.gameStateController = new GameStateController(levelView.getStatsPanelView(), gameState);
@@ -141,35 +148,15 @@ public class LevelController implements GameObjectChangeListener {
         updateCounts(remove);
 
         gameStateController.updateScore(calculateScore());
-
-        if (hasWon() && !winLossHandled) {
-            // Player wins!
-            handleWin();
-        } else if (hasLost() && !winLossHandled) {
-            // insufficient Characters to meet win threshold
-            handleLoss();
+        if ((hasWon() || hasLost()) && !winLossHandled) {
+            advanceOrRestart();
         }
-    }
-
-    private void handleLoss() {
-        winLossHandled = true;
-        playSound("src/main/resources/lose_sound.wav");
-        levelView.getLoseScreen().setVisible(true);
-        advanceOrRestart();
     }
 
     private boolean hasLost() {
         return currentLevelModel.getMAX_CHARS()
                 - (gameState.getCharactersThroughPortal() + gameState.getCharactersDead()) < currentLevelModel
                         .getWIN_CONDITION() - gameState.getCharactersThroughPortal();
-    }
-
-    private void handleWin() {
-        winLossHandled = true;
-        playSound("src/main/resources/win_sound.wav");
-        levelView.getWinScreen().setVisible(true);
-        this.level++; // advance to next level
-        advanceOrRestart();
     }
 
     private void playSound(String pathToClip) {
@@ -199,19 +186,23 @@ public class LevelController implements GameObjectChangeListener {
 
     private void advanceOrRestart() {
 
-        System.out.println("advanceOrRestart called");
-
-        this.currentLevelModel = loadLevel(level); // set the level from the levels array
-        if (this.currentLevelModel == null) {
-            this.currentLevelModel = levels[0]; // default to first level
-        }
+       if (hasWon() || hasLost()) {
+         winLossHandled = true;
+         String sound = hasWon() ? "win_sound.wav" : "lose_sounce.wav";
+         playSound("src/main/resources/" + sound);
+         levelView.getWinScreen().setIsVisible(hasWon());
+         levelView.getLoseScreen().setIsVisible(hasLost());
+       }
 
         Timer timer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 levelView.getWinScreen().setVisible(false);
+                levelView.getLoseScreen().setIsVisible(false);
+                if(hasWon()){
+                     level++;
+                }
                 ((Timer) e.getSource()).stop(); // ensure timer fires only one time
-                
                 System.exit(0);
             }
 

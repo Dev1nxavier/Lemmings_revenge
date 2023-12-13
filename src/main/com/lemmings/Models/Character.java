@@ -164,10 +164,9 @@ public class Character implements Collidable, Serializable{
             isOnElevator = true;
 
             updateElevatorPassengerCount(el);
-
             el.setIsMoving(true);
             if (el.getIsMoving()) {
-                // setCanMoveHorizontally(false);
+                setCanMoveHorizontally(false);
                 el.moveVertically();
                 setY_pos(el.getY_pos());
             }
@@ -196,7 +195,7 @@ public class Character implements Collidable, Serializable{
     }
 
     public void detectCollisions(ArrayList<Collidable> collidables) {
-
+        setCanMoveHorizontally(true);
         for (Object obj : collidables) {
             if (obj instanceof GameObject && ((GameObject) obj).getType() != ENV_TYPE.PORTAL) {
                 // set as a GameObjecct

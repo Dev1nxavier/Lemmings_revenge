@@ -39,6 +39,6 @@ public class Application {
 
         mainFrame.pack(); // frame matches size of LevelView
         mainFrame.setVisible(true); // here we go!
-
+        
     }
 }
