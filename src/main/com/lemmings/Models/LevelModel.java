@@ -26,7 +26,7 @@ public class LevelModel implements Serializable {
     private final int HEIGHT = 600;
     private final int MAX_CHARS = 10;
     private final int POINTS_PER_CHARACTER = 5;
-    private int WIN_CONDITION = 8;
+    private int WIN_CONDITION = 9;
     private final int LEVEL;
     private int[][] map;
     private final String id;

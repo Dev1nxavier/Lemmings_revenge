@@ -50,6 +50,7 @@ public class LevelView extends JPanel {
     public void initializeWithLevelModel(LevelModel levelModel) {
         System.out.println("LevelView.initializeWithLevelModel");
         clearGameObjectsFromView();
+
         for (GameObject go : levelModel.getGameObjects()) {
             addObjectToView(go, JLayeredPane.DEFAULT_LAYER);
         }
@@ -176,6 +177,12 @@ public class LevelView extends JPanel {
 
     public Rectangle getGamePanelBounds() {
         return gamePlayPane.getBounds();
+    }
+
+    public void restartLevel(LevelModel levelModel) {
+        this.removeAll();
+        layoutComponents();
+        initializeWithLevelModel(levelModel);
     }
 
     /**

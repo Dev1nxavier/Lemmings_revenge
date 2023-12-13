@@ -49,12 +49,17 @@ public class LevelController implements GameObjectChangeListener {
         this.gameState = gameState;
         this.menuModel = menuOptions;
 
-        // create controllers
-        this.gameStateController = new GameStateController(levelView.getStatsPanelView(), gameState);
-        this.menuController = new MenuOptionsController(levelView.getMenuOptionsView(), menuModel);
+        initializeControllers(levelView, gameState);
 
         initializeGame();
         addListeners();
+        
+    }
+
+    private void initializeControllers(LevelView levelView, GameState gameState) {
+        // create controllers
+        this.gameStateController = new GameStateController(levelView.getStatsPanelView(), gameState);
+        this.menuController = new MenuOptionsController(levelView.getMenuOptionsView(), menuModel);
     }
 
     public void initializeGame() {
@@ -65,6 +70,7 @@ public class LevelController implements GameObjectChangeListener {
         this.characterControllers = levelView.initializeCharacterViews(currentLevelModel.getCharacters(), this);
         // add GameObjects and Characters to LevelView
         this.levelView.initializeWithLevelModel(this.currentLevelModel);
+        playSound("src/main/resources/backgroundMusic.wav");
     }
 
     private void addListeners() {
@@ -205,9 +211,7 @@ public class LevelController implements GameObjectChangeListener {
             public void actionPerformed(ActionEvent e) {
                 levelView.getWinScreen().setVisible(false);
                 ((Timer) e.getSource()).stop(); // ensure timer fires only one time
-                // reinitialize
-                // initializeGame();
-                // updateGameState();
+                
                 System.exit(0);
             }
 
