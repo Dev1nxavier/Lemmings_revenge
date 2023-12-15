@@ -19,9 +19,13 @@ import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
  * @author Sean Greene
  * @date November 10, 2023
  * 
- *       this class models a character.
+ *       Represents a character in the game, managing its movement, collisions,
+ *       and interactions.
+ *       This class handles character state updates, including position changes,
+ *       collision detection,
+ *       and skill usage.
  */
-public class Character implements Collidable, Serializable{
+public class Character implements Collidable, Serializable {
     private double GRAVITY = 8;
     protected boolean isMovingRight = true;
     private int xPos, yPos;
@@ -36,6 +40,10 @@ public class Character implements Collidable, Serializable{
     private int speed;
     private GameObjectChangeListener listener;
 
+    /**
+     * Default constructor that initializes the character with default position and
+     * state.
+     */
     public Character() {
         this.xPos = 100;
         this.yPos = 200;
@@ -43,11 +51,11 @@ public class Character implements Collidable, Serializable{
         speed = 5;
     }
 
-    public void updateCharacterModel() {
-        updatePosition();
-    }
+    /**
+     * Updates the character's position based on its current state.
+     * The character moves horizontally if on ground, and vertically otherwise.
+     */
 
-    // updates character's position
     public void updatePosition() {
         if (isGround()) {
 
@@ -60,16 +68,23 @@ public class Character implements Collidable, Serializable{
         }
     };
 
+    /**
+     * Advance position in the positive or negative x direction
+     */
     private void moveHorizontally() {
         xPos += isMovingRight ? speed : -speed;
-        // y_pos = (currentGround.getyPos()-getC_HEIGHT()); // ensure character is
-        // standing on ground
     }
 
+    /**
+     * Move position along the positive y direction
+     */
     private void moveVertically() {
         yPos += GRAVITY;
     }
 
+    /**
+     * Toggles the characters movement direction along the x axis
+     */
     public void toggleDirection() {
         isMovingRight = !isMovingRight;
     }
@@ -84,15 +99,17 @@ public class Character implements Collidable, Serializable{
         }
     }
 
-    // this method detects the bottom edge of the game panel. If a Character's y-position is
-    // greater than the bottom-most vertical bound, the character's isDead flag is set to true. 
+    // this method detects the bottom edge of the game panel. If a Character's
+    // y-position is
+    // greater than the bottom-most vertical bound, the character's isDead flag is
+    // set to true.
     public void detectVerticalBounds(Rectangle bounds) {
         int floor = bounds.y + bounds.height - 10;
         if (this.getY_pos() >= floor) {
             this.isDead = true;
         }
     }
-    
+
     /**
      * This method calls the Skill class's useSkill method for the instance of
      * this Skill class assigned to this Character model.
@@ -132,7 +149,7 @@ public class Character implements Collidable, Serializable{
 
                 // check if Character is within margin above ground
                 if (isOverlapping(charBounds, groundBounds)) {
-                    
+
                     setIsGround(true);
 
                     if (this.currentGround != null && this.currentGround != g) {
@@ -148,6 +165,12 @@ public class Character implements Collidable, Serializable{
         return null;
     }
 
+    /**
+     * Detects if character has collided with a collapsible game object.
+     * If true, sets the collapbible game object's isActivated flag to true
+     * 
+     * @param g the GameObject this Character has collided with
+     */
     private void collapsible(GameObject g) {
         if (g.getType() == ENV_TYPE.COLLAPSIBLE) {
             CollapsibleGround cg = (CollapsibleGround) g;
@@ -157,13 +180,19 @@ public class Character implements Collidable, Serializable{
         }
     }
 
+    /**
+     * Determines if the character has collided with a GameObject of type Elevator
+     * If the gameObject is of type elevator, it invokes the elevator's
+     * moveVertically method
+     * 
+     * @param g the GameObject this Character has collided with.
+     */
     private void elevator(GameObject g) {
         if (g.getType() == ENV_TYPE.ELEVATOR) {
             Elevator el = (Elevator) g; // cast ground object to Elevator instance
 
             isOnElevator = true;
 
-            updateElevatorPassengerCount(el);
             el.setIsMoving(true);
             if (el.getIsMoving()) {
                 el.moveVertically();
@@ -172,12 +201,14 @@ public class Character implements Collidable, Serializable{
         }
     }
 
-    private void updateElevatorPassengerCount(Elevator el) {
-        if (!isOnElevator) {
-            el.updatePassengerCount();
-        }
-    }
-
+    /**
+     * Determines if the Characters bounding box overlaps with a GroundObject's
+     * bounding box and returns true, otherwise returns false.
+     * 
+     * @param Char the bounding box of this Character
+     * @param g    the GameObject's bounding box
+     * @return true if the overlapping condition is met, otherwise false
+     */
     private boolean isOverlapping(Rectangle Char, Rectangle g) {
         Rectangle r = this.getBounds();
         Rectangle ground = g.getBounds();
@@ -186,6 +217,11 @@ public class Character implements Collidable, Serializable{
                 && r.x < ground.x + ground.width && r.x + r.width > ground.x);
     }
 
+    /**
+     * Sets the field lastGround
+     * 
+     * @param newGround the current ground the Character has collided with.
+     */
     private void setLastGround(Ground newGround) {
         if (this.lastGround != newGround) {
 
@@ -193,8 +229,20 @@ public class Character implements Collidable, Serializable{
         }
     }
 
+    /**
+     * Detects collisions between the character and other collidable objects in the
+     * game.
+     * This method checks for collisions with various types of game objects. If a
+     * collision
+     * is detected with specific objects like rocks, or with other characters using
+     * certain skills,
+     * the character's direction is toggled.
+     *
+     * @param collidables The list of collidable objects to check for collisions
+     *                    against.
+     */
     public void detectCollisions(ArrayList<Collidable> collidables) {
- 
+
         for (Object obj : collidables) {
             if (obj instanceof GameObject && ((GameObject) obj).getType() != ENV_TYPE.PORTAL) {
                 // set as a GameObjecct
@@ -219,13 +267,30 @@ public class Character implements Collidable, Serializable{
         }
     }
 
+    /**
+     * Detects collisions between the Character and the level's portal object.
+     * 
+     * @param portal the portal GameObject
+     * @return true if the Character has collided with a portal GameObject
+     */
     public boolean detectPortal(WarpPortal portal) {
-         if(detectCollision(portal)){
+        if (detectCollision(portal)) {
             portal.playSound("src/main/resources/warp.wav");
             return true;
-         }
-         return false;
+        }
+        return false;
     }
+
+    /**
+     * Determines if the character has collided with another collidable object.
+     * Collision is detected by checking for overlaps between the bounding
+     * rectangles
+     * of the character and the other object. An overlap on both the X and Y axes
+     * indicates a collision.
+     *
+     * @param object The collidable object to check for a collision with.
+     * @return True if a collision is detected, false otherwise.
+     */
 
     public boolean detectCollision(Collidable object) {
 
@@ -240,6 +305,10 @@ public class Character implements Collidable, Serializable{
         }
         return false;
     }
+
+    /*
+     * Getters and setters
+     */
 
     public void setMovingRight(boolean isMovingRight) {
         this.isMovingRight = isMovingRight;
@@ -302,6 +371,10 @@ public class Character implements Collidable, Serializable{
         return this.isDead;
     }
 
+    /**
+     * removes the skill that has been set to this Character. 
+     * @return true if a skill was set and has been removed, false otherwise. 
+     */
     public boolean removeSkill() {
         this.type = null;
         setSkill(null);

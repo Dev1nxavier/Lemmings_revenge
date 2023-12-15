@@ -1,6 +1,5 @@
 package src.main.com.lemmings.Models.GameObjects;
 import java.awt.Point;
-import java.awt.Rectangle;
 
 /**
  * Bridge.java
@@ -18,10 +17,5 @@ public class Bridge extends Ground {
         setImage("bridge_03.png");
         setType(ENV_TYPE.GROUND);
         this.text = "Bridge";
-    }
-
-    public boolean shouldDestroy(double y){
-        Rectangle ground = this.getBounds();
-        return (ground.y > y);
     }
 }

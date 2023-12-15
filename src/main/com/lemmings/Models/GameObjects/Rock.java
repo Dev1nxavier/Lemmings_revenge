@@ -3,7 +3,7 @@ package src.main.com.lemmings.Models.GameObjects;
 import java.awt.Point;
 
 /**
- * Rock
+ * Rock.java
  */
 public class Rock extends GameObject {
 

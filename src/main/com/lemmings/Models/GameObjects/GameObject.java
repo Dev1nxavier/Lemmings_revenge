@@ -23,6 +23,10 @@ import src.main.com.lemmings.utilities.Utilities;
  * 
  * @author Sean Greene
  * @date November 10, 2023
+ * 
+ * Represents an abstract base class for the game objects in the game.
+ * Each game object has position, dimension, and an image. It implements the Collidable 
+ * interface for interacting with other GameObjects and Character models in the game. 
  */
 
 public abstract class GameObject extends JLabel implements Collidable {
@@ -38,10 +42,19 @@ public abstract class GameObject extends JLabel implements Collidable {
     private ENV_TYPE type;
     private GameObjectChangeListener listener;
 
-    public GameObject() {
+    /**
+     * Constructs a default GameObject
+     */
+    public GameObject() {};
 
-    };
-
+    /**
+     * Constructs a GameObject with a specified position, dimensions, and 2D array address
+     * @param x the x-coordinate of the object
+     * @param y the y-coordinate of the object
+     * @param width the width of the object
+     * @param height the height of the object
+     * @param rowAndCol the 2D array address of the object in the LevelModel map. 
+     */
     public GameObject(int x, int y, int width, int height, Point rowAndCol) {
         this();
         this.rowAndCol = rowAndCol;
@@ -49,19 +62,30 @@ public abstract class GameObject extends JLabel implements Collidable {
         this.yPos = y;
         this.width = width;
         this.height = height;
+        this.setType(type);
         setObjectBounds(x, y, width, height);
     }
 
+    /**
+     * Sets the view bounds of this game object. 
+     * For use in the LevelView layeredPane where the layoutmanager is null
+     */
     @Override
     public void setObjectBounds(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
     }
 
+    /**
+     * Sets the preferred size of the gameobject
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(this.width, this.height);
     }
 
+   /**
+    * Getter and setter methods for the fields.
+    */
     @Override
     public int getX_pos() {
         return this.xPos;
@@ -86,6 +110,10 @@ public abstract class GameObject extends JLabel implements Collidable {
         return image;
     }
 
+    /**
+     * Sets the image for this game object. 
+     * @param name The name of the image to be set. 
+     */
     public void setImage(String name) {
         this.imagePath = name;
         this.image = ImageLoader.getImage(name);
@@ -163,7 +191,7 @@ public abstract class GameObject extends JLabel implements Collidable {
 
         try {
             if (image != null) {
-                g2d.drawImage(image, 0, 0, this.width, this.height, null);
+                g2d.drawImage(image, 0, 0, this.width, this.height, this);
             }
         } catch (Exception e) {
             System.out.println("Unable to load image");
@@ -192,7 +220,6 @@ public abstract class GameObject extends JLabel implements Collidable {
         return this.listener;
     }
 
-    // TODO: REMOVE!
     /**
      * This method sets a mouseClicked listener to this GameObject instance. On
      * mouseclick,

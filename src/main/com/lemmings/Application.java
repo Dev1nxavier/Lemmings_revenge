@@ -14,6 +14,12 @@ import src.main.com.lemmings.utilities.Utilities;
  * 
  * @author Sean Greene
  * @date November 10, 2023
+ * 
+ *       The main class for the Lemmings REVENGE! game application.
+ *       This class sets up the game environment, including the view, game
+ *       state, menu options,
+ *       and the level controller. It initializes and displays the main game
+ *       window.
  */
 public class Application {
     // Create shared components
@@ -21,11 +27,23 @@ public class Application {
     private GameState gameState = new GameState();
     private MenuOptions menuOptions = new MenuOptions();
 
+    /**
+     * Main method to launch the Lemmings REVENGE! game.
+     * Initializes the game levels and starts the application.
+     * 
+     * @param args Command line arguments (not used in this application).
+     */
     public static void main(String[] args) {
         Utilities.createLevels();
         new Application();
     }
 
+    /**
+     * Constructs the Application.
+     * Sets up the game by initializing the level view, game state, and menu
+     * options.
+     * It creates and configures the main game window.
+     */
     public Application() {
 
         // Create controller
@@ -39,6 +57,6 @@ public class Application {
 
         mainFrame.pack(); // frame matches size of LevelView
         mainFrame.setVisible(true); // here we go!
-        
+
     }
 }

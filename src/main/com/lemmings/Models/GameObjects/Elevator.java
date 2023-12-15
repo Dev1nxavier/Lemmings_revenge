@@ -1,6 +1,9 @@
 package src.main.com.lemmings.Models.GameObjects;
 
+import java.awt.Color;
 import java.awt.Point;
+
+import javax.swing.BorderFactory;
 /**
  * Elevator
  * 
@@ -20,14 +23,8 @@ public class Elevator extends Ground {
         super(x, y, 150, 75, rowAndCol);
         this.init_y_pos = y;
         setType(ENV_TYPE.ELEVATOR);
-        setImage("elevator_03.png");
-
+        setImage("elevator_03_rescale.png");
         setObjectBounds(x, y, this.getWidth(), this.getHeight());
-    }
-
-    @Override
-    public void setObjectBounds(int x, int y, int width, int height) {
-        super.setObjectBounds(x, y - 25, width, height);
     }
 
     public void setIsMoving(boolean isMoving) {
