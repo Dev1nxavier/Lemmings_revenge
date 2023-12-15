@@ -43,6 +43,13 @@ public class LevelController implements GameObjectChangeListener {
     private boolean winLossHandled = false; // flag to ensure handleWin is called one time
     private Timer timer;
 
+    /**
+     * The Constructor for a new LevelController object. 
+     * 
+     * @param levelView The main view component for the game level
+     * @param gameState The object representing the current game stats
+     * @param menuOptions The menu options set in the game
+     */
     public LevelController(LevelView levelView, GameState gameState, MenuOptions menuOptions) {
         this.levelView = levelView;
         this.currentLevelModel = loadLevel(level);
@@ -56,19 +63,20 @@ public class LevelController implements GameObjectChangeListener {
         
     }
 
-    private void initializeLevel(int level){
-        this.currentLevelModel = loadLevel(level);
-        levelView.clearGameObjectsFromView();
-        // this.characterControllers = levelView.initializeCharacterViews(currentLevelModel.getCharacters(), this);
-        this.levelView.initializeWithLevelModel(this.currentLevelModel);
-    }
-
+    /**
+     * Initializes the CharacterController instance with a new GameStateController and MenuController instance. 
+     * @param levelView the view component for the game level
+     * @param gameState the current state of the game
+     */
     private void initializeControllers(LevelView levelView, GameState gameState) {
         // create controllers
         this.gameStateController = new GameStateController(levelView.getStatsPanelView(), gameState);
         this.menuController = new MenuOptionsController(levelView.getMenuOptionsView(), menuModel);
     }
 
+    /**
+     * Initializes the game by setting up characters, game objects and the background music
+     */
     public void initializeGame() {
         
         // clear level view
@@ -80,22 +88,36 @@ public class LevelController implements GameObjectChangeListener {
         playSound("src/main/resources/backgroundMusic.wav");
     }
 
+    /**
+     * Adds event listeners for game interactions
+     */
     private void addListeners() {
         setupTimer();
         setupMenuControllerListener();
         setGameObjectListener();
     }
 
+    /**
+     * Sets a GameObjectChangeListener to each GameObject instance using a dependency injection model
+     */
     private void setGameObjectListener() {
         for (GameObject go : currentLevelModel.getGameObjects()) {
             go.setGameObjectChangeListener(this);
         }
     }
 
+    /**
+     * Adds a GameObjectChangeListener to the menuController instance. 
+     */
     private void setupMenuControllerListener() {
         menuController.addGameObjectChangeListener(this);
     }
 
+    /**
+     * Loads the LevelModel instances from the levels datafile and sets the current level. 
+     * @param level
+     * @return
+     */
     private LevelModel loadLevel(int level) {
         // load the LevelModels from file
         this.levels = Utilities.loadLevels("src/main/levels.dat");
@@ -107,6 +129,10 @@ public class LevelController implements GameObjectChangeListener {
         return levels[level];
     }
 
+    /**
+     * Sets up a timer to refresh the game state at regular intervals.
+     * The timer is responsible for frame update and game logic execution.
+     */
     private void setupTimer() {
         // refresh at frame rate
         this.timer = new Timer(100, new ActionListener() {
@@ -143,6 +169,10 @@ public class LevelController implements GameObjectChangeListener {
         processWinOrDeadConditions();
     }
 
+    /**
+     * Process win or death conditions for the game, updating counts and checking for 
+     * game completion. 
+     */
     private void processWinOrDeadConditions() {
         ArrayList<CharacterController> remove = findCharactersMeetingConditions();
         updateCounts(remove);
@@ -153,25 +183,49 @@ public class LevelController implements GameObjectChangeListener {
         }
     }
 
+    /**
+     * Checks if the number of remaining characters is higher than the required number of characters 
+     * to meet the level's win condition and returns true or false. 
+     * @return true if the remaining character count is below the level's win condition
+     */
     private boolean hasLost() {
         return currentLevelModel.getMAX_CHARS()
                 - (gameState.getCharactersThroughPortal() + gameState.getCharactersDead()) < currentLevelModel
                         .getWIN_CONDITION() - gameState.getCharactersThroughPortal();
     }
 
+    /**
+     * Plays the specified clip
+     * @param pathToClip
+     */
     private void playSound(String pathToClip) {
         Utilities.playClip(pathToClip);
     }
 
+    /** 
+     * Checks the win condition for the level. 
+     * 
+     * @return true if the number of characters passing through the level's portal is equal or greater than 
+     * the Level's win condition
+     */
     private boolean hasWon() {
         return gameState.getCharactersThroughPortal() >= currentLevelModel.getWIN_CONDITION();
     }
 
+    /**
+     * Calculates the current score based on the number of characters who passed through the portal
+     * @return the current score of the level
+     */
     private int calculateScore() {
         int score = gameState.getCharactersThroughPortal() * currentLevelModel.getPOINTS_PER_CHARACTER();
         return score;
     }
 
+    /**
+     * Updates the character counts for dead characters and characters who have passed through the level's portal and removes
+     * the characters meeting either condition from the game state. 
+     * @param characterControllers
+     */
     private void updateCounts(ArrayList<CharacterController> characterControllers) {
         for (CharacterController ch : characterControllers) {
             if (!ch.getIsDead()) {
@@ -184,6 +238,10 @@ public class LevelController implements GameObjectChangeListener {
         removeCharacters(characterControllers);
     }
 
+    /**
+     * Displays the win or lose screen depending on if the win or lose condition has been met.
+     * Starts a new timer that displays the win or lose screen on a delay before exiting the game. 
+     */
     private void advanceOrRestart() {
 
        if (hasWon() || hasLost()) {

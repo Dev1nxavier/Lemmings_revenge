@@ -29,6 +29,13 @@ public class CharacterController {
     private CharacterView characterView;
     private GameObjectChangeListener listener;
 
+    /**
+     * Constructor for a new Character Controller object. 
+     * 
+     * @param character the Character model to be associated with this Character Controller
+     * @param characterView the CharacterView to be associated with this character controller
+     * @param listener the GameObjectChangeListener interface to be set to this Character Controller
+     */
     public CharacterController(Character character, CharacterView characterView, GameObjectChangeListener listener) {
         this.character = character;
         this.characterView = characterView;
@@ -36,20 +43,34 @@ public class CharacterController {
         addListeners();
     }
 
+    /**
+     * Adds mouse listeners to the CharacterView associated with this Character Controller
+     * Listeners handle various mouse events: press, enter, exit
+     * 
+     */
     private void addListeners() {
         this.characterView.addMouseListener(new MouseAdapter() {
+            /**
+             * On press, handle character selection
+             */
             @Override
             public void mousePressed(MouseEvent clickEvent) {
                 super.mousePressed(clickEvent);
                 onCharacterSelected();
             }
 
+            /**
+             * on mouse over, display an arrow icon over the characterview
+             */
             @Override
             public void mouseEntered(MouseEvent enterEvent) {
                 super.mouseEntered(enterEvent);
                 characterView.showArrow();
             }
 
+            /**
+             * On mouse exit, remove arrow icon from characterview
+             */
             @Override
             public void mouseExited(MouseEvent exitEvent) {
                 super.mouseExited(exitEvent);
@@ -59,21 +80,36 @@ public class CharacterController {
         });
     }
 
+    /**
+     * Update the GameObjectChangeListener when the characterview is clicked
+     */
     protected void onCharacterSelected() {
         listener.updateCharacterModel(this);
     }
 
+    /**
+     * Updates the charactermodel state in response to game environment interactions
+     * Invokes any skills associated with character model, detects collisions, and updates characters position
+     * Checks for boundary constraints within game panel
+     * 
+     * @param env           The game environment objects that can interact wtih the character
+     * @param characters    The array of other characters in the game, for collision detection
+     * @param gameBounds    The boundaries of the game area to constrain characters x movement or detect falling
+     */
     public void updateCharacter(ArrayList<GameObject> env, ArrayList<Character> characters, Rectangle gameBounds) {
+        // Collect all collidable objects
         ArrayList<Collidable> collidables = new ArrayList<>();
         collidables.addAll(env);
         collidables.addAll(characters);
 
+        // update character
         invokeSkill(env);
         character.detectCollisions(collidables);
         character.updatePosition();
         character.detectHorizontalBounds(gameBounds);
         character.detectVerticalBounds(gameBounds);
 
+        // detect ground and alert listener
         detectGround(env);
         onCharacterModelUpdate();
 

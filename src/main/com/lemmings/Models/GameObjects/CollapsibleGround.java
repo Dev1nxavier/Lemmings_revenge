@@ -1,18 +1,10 @@
 package src.main.com.lemmings.Models.GameObjects;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.SwingUtilities;
-
-import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
  * CollapsibleGround
@@ -40,6 +32,12 @@ public class CollapsibleGround extends Ground {
     private int offset = 20; // the y-offset of the image
     private final int repeats = 3;
 
+    /**
+     * Constructs a collapsibleground object. Initializes the object with the default skill type, image, and count. 
+     * @param x
+     * @param y
+     * @param rowAndCol
+     */
     public CollapsibleGround(int x, int y, Point rowAndCol) {
         super(x, y, 75, 75, rowAndCol);
         setType(ENV_TYPE.COLLAPSIBLE);
@@ -50,16 +48,28 @@ public class CollapsibleGround extends Ground {
         setImage("collapsibleGround_01.png");
     }
 
+    /**
+     * Sets the number of stages this object will be available for. 
+     * 
+     * @param count The number of times this object should exist before being removed from the game state.
+     */
     private void setCount(int count) {
         this.count = count;
     }
 
+    /**
+     * This method is responsible for updating the image of the ground and decrementing the number of stages before this
+     * object is removed from the game state.
+     */
     private void updateGroundModel() {
         decrementCount();
         setCurrentFrame();
         removeObject();
     }
 
+    /**
+     * Checks the remove condition and if no count remains, removes the game object from the gamestate. 
+     */
     private void removeObject() {
         if (this.count <= 0) {
             // cancel timer
@@ -102,6 +112,9 @@ public class CollapsibleGround extends Ground {
 
     }
 
+    /**
+     * Sets the current image to be used in this object's view. 
+     */
     private void setCurrentFrame() {
         // currentFrame = (currentFrame + 1) % imageFrames.size();
         currentFrame = (currentFrame + 1) % imageFrames.length;

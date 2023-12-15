@@ -19,7 +19,10 @@ import src.main.com.lemmings.utilities.ImageLoader;
 import src.main.com.lemmings.utilities.Utilities;
 
 /**
- * GameObject
+ * GameObject.java
+ * 
+ * @author Sean Greene
+ * @date November 10, 2023
  */
 
 public abstract class GameObject extends JLabel implements Collidable {

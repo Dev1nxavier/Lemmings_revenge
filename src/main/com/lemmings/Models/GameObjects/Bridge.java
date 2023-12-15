@@ -1,10 +1,14 @@
 package src.main.com.lemmings.Models.GameObjects;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
- * Ground
+ * Bridge.java
+ * 
+ * @author Sean Greene
+ * @date November 10, 2023
+ * 
+ * Defines a Bridge object. 
  */
 public class Bridge extends Ground {
     String text;

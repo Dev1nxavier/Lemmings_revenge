@@ -24,7 +24,13 @@ import src.main.com.lemmings.Views.Components.BackgroundPanel;
 import src.main.com.lemmings.utilities.ImageLoader;
 
 /**
- * LevelView
+ * LevelView.java
+ * 
+ * @author Sean Greene
+ * @date November 10, 2023
+ * 
+ * Represents the main view for the game level. This class renders the game's characters,
+ * objects, win/ lose screen and GUI elements
  */
 public class LevelView extends JPanel {
     private WinLoseScreen winScreen;
@@ -36,17 +42,19 @@ public class LevelView extends JPanel {
     private MenuOptionsView menuView; // for providing the moves available on the level
     private ArrayList<CharacterView> characterViews = new ArrayList<>();
 
+    /**
+     * Constructs a new LevelView, setting up the panels and components
+     */
     public LevelView() {
         this.setDoubleBuffered(true); // explicitly enable double buffering
         layoutComponents();
     }
 
     /**
-     * This method calls a method to clear all elements from LevelView before
-     * itterating over an ArrayList of gameObjects and CharacterViews and adding
-     * each to the LevelView's JLayeredPane.
+     * Initializes the level view with the level model
+     * Clears exiting game objects and adds new ones from the level model.
      * 
-     * @param gameObjects
+     * @param levelModel The model representing the current level's state.
      */
     public void initializeWithLevelModel(LevelModel levelModel) {
         clearGameObjectsFromView();
@@ -94,7 +102,7 @@ public class LevelView extends JPanel {
         gamePlayPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 50));
         rootPanel = new JPanel(); // JPanel holds Game window, Stats Window, Options Menu
         rootPanel.setOpaque(false); // transparent to show background
-        rootPanel.setLayout(new BorderLayout());
+        rootPanel.setLayout(new BorderLayout(20, 0));
 
         JPanel statsPanel = new JPanel();
         statsPanel.setOpaque(false);
@@ -138,6 +146,11 @@ public class LevelView extends JPanel {
         gamePlayPane.repaint();
     }
 
+    /**
+     * Removes a specified JLabel object from the LevelView
+     * @param ObjectView the JLabel object to be removed
+     * @param zIndex the layer index from which the object is to be removed.
+     */
     public void removeObjectFromView(JLabel ObjectView, int zIndex) {
         this.characterViews.remove(ObjectView); // remove from list
         // get components in gamePlayPane
@@ -167,8 +180,8 @@ public class LevelView extends JPanel {
     }
 
     /**
-     * This method removes all components from the LayeredPane container of the
-     * LevelView. It then calls revalidate on the LevelView.
+     * Clears all game objects from the view
+     * This is used when resetting or updating the level.
      */
     public void clearGameObjectsFromView() {
         this.gamePlayPane.removeAll();
@@ -178,17 +191,23 @@ public class LevelView extends JPanel {
         return gamePlayPane.getBounds();
     }
 
+
+    /**
+     * Restarts the level with the provided level model, updating the view.
+     * 
+     * @param levelModel The new level model to be set for the level.
+     */
     public void restartLevel(LevelModel levelModel) {
         this.clearGameObjectsFromView();
         initializeWithLevelModel(levelModel);
     }
 
     /**
-     * WinScreen.java
+     * WinLoseScreen.java
      * 
-     * Inner class that defines the win screen. Instances of this class are made
+     * Inner class that defines the win and lose screen. Instances of this class are made
      * visible when the
-     * Level's win conditions are met.
+     * Level's win or lose conditions are met.
      */
     public class WinLoseScreen extends JPanel {
         private transient BufferedImage image;
