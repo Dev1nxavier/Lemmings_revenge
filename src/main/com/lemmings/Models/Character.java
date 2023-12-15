@@ -356,7 +356,7 @@ public class Character implements Collidable, Serializable{
 
     @Override
     public void setGameObjectChangeListener(GameObjectChangeListener listener) {
-        // TODO Auto-generated method stub
+        this.listener = listener;
 
     }
 

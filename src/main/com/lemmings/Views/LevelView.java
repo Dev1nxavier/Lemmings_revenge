@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -48,7 +49,6 @@ public class LevelView extends JPanel {
      * @param gameObjects
      */
     public void initializeWithLevelModel(LevelModel levelModel) {
-        System.out.println("LevelView.initializeWithLevelModel");
         clearGameObjectsFromView();
 
         for (GameObject go : levelModel.getGameObjects()) {
@@ -91,7 +91,7 @@ public class LevelView extends JPanel {
                 return new Dimension(600, 600);
             }
         };
-
+        gamePlayPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 50));
         rootPanel = new JPanel(); // JPanel holds Game window, Stats Window, Options Menu
         rootPanel.setOpaque(false); // transparent to show background
         rootPanel.setLayout(new BorderLayout());

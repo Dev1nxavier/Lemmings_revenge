@@ -28,7 +28,7 @@ public class MenuOptions {
             switch (type) {
                 case BLOCKER -> image = "blocker_icon.png";
                 case BUILDER -> image = "bridge_icon.png";
-                case EXCAVATOR -> image = "miner_icon.png";
+                case EXCAVATOR -> image = "excavator_icon.png";
                 case MINER -> image = "miner_icon.png";
                 case BOMBER -> image = "dynamite_icon.png";
                 default-> image = "pauseButton.png";

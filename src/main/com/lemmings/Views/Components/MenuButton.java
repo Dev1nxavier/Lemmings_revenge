@@ -21,7 +21,6 @@ import src.main.com.lemmings.Models.Skills.Skill.SKILL_TYPE;
  */
 public class MenuButton extends GameButton {
     private SKILL_TYPE type;
-    private int width, height;
 
     public MenuButton() {
         this("New Skill", null, SKILL_TYPE.BLOCKER);

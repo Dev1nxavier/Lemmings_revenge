@@ -1,8 +1,11 @@
 package src.main.com.lemmings.Models.Skills;
 
+import java.awt.image.BufferedImage;
+
 import src.main.com.lemmings.Models.Character;
 import src.main.com.lemmings.Models.GameObjectChangeListener;
 import src.main.com.lemmings.Models.GameObjects.Ground;
+import src.main.com.lemmings.utilities.ImageLoader;
 import src.main.com.lemmings.utilities.Utilities;
 
 /**
@@ -16,14 +19,22 @@ public class Miner extends Excavator {
     // zero-arg constructor
     public Miner() {
         super();
-        setCount(2);
-
     }
 
     public Miner(GameObjectChangeListener listener) {
         super(listener);
         setCount(2);
     };
+
+        @Override
+    public void setImage() {
+        try {
+            BufferedImage newIMage = ImageLoader.getImage("miner_icon.png");
+            super.setImage(newIMage);
+        } catch (Exception e) {
+            System.err.println("Unable to load image: " + e.getMessage());
+        }
+    }
 
     @Override
     public SKILL_TYPE getSkillType() {

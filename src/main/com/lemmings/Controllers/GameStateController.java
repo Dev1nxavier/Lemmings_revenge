@@ -48,7 +48,6 @@ public class GameStateController {
     }
 
     public void updateCharactersThroughPortal(int count){
-        System.out.println("GameStateCtrl.updateCharacterPortal" + count);
         gameState.updateCharactersThroughPortal(count);
         updateCharacterCount(count);
     }

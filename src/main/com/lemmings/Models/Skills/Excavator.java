@@ -93,10 +93,14 @@ public class Excavator implements Skill {
     @Override
     public void setImage() {
         try {
-            this.image = ImageLoader.getImage("miner_icon.png");
+            this.image = ImageLoader.getImage("excavator_icon.png");
         } catch (Exception e) {
             System.err.println("Unable to load image: " + e.getMessage());
         }
+    }
+
+    public void setImage(BufferedImage image){
+        this.image = image;
     }
 
 }
