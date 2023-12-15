@@ -77,7 +77,7 @@ public class LevelModel implements Serializable {
             Character ch = new Character();
             // slightly offset each character
             ch.setX_pos((i + 2) * 20);
-            ch.setY_pos(100);
+            ch.setY_pos(1);
             characters.add(ch);
         }
     }
