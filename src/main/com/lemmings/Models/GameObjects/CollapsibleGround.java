@@ -19,9 +19,9 @@ import javax.swing.SwingUtilities;
 public class CollapsibleGround extends Ground {
     // private transient ArrayList<BufferedImage> imageFrames = new ArrayList<>();
     private String[] imageFrames = new String[] {
-        "collapsibleGround_02.png",
-        "collapsibleGround_03.png",
-        "collapsibleGround_03.png"
+            "collapsibleGround_02.png",
+            "collapsibleGround_03.png",
+            "collapsibleGround_03.png"
     };
 
     private int currentFrame;
@@ -33,7 +33,9 @@ public class CollapsibleGround extends Ground {
     private final int repeats = 3;
 
     /**
-     * Constructs a collapsibleground object. Initializes the object with the default skill type, image, and count. 
+     * Constructs a collapsibleground object. Initializes the object with the
+     * default skill type, image, and count.
+     * 
      * @param x
      * @param y
      * @param rowAndCol
@@ -44,21 +46,32 @@ public class CollapsibleGround extends Ground {
         this.text = "" + this.getRowAndCol().x + ", " + this.getRowAndCol().y;
         this.currentFrame = 0;
         setCount(repeats);
-        // initializeAnimationFrames();
         setImage("collapsibleGround_01.png");
+
     }
 
     /**
-     * Sets the number of stages this object will be available for. 
+     * Sets the number of stages this object will be available for.
      * 
-     * @param count The number of times this object should exist before being removed from the game state.
+     * @param count The number of times this object should exist before being
+     *              removed from the game state.
      */
     private void setCount(int count) {
         this.count = count;
     }
 
     /**
-     * This method is responsible for updating the image of the ground and decrementing the number of stages before this
+     * Sets the view bounds of this game object.
+     * For use in the LevelView layeredPane where the layoutmanager is null
+     */
+    @Override
+    public void setObjectBounds(int x, int y, int width, int height) {
+        this.setBounds(x, y, width, height);
+    }
+
+    /**
+     * This method is responsible for updating the image of the ground and
+     * decrementing the number of stages before this
      * object is removed from the game state.
      */
     private void updateGroundModel() {
@@ -68,7 +81,8 @@ public class CollapsibleGround extends Ground {
     }
 
     /**
-     * Checks the remove condition and if no count remains, removes the game object from the gamestate. 
+     * Checks the remove condition and if no count remains, removes the game object
+     * from the gamestate.
      */
     private void removeObject() {
         if (this.count <= 0) {
@@ -113,7 +127,7 @@ public class CollapsibleGround extends Ground {
     }
 
     /**
-     * Sets the current image to be used in this object's view. 
+     * Sets the current image to be used in this object's view.
      */
     private void setCurrentFrame() {
         // currentFrame = (currentFrame + 1) % imageFrames.size();
